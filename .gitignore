@@ -1,0 +1,18 @@
+# Target Build Directory#
+########################
+/target/
+
+# Compiled source #
+###################
+*.class
+*.dll
+*.exe
+
+#Eclipse Settings File#
+######################
+/.settings/
+*.prefs
+*.classpath
+*.project
+*.log*
+*.DS_Store
