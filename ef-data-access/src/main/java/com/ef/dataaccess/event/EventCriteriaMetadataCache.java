@@ -1,0 +1,49 @@
+package com.ef.dataaccess.event;
+
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.stereotype.Component;
+
+import com.ef.dataaccess.spring.member.rowmapper.EventCriteriaMetadataRowMapper;
+import com.ef.model.event.EventCriteriaMetadata;
+
+@Component
+public class EventCriteriaMetadataCache {
+
+  private final String SELECT_EVENT_CRITERIA_MAP = "select id, name, description from event_criteria_meta";
+
+  private final JdbcTemplate jdbcTemplate;
+
+  private final Map<String, EventCriteriaMetadata> nameToEventCriteriaMap;
+  private final Map<Integer, EventCriteriaMetadata> idToEventCriteriaMap;
+
+  @Autowired
+  public EventCriteriaMetadataCache(@Qualifier("indvitedDbJdbcTemplate") JdbcTemplate jdbcTemplate) {
+    this.jdbcTemplate = jdbcTemplate;
+    nameToEventCriteriaMap = new HashMap<String, EventCriteriaMetadata>();
+    idToEventCriteriaMap = new HashMap<Integer, EventCriteriaMetadata>();
+    refreshCache();
+  }
+
+  public EventCriteriaMetadata getEventCriteria(String eventCriteriaName) {
+    return nameToEventCriteriaMap.get(eventCriteriaName);
+  }
+
+  public EventCriteriaMetadata getEventCriteria(int eventCriteriaId) {
+    return idToEventCriteriaMap.get(eventCriteriaId);
+  }
+
+  private void refreshCache() {
+    List<EventCriteriaMetadata> eventCriteriaMetadataList = jdbcTemplate.query(SELECT_EVENT_CRITERIA_MAP,
+        new EventCriteriaMetadataRowMapper());
+    for (EventCriteriaMetadata eventCriteriaMetadata : eventCriteriaMetadataList) {
+      nameToEventCriteriaMap.put(eventCriteriaMetadata.getName(), eventCriteriaMetadata);
+      idToEventCriteriaMap.put(eventCriteriaMetadata.getId(), eventCriteriaMetadata);
+    }
+  }
+}
