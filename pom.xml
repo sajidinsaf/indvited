@@ -259,7 +259,6 @@
 		<module>ef-session-management</module>		
 		<module>ef-data-access</module>
 		<module>ef-event-service</module>
-		<module>ef-registration-service</module>
-		<module>ef-login-service</module>
+		<module>ef-member-service</module>
 	</modules>
 </project>

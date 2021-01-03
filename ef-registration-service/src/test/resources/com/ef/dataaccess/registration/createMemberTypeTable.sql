@@ -1,1 +1,0 @@
-CREATE TABLE member_type (id int, name varchar(16));
