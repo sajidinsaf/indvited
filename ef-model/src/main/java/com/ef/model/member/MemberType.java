@@ -1,7 +1,10 @@
 package com.ef.model.member;
 
-public class MemberType {
+import java.io.Serializable;
 
+public class MemberType implements Serializable {
+
+  private static final long serialVersionUID = 897249091518055980L;
   private final int id;
   private final String name;
 

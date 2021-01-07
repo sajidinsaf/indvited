@@ -1,10 +1,13 @@
 package com.ef.model.member;
 
+import java.io.Serializable;
 import java.sql.Timestamp;
 
 import com.ef.common.FieldCannotBeMutatedException;
 
-public class Member {
+public class Member implements Serializable {
+
+  private static final long serialVersionUID = 275549302589403129L;
 
   private String id;
   private String firstname;

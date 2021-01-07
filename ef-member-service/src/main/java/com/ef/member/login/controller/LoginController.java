@@ -4,6 +4,8 @@ import static com.ef.member.login.controller.LoginControllerConstants.LOGIN_WITH
 
 import java.util.List;
 
+import javax.servlet.http.HttpSession;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -39,20 +41,24 @@ public class LoginController {
 
 //  curl -i -H "Accept: application/json" -H "Content-Type:application/json" -X POST --data '{"id":"1232455663","type":"PREvent","scheduledDate":"2020/12/25","scheduledTime":"18:03:51","location":"Mainland China","description":"Review Food Event"}' "http://secure.codeczar.co.uk/event-service/rest/event/publish"
   @PostMapping(LOGIN_WITH_USERNAME_AND_PASSWORD)
-  public ResponseEntity<?> registerMember(@RequestBody MemberLoginBindingModel memberLoginData) {
+  public ResponseEntity<?> registerMember(@RequestBody MemberLoginBindingModel memberLoginData,
+      HttpSession httpSession) {
     logUtil.debug(logger, "Logging in member: " + memberLoginData);
 
     Response<Member> loginStatus = loginService.loginMember(memberLoginData);
 
     if (loginStatus.getFailureReasons() != null && !loginStatus.getFailureReasons().isEmpty()) {
       logUtil.info(logger,
-          "Error registering member: " + memberLoginData + " [" + loginStatus.getFailureReasons() + "]");
+          "Error logging in member: " + memberLoginData + " [" + loginStatus.getFailureReasons() + "]");
+      httpSession.invalidate();
       return new ResponseEntity<List<String>>(loginStatus.getFailureReasons(),
           HttpStatus.valueOf(loginStatus.getStatusCode().name()));
     }
 
-    return new ResponseEntity<Member>(loginStatus.getResponseResult(),
-        HttpStatus.valueOf(loginStatus.getStatusCode().name()));
+    Member member = loginStatus.getResponseResult();
+    httpSession.setAttribute("member", member);
+
+    return new ResponseEntity<Member>(member, HttpStatus.valueOf(loginStatus.getStatusCode().name()));
   }
 
 }
