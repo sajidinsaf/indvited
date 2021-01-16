@@ -34,6 +34,7 @@ import org.springframework.jdbc.datasource.embedded.EmbeddedDatabaseType;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
+import com.ef.dataaccess.config.DbTestUtils;
 import com.ef.model.member.Member;
 import com.ef.model.member.MemberRegistrationBindingModel;
 
@@ -64,8 +65,9 @@ public class InsertMemberTest {
 
   @After
   public void tearDown() {
-    jdbcTemplate.execute("drop table member_type");
-    jdbcTemplate.execute("drop table member");
+    jdbcTemplate.execute("DROP SCHEMA PUBLIC CASCADE");
+//    jdbcTemplate.execute("drop table member_type");
+//    jdbcTemplate.execute("drop table member");
   }
 
   @Test
@@ -101,10 +103,10 @@ class HsqlDbConfigInsertMemberTest {
   }
 
   private DataSource dataSource() {
-    return new EmbeddedDatabaseBuilder().setType(EmbeddedDatabaseType.HSQL)
-        .addScript("classpath:com/ef/dataaccess/registration/createMemberTypeTable.sql")
-        .addScript("classpath:com/ef/dataaccess/registration/insertMemberTypeData.sql")
-        .addScript("classpath:com/ef/dataaccess/registration/createMemberTable.sql").build();
+    EmbeddedDatabaseBuilder embeddedDatabaseBuilder = new EmbeddedDatabaseBuilder().setType(EmbeddedDatabaseType.HSQL);
+
+    return new DbTestUtils().addCreateScripts(embeddedDatabaseBuilder)
+        .addScript("classpath:com/ef/dataaccess/member/insertMemberTypeData.sql").build();
 
   }
 

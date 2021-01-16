@@ -8,6 +8,7 @@ import static org.junit.Assert.assertThat;
 //import java.util.regex.Pattern;
 import javax.sql.DataSource;
 
+import org.aspectj.lang.annotation.AfterThrowing;
 //import static org.mockito.Mockito.never;
 //import static org.mockito.Mockito.verify;
 //import static org.mockito.Mockito.when;
@@ -29,6 +30,7 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
 import com.ef.dataaccess.Query;
+import com.ef.dataaccess.config.DbTestUtils;
 import com.ef.dataaccess.config.LoginCredentials;
 
 public class MemberLoginServiceTest {
@@ -48,9 +50,11 @@ public class MemberLoginServiceTest {
   }
 
   @After
+  @AfterThrowing
   public void tearDown() {
-    jdbcTemplate.execute("drop table member_type");
-    jdbcTemplate.execute("drop table member");
+    jdbcTemplate.execute("DROP SCHEMA PUBLIC CASCADE");
+//    jdbcTemplate.execute("drop table member_type");
+//    jdbcTemplate.execute("drop table member");
   }
 
   // @Test
@@ -93,10 +97,9 @@ class HsqlDbConfigMemberLoginServiceTest {
   }
 
   private DataSource dataSource() {
-    return new EmbeddedDatabaseBuilder().setType(EmbeddedDatabaseType.HSQL)
-        .addScript("classpath:com/ef/dataaccess/registration/createMemberTypeTable.sql")
-        .addScript("classpath:com/ef/dataaccess/registration/createMemberTable.sql")
-        .addScript("classpath:com/ef/dataaccess/registration/insertMemberDataWithEncryptedPassword.sql").build();
+    EmbeddedDatabaseBuilder embeddedDatabaseBuilder = new EmbeddedDatabaseBuilder().setType(EmbeddedDatabaseType.HSQL);
+    return new DbTestUtils().addCreateScripts(embeddedDatabaseBuilder)
+        .addScript("classpath:com/ef/dataaccess/member/insertMemberDataWithEncryptedPassword.sql").build();
   }
 
   @Bean

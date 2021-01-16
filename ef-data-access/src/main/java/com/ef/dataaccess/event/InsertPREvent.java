@@ -6,6 +6,7 @@ import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Component;
 
+import com.ef.common.LRPair;
 import com.ef.dataaccess.Insert;
 import com.ef.dataaccess.Query;
 import com.ef.model.event.EventVenue;
@@ -78,7 +79,7 @@ public class InsertPREvent implements Insert<PREventBindingModel, PREvent> {
 
     event.setEventType(eventTypeCache.getEventType(eventTypeId));
 
-    Pair<PREventBindingModel, PREvent> eventPair = new EventPair(input, event);
+    Pair<PREventBindingModel, PREvent> eventPair = new LRPair<PREventBindingModel, PREvent>(input, event);
     insertEventCriteria.data(eventPair);
     insertEventTimeSlot.data(eventPair);
 
@@ -92,32 +93,6 @@ public class InsertPREvent implements Insert<PREventBindingModel, PREvent> {
     return input.getEventLocation().getId();
   }
 
-  class EventPair extends Pair<PREventBindingModel, PREvent> {
-    private static final long serialVersionUID = 1023929892626731777L;
-
-    private PREventBindingModel left;
-    private PREvent right;
-
-    public EventPair(PREventBindingModel left, PREvent right) {
-      this.left = left;
-      this.right = right;
-    }
-
-    @Override
-    public PREvent setValue(PREvent value) {
-      return null;
-    }
-
-    @Override
-    public PREventBindingModel getLeft() {
-      return left;
-    }
-
-    @Override
-    public PREvent getRight() {
-      return right;
-    }
-  }
 }
 
 //

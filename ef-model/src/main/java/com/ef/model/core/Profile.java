@@ -1,29 +1,40 @@
 package com.ef.model.core;
 
-public class Domain implements Identifiable {
+public abstract class Profile implements Identifiable {
 
-  private static final long serialVersionUID = 8226190935821525428L;
+  private static final long serialVersionUID = 4973109638118064442L;
 
   private final int id;
   private final String name;
 
-  public Domain(int id, String name) {
+  public Profile(int id, String name) {
     super();
     this.id = id;
     this.name = name;
   }
 
+  @Override
   public int getId() {
     return id;
   }
 
+  @Override
   public String getName() {
     return name;
   }
 
   @Override
   public String toString() {
-    return "Domain [id=" + id + ", name=" + name + "]";
+    return "Profile [id=" + id + ", name=" + name + "]";
+  }
+
+  public boolean satisfies(Criteria<Profile>[] matchingCriteria) {
+    for (Criteria<Profile> c : matchingCriteria) {
+      if (!c.isSatisfiedBy(this)) {
+        return false;
+      }
+    }
+    return true;
   }
 
   @Override
@@ -43,7 +54,7 @@ public class Domain implements Identifiable {
       return false;
     if (getClass() != obj.getClass())
       return false;
-    Domain other = (Domain) obj;
+    Profile other = (Profile) obj;
     if (id != other.id)
       return false;
     if (name == null) {

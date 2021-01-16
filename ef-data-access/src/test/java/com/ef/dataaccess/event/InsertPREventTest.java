@@ -27,6 +27,7 @@ import org.springframework.jdbc.datasource.embedded.EmbeddedDatabaseType;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
+import com.ef.dataaccess.config.DbTestUtils;
 import com.ef.model.event.PREvent;
 import com.ef.model.event.PREventBindingModel;
 import com.ef.model.event.PREventCriteriaBindingModel;
@@ -68,16 +69,16 @@ public class InsertPREventTest {
 
   @After
   public void tearDown() {
-
-    jdbcTemplate.execute("drop table domain");
-    jdbcTemplate.execute("drop table venue");
-    jdbcTemplate.execute("drop table event_type");
-    jdbcTemplate.execute("drop table event");
-    jdbcTemplate.execute("drop table event_time_slot");
-    jdbcTemplate.execute("drop table event_criteria_meta");
-    jdbcTemplate.execute("drop table event_criteria_data");
-    jdbcTemplate.execute("drop table member");
-    jdbcTemplate.execute("drop table member_type");
+    jdbcTemplate.execute("DROP SCHEMA PUBLIC CASCADE");
+//    jdbcTemplate.execute("drop table domain");
+//    jdbcTemplate.execute("drop table venue");
+//    jdbcTemplate.execute("drop table event_type");
+//    jdbcTemplate.execute("drop table event");
+//    jdbcTemplate.execute("drop table event_time_slot");
+//    jdbcTemplate.execute("drop table event_criteria_meta");
+//    jdbcTemplate.execute("drop table event_criteria_data");
+//    jdbcTemplate.execute("drop table member");
+//    jdbcTemplate.execute("drop table member_type");
   }
 
   @Test
@@ -92,7 +93,7 @@ public class InsertPREventTest {
     SimpleDateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy");
     assertThat(dateFormat.format(event.getCreatedDate()), is(dateFormat.format(new java.util.Date())));
 
-    assertThat(event.getMember().getId(), is("1"));
+    assertThat(event.getMember().getId(), is(1));
     assertThat(event.getMember().getFirstName(), is("dummy2"));
     assertThat(event.getMember().getEmail(), is("dummy2@456.com"));
 
@@ -126,18 +127,10 @@ class HsqlDbConfigInsertPREventTest {
   }
 
   private DataSource dataSource() {
-    return new EmbeddedDatabaseBuilder().setType(EmbeddedDatabaseType.HSQL)
-        .addScript("classpath:com/ef/dataaccess/event/createDomainTable.sql")
-        .addScript("classpath:com/ef/dataaccess/event/createEventTimeSlotTable.sql")
-        .addScript("classpath:com/ef/dataaccess/event/createEventCriteriaMetaTable.sql")
-        .addScript("classpath:com/ef/dataaccess/event/createEventCriteriaDataTable.sql")
-        .addScript("classpath:com/ef/dataaccess/event/createEventTypeTable.sql")
-        .addScript("classpath:com/ef/dataaccess/event/createVenueTable.sql")
-        .addScript("classpath:com/ef/dataaccess/event/createEventTable.sql")
-        .addScript("classpath:com/ef/dataaccess/registration/createMemberTable.sql")
-        .addScript("classpath:com/ef/dataaccess/registration/createMemberTypeTable.sql")
-        .addScript("classpath:com/ef/dataaccess/registration/insertMemberTypeData.sql")
-        .addScript("classpath:com/ef/dataaccess/registration/insertMemberData.sql")
+    EmbeddedDatabaseBuilder embeddedDatabaseBuilder = new EmbeddedDatabaseBuilder().setType(EmbeddedDatabaseType.HSQL);
+    return new DbTestUtils().addCreateScripts(embeddedDatabaseBuilder)
+        .addScript("classpath:com/ef/dataaccess/member/insertMemberTypeData.sql")
+        .addScript("classpath:com/ef/dataaccess/member/insertMemberData.sql")
         .addScript("classpath:com/ef/dataaccess/event/insertEventTypeData.sql")
         .addScript("classpath:com/ef/dataaccess/event/insertEventCriteriaMeta.sql")
         .addScript("classpath:com/ef/dataaccess/event/insertDomains.sql").build();

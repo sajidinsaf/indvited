@@ -50,7 +50,9 @@ public class LoginController {
     if (loginStatus.getFailureReasons() != null && !loginStatus.getFailureReasons().isEmpty()) {
       logUtil.info(logger,
           "Error logging in member: " + memberLoginData + " [" + loginStatus.getFailureReasons() + "]");
-      httpSession.invalidate();
+      if (httpSession != null) {
+        httpSession.invalidate();
+      }
       return new ResponseEntity<List<String>>(loginStatus.getFailureReasons(),
           HttpStatus.valueOf(loginStatus.getStatusCode().name()));
     }

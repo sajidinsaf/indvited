@@ -9,7 +9,7 @@ public class Member implements Serializable {
 
   private static final long serialVersionUID = 275549302589403129L;
 
-  private String id;
+  private int id;
   private String firstname;
   private String lastname;
   private String username;
@@ -24,7 +24,7 @@ public class Member implements Serializable {
 
   }
 
-  public Member(String id, String firstname, String lastname, String username, String email, String phone,
+  public Member(int id, String firstname, String lastname, String username, String email, String phone,
       MemberType memberType, Timestamp date_registered, Timestamp timestamp_of_last_login) {
     super();
     this.id = id;
@@ -38,8 +38,8 @@ public class Member implements Serializable {
     this.timestamp_of_last_login = timestamp_of_last_login;
   }
 
-  public Member(String id, String firstname, String lastname, String username, String email, String phone,
-      String password, MemberType memberType, Timestamp date_registered, Timestamp timestamp_of_last_login) {
+  public Member(int id, String firstname, String lastname, String username, String email, String phone, String password,
+      MemberType memberType, Timestamp date_registered, Timestamp timestamp_of_last_login) {
     super();
     this.id = id;
     this.firstname = firstname;
@@ -53,11 +53,11 @@ public class Member implements Serializable {
     this.timestamp_of_last_login = timestamp_of_last_login;
   }
 
-  public String getId() {
+  public int getId() {
     return id;
   }
 
-  public void setId(String id) {
+  public void setId(int id) {
     checkForMutation(id, "id");
     this.id = id;
   }
@@ -162,7 +162,7 @@ public class Member implements Serializable {
     result = prime * result + ((date_registered == null) ? 0 : date_registered.hashCode());
     result = prime * result + ((email == null) ? 0 : email.hashCode());
     result = prime * result + ((firstname == null) ? 0 : firstname.hashCode());
-    result = prime * result + ((id == null) ? 0 : id.hashCode());
+    result = prime * result + id;
     result = prime * result + ((lastname == null) ? 0 : lastname.hashCode());
     result = prime * result + ((memberType == null) ? 0 : memberType.hashCode());
     result = prime * result + ((phone == null) ? 0 : phone.hashCode());
@@ -195,10 +195,7 @@ public class Member implements Serializable {
         return false;
     } else if (!firstname.equals(other.firstname))
       return false;
-    if (id == null) {
-      if (other.id != null)
-        return false;
-    } else if (!id.equals(other.id))
+    if (id != other.id)
       return false;
     if (lastname == null) {
       if (other.lastname != null)

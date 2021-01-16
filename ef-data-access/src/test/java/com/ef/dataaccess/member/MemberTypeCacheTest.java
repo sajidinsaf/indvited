@@ -8,6 +8,7 @@ import static org.junit.Assert.assertThat;
 //import java.util.regex.Pattern;
 import javax.sql.DataSource;
 
+import org.aspectj.lang.annotation.AfterThrowing;
 //import static org.mockito.Mockito.never;
 //import static org.mockito.Mockito.verify;
 //import static org.mockito.Mockito.when;
@@ -30,6 +31,7 @@ import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.datasource.embedded.EmbeddedDatabaseBuilder;
 import org.springframework.jdbc.datasource.embedded.EmbeddedDatabaseType;
 
+import com.ef.dataaccess.config.DbTestUtils;
 import com.ef.model.member.MemberType;
 
 public class MemberTypeCacheTest {
@@ -47,8 +49,10 @@ public class MemberTypeCacheTest {
   }
 
   @After
+  @AfterThrowing
   public void tearDown() {
-    jdbcTemplate.execute("drop table member_type");
+    jdbcTemplate.execute("DROP SCHEMA PUBLIC CASCADE");
+//    jdbcTemplate.execute("drop table member_type");
   }
 
   @Test
@@ -77,9 +81,9 @@ class HsqlDbConfigQueryMemberTest {
   }
 
   private DataSource dataSource() {
-    return new EmbeddedDatabaseBuilder().setType(EmbeddedDatabaseType.HSQL)
-        .addScript("classpath:com/ef/dataaccess/registration/createMemberTypeTable.sql")
-        .addScript("classpath:com/ef/dataaccess/registration/insertMemberTypeData.sql").build();
+    EmbeddedDatabaseBuilder embeddedDatabaseBuilder = new EmbeddedDatabaseBuilder().setType(EmbeddedDatabaseType.HSQL);
+    return new DbTestUtils().addCreateScripts(embeddedDatabaseBuilder)
+        .addScript("classpath:com/ef/dataaccess/member/insertMemberTypeData.sql").build();
 
   }
 

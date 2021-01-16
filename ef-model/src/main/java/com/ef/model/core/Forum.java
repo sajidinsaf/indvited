@@ -1,29 +1,31 @@
 package com.ef.model.core;
 
-public class Domain implements Identifiable {
+public class Forum implements Identifiable {
 
-  private static final long serialVersionUID = 8226190935821525428L;
+  private static final long serialVersionUID = -3401800981091512218L;
 
   private final int id;
   private final String name;
 
-  public Domain(int id, String name) {
+  public Forum(int id, String name) {
     super();
     this.id = id;
     this.name = name;
   }
 
+  @Override
   public int getId() {
     return id;
   }
 
+  @Override
   public String getName() {
     return name;
   }
 
   @Override
   public String toString() {
-    return "Domain [id=" + id + ", name=" + name + "]";
+    return "Forum [id=" + id + ", name=" + name + "]";
   }
 
   @Override
@@ -43,7 +45,7 @@ public class Domain implements Identifiable {
       return false;
     if (getClass() != obj.getClass())
       return false;
-    Domain other = (Domain) obj;
+    Forum other = (Forum) obj;
     if (id != other.id)
       return false;
     if (name == null) {
@@ -53,5 +55,4 @@ public class Domain implements Identifiable {
       return false;
     return true;
   }
-
 }
