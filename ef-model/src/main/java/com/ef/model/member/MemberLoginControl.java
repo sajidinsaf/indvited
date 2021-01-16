@@ -1,8 +1,14 @@
 package com.ef.model.member;
 
+import java.io.Serializable;
 import java.sql.Timestamp;
 
-public class MemberLoginControl {
+public class MemberLoginControl implements Serializable {
+
+  /**
+   * 
+   */
+  private static final long serialVersionUID = -5177139092646564272L;
 
   private final String memberEmailId;
   private final String token;
