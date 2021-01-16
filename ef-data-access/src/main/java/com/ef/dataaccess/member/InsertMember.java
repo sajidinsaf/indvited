@@ -19,15 +19,18 @@ public class InsertMember implements Insert<MemberRegistrationBindingModel, Memb
   private final Query<String, Member> queryMemberByName;
   private final MemberTypeCache memberTypeCache;
   private final PasswordEncoder encoder;
+  private final Query<String, String> emailFormatterForDb;
 
   @Autowired
   public InsertMember(@Qualifier("indvitedDbJdbcTemplate") JdbcTemplate jdbcTemplate,
-      @Qualifier("queryMemberByUsername") Query<String, Member> queryMemberByName, MemberTypeCache memberTypeCache,
+      @Qualifier("queryMemberByUsername") Query<String, Member> queryMemberByName,
+      @Qualifier("emailFormatterForDb") Query<String, String> emailFormatterForDb, MemberTypeCache memberTypeCache,
       PasswordEncoder encoder) {
     this.jdbcTemplate = jdbcTemplate;
     this.queryMemberByName = queryMemberByName;
     this.memberTypeCache = memberTypeCache;
     this.encoder = encoder;
+    this.emailFormatterForDb = emailFormatterForDb;
   }
 
   @Override
@@ -36,8 +39,9 @@ public class InsertMember implements Insert<MemberRegistrationBindingModel, Memb
     int memberTypeId = memberTypeCache.getMemberType(input.getMemberType()).getId();
     String password = encryptPassword(input.getPassword());
 
+    String email = emailFormatterForDb.data(input.getEmail());
     jdbcTemplate.update(INSERT_STATEMENT, new Object[] { input.getFirstName(), input.getLastName(), input.getUsername(),
-        password, input.getEmail(), input.getPhone(), memberTypeId });
+        password, email, input.getPhone(), memberTypeId });
 
     Member member = queryMemberByName.data(input.getUsername());
 

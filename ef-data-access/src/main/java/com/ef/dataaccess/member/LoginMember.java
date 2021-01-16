@@ -21,20 +21,25 @@ public class LoginMember implements Query<MemberLoginBindingModel, Member> {
   private final JdbcTemplate jdbcTemplate;
   private final Query<String, MemberType> queryMemberTypeByEmail;
   private final PasswordEncoder encoder;
+  private final Query<String, String> emailFormatterForDb;
 
   @Autowired
   public LoginMember(@Qualifier("indvitedDbJdbcTemplate") JdbcTemplate jdbcTemplate,
-      @Qualifier("queryMemberTypeByEmail") Query<String, MemberType> queryMemberTypeByEmail, PasswordEncoder encoder) {
+      @Qualifier("queryMemberTypeByEmail") Query<String, MemberType> queryMemberTypeByEmail,
+      @Qualifier("emailFormatterForDb") Query<String, String> emailFormatterForDb, PasswordEncoder encoder) {
     this.jdbcTemplate = jdbcTemplate;
     this.queryMemberTypeByEmail = queryMemberTypeByEmail;
+    this.emailFormatterForDb = emailFormatterForDb;
     this.encoder = encoder;
+
   }
 
   @Override
   public Member data(MemberLoginBindingModel data) {
 
     MemberType memberType = null;
-    String email = data.getEmail();
+    String email = emailFormatterForDb.data(data.getEmail());
+
     try {
       memberType = queryMemberTypeByEmail.data(email);
     } catch (EmptyResultDataAccessException e) {
