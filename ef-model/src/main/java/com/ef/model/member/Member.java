@@ -19,6 +19,7 @@ public class Member implements Serializable {
   private MemberType memberType;
   private Timestamp date_registered;
   private Timestamp timestamp_of_last_login;
+  private MemberLoginControl memberLoginControl;
 
   public Member() {
 
@@ -38,8 +39,25 @@ public class Member implements Serializable {
     this.timestamp_of_last_login = timestamp_of_last_login;
   }
 
+  public Member(int id, String firstname, String lastname, String username, String email, String phone,
+      MemberType memberType, Timestamp date_registered, Timestamp timestamp_of_last_login,
+      MemberLoginControl memberLoginControl) {
+    super();
+    this.id = id;
+    this.firstname = firstname;
+    this.lastname = lastname;
+    this.username = username;
+    this.email = email;
+    this.phone = phone;
+    this.memberType = memberType;
+    this.date_registered = date_registered;
+    this.timestamp_of_last_login = timestamp_of_last_login;
+    this.memberLoginControl = memberLoginControl;
+  }
+
   public Member(int id, String firstname, String lastname, String username, String email, String phone, String password,
-      MemberType memberType, Timestamp date_registered, Timestamp timestamp_of_last_login) {
+      MemberType memberType, Timestamp date_registered, Timestamp timestamp_of_last_login,
+      MemberLoginControl memberLoginControl) {
     super();
     this.id = id;
     this.firstname = firstname;
@@ -51,6 +69,7 @@ public class Member implements Serializable {
     this.memberType = memberType;
     this.date_registered = date_registered;
     this.timestamp_of_last_login = timestamp_of_last_login;
+    this.memberLoginControl = memberLoginControl;
   }
 
   public int getId() {
@@ -220,6 +239,14 @@ public class Member implements Serializable {
     } else if (!username.equals(other.username))
       return false;
     return true;
+  }
+
+  public MemberLoginControl getMemberLoginControl() {
+    return memberLoginControl;
+  }
+
+  public void setMemberLoginControl(MemberLoginControl memberLoginControl) {
+    this.memberLoginControl = memberLoginControl;
   }
 
 }

@@ -6,7 +6,7 @@ import com.google.gson.Gson;
 
 public class PREventBindingModel {
 
-  private int eventCreatorId;
+  private String eventCreatorEmailId;
   private String eventType;
   private String domainName;
   private PREventTimeSlotBindingModel[] prEventTimeSlotBindingModel;
@@ -20,11 +20,11 @@ public class PREventBindingModel {
 
   }
 
-  public PREventBindingModel(int eventCreatorId, String eventType, String domainName,
+  public PREventBindingModel(String eventCreatorEmailId, String eventType, String domainName,
       PREventTimeSlotBindingModel[] prEventTimeSlotBindingModel, String cap, String exclusions,
       PREventCriteriaBindingModel[] eventCriteria, PREventLocationBindingModel eventLocation, String notes) {
     super();
-    this.eventCreatorId = eventCreatorId;
+    this.eventCreatorEmailId = eventCreatorEmailId;
     this.eventType = eventType;
     this.domainName = domainName;
     this.prEventTimeSlotBindingModel = prEventTimeSlotBindingModel;
@@ -35,12 +35,12 @@ public class PREventBindingModel {
     this.notes = notes;
   }
 
-  public int getEventCreatorId() {
-    return eventCreatorId;
+  public String getEventCreatorEmailId() {
+    return eventCreatorEmailId;
   }
 
-  public void setEventCreatorId(int eventCreatorId) {
-    this.eventCreatorId = eventCreatorId;
+  public void setEventCreatorEmailId(String eventCreatorEmailId) {
+    this.eventCreatorEmailId = eventCreatorEmailId;
   }
 
   public String getEventType() {
@@ -109,67 +109,16 @@ public class PREventBindingModel {
 
   @Override
   public String toString() {
-    return "PREventBindingModel [eventCreatorId=" + eventCreatorId + ", eventType=" + eventType
+    return "PREventBindingModel [eventCreatorEmailId=" + eventCreatorEmailId + ", eventType=" + eventType
         + ", prEventTimeSlotBindingModel=" + Arrays.toString(prEventTimeSlotBindingModel) + ", cap=" + cap
         + ", exclusions=" + exclusions + ", eventCriteria=" + Arrays.toString(eventCriteria) + ", eventLocation="
         + eventLocation + ", notes=" + notes + "]";
   }
 
-  @Override
-  public int hashCode() {
-    final int prime = 31;
-    int result = 1;
-    result = prime * result + eventCreatorId;
-    return result;
-  }
-
-  @Override
-  public boolean equals(Object obj) {
-    if (this == obj)
-      return true;
-    if (obj == null)
-      return false;
-    if (getClass() != obj.getClass())
-      return false;
-    PREventBindingModel other = (PREventBindingModel) obj;
-    if (cap == null) {
-      if (other.cap != null)
-        return false;
-    } else if (!cap.equals(other.cap))
-      return false;
-    if (eventCreatorId != other.eventCreatorId)
-      return false;
-    if (!Arrays.equals(eventCriteria, other.eventCriteria))
-      return false;
-    if (eventLocation == null) {
-      if (other.eventLocation != null)
-        return false;
-    } else if (!eventLocation.equals(other.eventLocation))
-      return false;
-    if (eventType == null) {
-      if (other.eventType != null)
-        return false;
-    } else if (!eventType.equals(other.eventType))
-      return false;
-    if (exclusions == null) {
-      if (other.exclusions != null)
-        return false;
-    } else if (!exclusions.equals(other.exclusions))
-      return false;
-    if (notes == null) {
-      if (other.notes != null)
-        return false;
-    } else if (!notes.equals(other.notes))
-      return false;
-    if (!Arrays.equals(prEventTimeSlotBindingModel, other.prEventTimeSlotBindingModel))
-      return false;
-    return true;
-  }
-
   public static void main(String[] args) {
     PREventBindingModel event = new PREventBindingModel();
     event.setCap("1 cocktail each / 2 starters / 2 mains");
-    event.setEventCreatorId(23324345);
+    event.setEventCreatorEmailId("myemail@email.com");
 
     event.setDomainName("Restaurant");
     PREventCriteriaBindingModel prEventCriteriaBindingModel1 = new PREventCriteriaBindingModel("Mininum Zomato reviews",
@@ -223,6 +172,55 @@ public class PREventBindingModel {
         prEventTimeSlot3, prEventTimeSlot4, prEventTimeSlot5, prEventTimeSlot6 });
 
     System.out.println(new Gson().toJson(event));
+  }
+
+  @Override
+  public int hashCode() {
+    final int prime = 31;
+    int result = 1;
+    result = prime * result + ((domainName == null) ? 0 : domainName.hashCode());
+    result = prime * result + ((eventCreatorEmailId == null) ? 0 : eventCreatorEmailId.hashCode());
+    result = prime * result + Arrays.hashCode(eventCriteria);
+    result = prime * result + ((eventLocation == null) ? 0 : eventLocation.hashCode());
+    result = prime * result + ((eventType == null) ? 0 : eventType.hashCode());
+    result = prime * result + Arrays.hashCode(prEventTimeSlotBindingModel);
+    return result;
+  }
+
+  @Override
+  public boolean equals(Object obj) {
+    if (this == obj)
+      return true;
+    if (obj == null)
+      return false;
+    if (getClass() != obj.getClass())
+      return false;
+    PREventBindingModel other = (PREventBindingModel) obj;
+    if (domainName == null) {
+      if (other.domainName != null)
+        return false;
+    } else if (!domainName.equals(other.domainName))
+      return false;
+    if (eventCreatorEmailId == null) {
+      if (other.eventCreatorEmailId != null)
+        return false;
+    } else if (!eventCreatorEmailId.equals(other.eventCreatorEmailId))
+      return false;
+    if (!Arrays.equals(eventCriteria, other.eventCriteria))
+      return false;
+    if (eventLocation == null) {
+      if (other.eventLocation != null)
+        return false;
+    } else if (!eventLocation.equals(other.eventLocation))
+      return false;
+    if (eventType == null) {
+      if (other.eventType != null)
+        return false;
+    } else if (!eventType.equals(other.eventType))
+      return false;
+    if (!Arrays.equals(prEventTimeSlotBindingModel, other.prEventTimeSlotBindingModel))
+      return false;
+    return true;
   }
 
 }

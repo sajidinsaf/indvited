@@ -19,7 +19,7 @@ import com.fasterxml.uuid.Generators;
 @Component("insertPREvent")
 public class InsertPREvent implements Insert<PREventBindingModel, PREvent> {
 
-  private final String INSERT_STATEMENT = "INSERT INTO event(uuid, event_type_id, domain_id, cap, exclusions, member_id, event_venue_id, notes) VALUES (?,?,?,?,?,?,?,?)";
+  private final String INSERT_STATEMENT = "INSERT INTO event(uuid, event_type_id, domain_id, cap, exclusions, member_email_id, event_venue_id, notes) VALUES (?,?,?,?,?,?,?,?)";
 
   private final JdbcTemplate jdbcTemplate;
   private final Query<String, PREvent> queryEventByUuid;
@@ -28,7 +28,7 @@ public class InsertPREvent implements Insert<PREventBindingModel, PREvent> {
   private final Insert<Pair<PREventBindingModel, PREvent>, PREvent> insertEventCriteria;
   private final Insert<Pair<PREventBindingModel, PREvent>, PREvent> insertEventTimeSlot;
   private final Query<PREventLocationBindingModel, EventVenue> queryVenueByKeyFieldOrInsert;
-  private final Query<Integer, Member> queryMemberById;
+  private final Query<String, Member> queryMemberByEmail;
 
   @Autowired
   public InsertPREvent(@Qualifier("indvitedDbJdbcTemplate") JdbcTemplate jdbcTemplate,
@@ -37,7 +37,7 @@ public class InsertPREvent implements Insert<PREventBindingModel, PREvent> {
       @Qualifier("insertPREventCriteria") Insert<Pair<PREventBindingModel, PREvent>, PREvent> insertEventCriteria,
       @Qualifier("insertPREventTimeSlot") Insert<Pair<PREventBindingModel, PREvent>, PREvent> insertEventTimeSlot,
       @Qualifier("queryVenueByKeyFieldOrInsert") Query<PREventLocationBindingModel, EventVenue> queryVenueByKeyFieldOrInsert,
-      @Qualifier("queryMemberById") Query<Integer, Member> queryMemberById) {
+      @Qualifier("queryMemberByEmail") Query<String, Member> queryMemberByEmail) {
     this.jdbcTemplate = jdbcTemplate;
     this.queryEventByUuid = queryEventByUuid;
     this.eventTypeCache = eventTypeCache;
@@ -45,7 +45,7 @@ public class InsertPREvent implements Insert<PREventBindingModel, PREvent> {
     this.insertEventCriteria = insertEventCriteria;
     this.insertEventTimeSlot = insertEventTimeSlot;
     this.queryVenueByKeyFieldOrInsert = queryVenueByKeyFieldOrInsert;
-    this.queryMemberById = queryMemberById;
+    this.queryMemberByEmail = queryMemberByEmail;
   }
 
 //  private PREventTimeSlotBindingModel[] prEventTimeSlotBindingModel;
@@ -66,14 +66,14 @@ public class InsertPREvent implements Insert<PREventBindingModel, PREvent> {
     Integer domainId = domainCache.getDomain(input.getDomainName()).getId();
     String cap = input.getCap() == null ? "" : input.getCap();
     String exclusions = input.getExclusions();
-    Integer memberId = input.getEventCreatorId();
+    String emailId = input.getEventCreatorEmailId();
     Integer eventLocationId = getLocationId(input);
     String notes = input.getNotes() == null ? "" : input.getNotes();
 
 //    insertEventTimeSlots(input);
 
     jdbcTemplate.update(INSERT_STATEMENT,
-        new Object[] { uuid, eventTypeId, domainId, cap, exclusions, memberId, eventLocationId, notes });
+        new Object[] { uuid, eventTypeId, domainId, cap, exclusions, emailId, eventLocationId, notes });
 
     final PREvent event = queryEventByUuid.data(uuid);
 
@@ -83,7 +83,7 @@ public class InsertPREvent implements Insert<PREventBindingModel, PREvent> {
     insertEventCriteria.data(eventPair);
     insertEventTimeSlot.data(eventPair);
 
-    Member member = queryMemberById.data(input.getEventCreatorId());
+    Member member = queryMemberByEmail.data(input.getEventCreatorEmailId());
     event.setMember(member);
     event.setEventVenue(eventVenue);
     return event;

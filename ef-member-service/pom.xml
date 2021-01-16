@@ -49,7 +49,17 @@
 		    <groupId>ef.service</groupId>
 		    <artifactId>ef-common</artifactId>
 		    <version>1.0.0-BUILD-SNAPSHOT</version>
-		</dependency>					
+		</dependency>	
+		
+		<dependency>
+	      <groupId>ef.service</groupId>
+	      <artifactId>ef-data-access</artifactId>
+	      <classifier>tests</classifier>
+	      <type>test-jar</type>
+	      <version>1.0.0-BUILD-SNAPSHOT</version>
+	      <scope>test</scope>
+        </dependency>	
+        			
 	</dependencies>
 	
 </project>

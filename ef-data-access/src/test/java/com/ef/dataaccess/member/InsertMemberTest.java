@@ -14,6 +14,7 @@ import java.util.Random;
 //import java.util.regex.Pattern;
 import javax.sql.DataSource;
 
+import org.aspectj.lang.annotation.AfterThrowing;
 import org.hamcrest.Matchers;
 import org.junit.After;
 import org.junit.Before;
@@ -64,6 +65,7 @@ public class InsertMemberTest {
   }
 
   @After
+  @AfterThrowing
   public void tearDown() {
     jdbcTemplate.execute("DROP SCHEMA PUBLIC CASCADE");
 //    jdbcTemplate.execute("drop table member_type");

@@ -10,6 +10,7 @@ import java.util.Random;
 
 import javax.sql.DataSource;
 
+import org.aspectj.lang.annotation.AfterThrowing;
 import org.hamcrest.Matchers;
 import org.junit.After;
 import org.junit.Before;
@@ -29,6 +30,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 
 import com.ef.common.validation.Validator;
 import com.ef.dataaccess.Query;
+import com.ef.dataaccess.config.DbTestUtils;
 import com.ef.member.login.service.LoginService;
 import com.ef.member.login.service.validation.EmailNotNullOrEmptyValidator;
 import com.ef.member.login.service.validation.PasswordNotNullOrEmptyValidator;
@@ -58,12 +60,9 @@ public class LoginServiceTest {
   }
 
   @After
+  @AfterThrowing
   public void tearDown() {
-    jdbcTemplate.execute("drop table member");
-    jdbcTemplate.execute("drop table member_type");
-    jdbcTemplate.execute("drop table domain");
-    jdbcTemplate.execute("drop table event_type");
-    jdbcTemplate.execute("drop table event_criteria_meta");
+    jdbcTemplate.execute("DROP SCHEMA PUBLIC CASCADE");
   }
 
   @Test
@@ -217,14 +216,11 @@ class HsqlDbConfigLoginServiceTest {
   }
 
   private DataSource dataSource() {
-    return new EmbeddedDatabaseBuilder().setType(EmbeddedDatabaseType.HSQL)
-        .addScript("classpath:com/ef/login/service/member/createMemberTypeTable.sql")
-        .addScript("classpath:com/ef/login/service/member/createMemberTable.sql")
-        .addScript("classpath:com/ef/login/service/member/createEventTypeTable.sql")
-        .addScript("classpath:com/ef/login/service/member/createDomainTable.sql")
-        .addScript("classpath:com/ef/login/service/member/createEventCriteriaMetaTable.sql")
+    EmbeddedDatabaseBuilder embeddedDatabaseBuilder = new EmbeddedDatabaseBuilder().setType(EmbeddedDatabaseType.HSQL);
+    return new DbTestUtils().addCreateScripts(embeddedDatabaseBuilder)
+        .addScript("classpath:com/ef/login/service/member/insertMemberTypeData.sql")
         .addScript("classpath:com/ef/login/service/member/insertMemberData.sql")
-        .addScript("classpath:com/ef/login/service/member/insertMemberTypeData.sql").build();
+        .addScript("classpath:com/ef/login/service/member/insertMemberLoginControlData.sql").build();
   }
 
   @Bean

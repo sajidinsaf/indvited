@@ -41,7 +41,7 @@ public class InsertPREventTest {
   @Mock
   private PREventBindingModel eventData;
 
-  private int eventCreatorId = 1;
+  private String eventCreatorEmailId = "dummy2@456.com";
   private String eventType = "Restaurant Review";
   private String domainName = "Restaurant";
   private PREventTimeSlotBindingModel[] prEventTimeSlotBindingModel = new PREventTimeSlotBindingModel[] {
@@ -83,7 +83,7 @@ public class InsertPREventTest {
 
   @Test
   public void test() {
-    eventData = new PREventBindingModel(eventCreatorId, eventType, domainName, prEventTimeSlotBindingModel, cap,
+    eventData = new PREventBindingModel(eventCreatorEmailId, eventType, domainName, prEventTimeSlotBindingModel, cap,
         exclusions, eventCriteria, eventLocation, notes);
 
     PREvent event = insertPREvent.data(eventData);
@@ -131,6 +131,7 @@ class HsqlDbConfigInsertPREventTest {
     return new DbTestUtils().addCreateScripts(embeddedDatabaseBuilder)
         .addScript("classpath:com/ef/dataaccess/member/insertMemberTypeData.sql")
         .addScript("classpath:com/ef/dataaccess/member/insertMemberData.sql")
+        .addScript("classpath:com/ef/dataaccess/member/insertMemberLoginControlData.sql")
         .addScript("classpath:com/ef/dataaccess/event/insertEventTypeData.sql")
         .addScript("classpath:com/ef/dataaccess/event/insertEventCriteriaMeta.sql")
         .addScript("classpath:com/ef/dataaccess/event/insertDomains.sql").build();

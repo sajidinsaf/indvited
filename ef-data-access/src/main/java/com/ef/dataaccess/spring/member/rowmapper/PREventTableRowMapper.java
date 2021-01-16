@@ -17,7 +17,7 @@ public class PREventTableRowMapper implements RowMapper<PREvent> {
 
     PREvent prEvent = new PREvent(rs.getInt("ID"), rs.getString("UUID"), rs.getString("CAP"), rs.getString("NOTES"),
         rs.getDate("CREATED_DATE"), rs.getInt("EVENT_TYPE_ID"), rs.getInt("DOMAIN_ID"), rs.getInt("EVENT_VENUE_ID"),
-        rs.getString("EXCLUSIONS"), rs.getInt("MEMBER_ID"));
+        rs.getString("EXCLUSIONS"), rs.getString("MEMBER_EMAIL_ID"));
     return prEvent;
   }
 

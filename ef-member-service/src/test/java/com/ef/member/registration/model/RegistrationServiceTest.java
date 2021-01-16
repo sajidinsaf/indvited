@@ -24,6 +24,7 @@ import org.springframework.jdbc.datasource.embedded.EmbeddedDatabaseType;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
+import com.ef.dataaccess.config.DbTestUtils;
 import com.ef.dataaccess.member.InsertMember;
 import com.ef.member.registration.service.RegistrationService;
 import com.ef.model.member.Member;
@@ -58,11 +59,7 @@ public class RegistrationServiceTest {
 
   @After
   public void tearDown() {
-    jdbcTemplate.execute("drop table member");
-    jdbcTemplate.execute("drop table member_type");
-    jdbcTemplate.execute("drop table domain");
-    jdbcTemplate.execute("drop table event_type");
-    jdbcTemplate.execute("drop table event_criteria_meta");
+    jdbcTemplate.execute("DROP SCHEMA PUBLIC CASCADE");
   }
 
   @Test
@@ -103,12 +100,8 @@ class HsqlDbConfigRegistrationServiceTest {
   }
 
   private DataSource dataSource() {
-    return new EmbeddedDatabaseBuilder().setType(EmbeddedDatabaseType.HSQL)
-        .addScript("classpath:com/ef/dataaccess/registration/createDomainTable.sql")
-        .addScript("classpath:com/ef/dataaccess/registration/createEventCriteriaMetaTable.sql")
-        .addScript("classpath:com/ef/dataaccess/registration/createEventTypeTable.sql")
-        .addScript("classpath:com/ef/dataaccess/registration/createMemberTypeTable.sql")
-        .addScript("classpath:com/ef/dataaccess/registration/createMemberTable.sql")
+    EmbeddedDatabaseBuilder embeddedDatabaseBuilder = new EmbeddedDatabaseBuilder().setType(EmbeddedDatabaseType.HSQL);
+    return new DbTestUtils().addCreateScripts(embeddedDatabaseBuilder)
         .addScript("classpath:com/ef/dataaccess/registration/insertMemberTypeData.sql").build();
   }
 

@@ -60,12 +60,6 @@ public class InsertMemberCriteriaDataTest {
   @After
   public void tearDown() {
     jdbcTemplate.execute("DROP SCHEMA PUBLIC CASCADE");
-//    jdbcTemplate.execute("drop table member_criteria_data");
-//    jdbcTemplate.execute("drop table event_criteria_meta");
-//    jdbcTemplate.execute("drop table member");
-//    jdbcTemplate.execute("drop table member_type");
-//    jdbcTemplate.execute("drop table event_type");
-//    jdbcTemplate.execute("drop table domain");
   }
 
   @Test
