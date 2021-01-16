@@ -20,6 +20,7 @@ import com.ef.common.logging.ServiceLoggingUtil;
 import com.ef.member.login.service.LoginService;
 import com.ef.model.member.Member;
 import com.ef.model.member.MemberLoginBindingModel;
+import com.ef.model.member.MemberLoginControl;
 import com.ef.model.response.Response;
 
 /**
@@ -60,7 +61,8 @@ public class LoginController {
     Member member = loginStatus.getResponseResult();
     httpSession.setAttribute("member", member);
 
-    return new ResponseEntity<Member>(member, HttpStatus.valueOf(loginStatus.getStatusCode().name()));
+    return new ResponseEntity<MemberLoginControl>(member.getMemberLoginControl(),
+        HttpStatus.valueOf(loginStatus.getStatusCode().name()));
   }
 
 }

@@ -10,21 +10,22 @@ public class MemberLoginControl implements Serializable {
    */
   private static final long serialVersionUID = -5177139092646564272L;
 
-  private final String memberEmailId;
+  private final String email;
   private final String token;
   private final Timestamp creationTimestamp;
-  private final Timestamp expiryTimestamp;
+  private final Timestamp expires;
 
-  public MemberLoginControl(String memberId, String token, Timestamp creationTimestamp, Timestamp expiryTimestamp) {
+  public MemberLoginControl(String memberEmailId, String token, Timestamp creationTimestamp,
+      Timestamp expiryTimestamp) {
     super();
-    this.memberEmailId = memberId;
+    this.email = memberEmailId;
     this.token = token;
     this.creationTimestamp = creationTimestamp;
-    this.expiryTimestamp = expiryTimestamp;
+    this.expires = expiryTimestamp;
   }
 
-  public String getMemberEmailId() {
-    return memberEmailId;
+  public String getEmail() {
+    return email;
   }
 
   public String getToken() {
@@ -35,14 +36,14 @@ public class MemberLoginControl implements Serializable {
     return creationTimestamp;
   }
 
-  public Timestamp getExpiryTimestamp() {
-    return expiryTimestamp;
+  public Timestamp getExpires() {
+    return expires;
   }
 
   @Override
   public String toString() {
-    return "MemberLoginControl [memberId=" + memberEmailId + ", token=" + token + ", creationTimestamp="
-        + creationTimestamp + ", expiryTimestamp=" + expiryTimestamp + "]";
+    return "MemberLoginControl [memberId=" + email + ", token=" + token + ", creationTimestamp=" + creationTimestamp
+        + ", expiryTimestamp=" + expires + "]";
   }
 
 }
