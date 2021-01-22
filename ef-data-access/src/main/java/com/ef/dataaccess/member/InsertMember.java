@@ -24,9 +24,9 @@ public class InsertMember implements Insert<MemberRegistrationBindingModel, Memb
   private final MemberTypeCache memberTypeCache;
   private final PasswordEncoder encoder;
   private final Query<String, String> emailFormatterForDb;
-  private final static int login_session_expiry_period_in_milliseconds = System
-      .getProperty("ef.login.session.expiry.period.in.seconds") == null ? 1000 * 60 * 60 * 24 * 7 * 4
-          : 1000 * Integer.parseInt(System.getProperty("ef.login.session.expiry.period.in.seconds"));
+  private final static long login_session_expiry_period_in_milliseconds = System
+      .getProperty("ef.login.session.expiry.period.in.seconds") == null ? 2419200000L
+          : 1000L * Long.parseLong(System.getProperty("ef.login.session.expiry.period.in.seconds"));
 
   @Autowired
   public InsertMember(@Qualifier("indvitedDbJdbcTemplate") JdbcTemplate jdbcTemplate,
@@ -65,4 +65,9 @@ public class InsertMember implements Insert<MemberRegistrationBindingModel, Memb
     return encoder.encode(password);
   }
 
+  public static void main(String args[]) {
+    System.out.println(login_session_expiry_period_in_milliseconds);
+    Timestamp t = new Timestamp(System.currentTimeMillis() + login_session_expiry_period_in_milliseconds);
+    System.out.println(t.toString());
+  }
 }

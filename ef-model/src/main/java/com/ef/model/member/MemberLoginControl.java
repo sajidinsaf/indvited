@@ -12,16 +12,16 @@ public class MemberLoginControl implements Serializable {
 
   private final String email;
   private final String token;
-  private final Timestamp creationTimestamp;
-  private final Timestamp expires;
+  private final long creationTimestamp;
+  private final long expires;
 
   public MemberLoginControl(String memberEmailId, String token, Timestamp creationTimestamp,
       Timestamp expiryTimestamp) {
     super();
     this.email = memberEmailId;
     this.token = token;
-    this.creationTimestamp = creationTimestamp;
-    this.expires = expiryTimestamp;
+    this.creationTimestamp = creationTimestamp.getTime();
+    this.expires = expiryTimestamp.getTime();
   }
 
   public String getEmail() {
@@ -32,11 +32,11 @@ public class MemberLoginControl implements Serializable {
     return token;
   }
 
-  public Timestamp getCreationTimestamp() {
+  public long getCreationTimestamp() {
     return creationTimestamp;
   }
 
-  public Timestamp getExpires() {
+  public long getExpires() {
     return expires;
   }
 

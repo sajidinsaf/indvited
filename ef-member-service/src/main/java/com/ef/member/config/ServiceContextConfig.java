@@ -23,13 +23,17 @@ import com.ef.common.validation.Validator;
 import com.ef.dataaccess.Insert;
 import com.ef.dataaccess.Query;
 import com.ef.member.login.service.LoginService;
+import com.ef.member.login.service.TokenAuthService;
 import com.ef.member.login.service.validation.EmailNotNullOrEmptyValidator;
 import com.ef.member.login.service.validation.PasswordNotNullOrEmptyValidator;
 import com.ef.member.registration.service.RegistrationService;
+import com.ef.member.registration.service.validation.MemberRegistrationBindingModelPasswordValidator;
+import com.ef.member.registration.service.validation.MemberTokenAuthBindingModelPasswordValidator;
 import com.ef.member.registration.service.validation.UniqueValueValidator;
 import com.ef.model.member.Member;
 import com.ef.model.member.MemberLoginBindingModel;
 import com.ef.model.member.MemberRegistrationBindingModel;
+import com.ef.model.member.MemberTokenAuthBindingModel;
 
 @Configuration
 //@EnableWebMvc
@@ -80,11 +84,27 @@ public class ServiceContextConfig implements WebMvcConfigurer {
     return new LoginService(loginMember, validators);
   }
 
+  @Bean
+  public TokenAuthService tokenAuthService(
+      @Autowired @Qualifier("loginMemberAuthToken") Query<MemberTokenAuthBindingModel, Member> loginMember) {
+
+    List<Validator<MemberTokenAuthBindingModel, String>> validators = authTokenDataValidators();
+    return new TokenAuthService(loginMember, validators);
+  }
+
   private List<Validator<MemberLoginBindingModel, String>> loginDataValidators() {
     List<Validator<MemberLoginBindingModel, String>> validators = new ArrayList<Validator<MemberLoginBindingModel, String>>();
 
     validators.add(new EmailNotNullOrEmptyValidator());
     validators.add(new PasswordNotNullOrEmptyValidator());
+    return validators;
+  }
+
+  private List<Validator<MemberTokenAuthBindingModel, String>> authTokenDataValidators() {
+    List<Validator<MemberTokenAuthBindingModel, String>> validators = new ArrayList<Validator<MemberTokenAuthBindingModel, String>>();
+
+//    validators.add(new EmailNotNullOrEmptyValidator());
+    validators.add(new MemberTokenAuthBindingModelPasswordValidator());
     return validators;
   }
 
@@ -118,6 +138,7 @@ public class ServiceContextConfig implements WebMvcConfigurer {
     List<Validator<MemberRegistrationBindingModel, String>> validators = new ArrayList<Validator<MemberRegistrationBindingModel, String>>();
 
     validators.add(new UniqueValueValidator(queryMemberByUsername, queryMemberByEmail, queryMemberByPhone));
+    validators.add(new MemberRegistrationBindingModelPasswordValidator());
 
     return validators;
   }

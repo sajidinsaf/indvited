@@ -2,7 +2,7 @@ package com.ef.model.member;
 
 import java.util.Date;
 
-public class MemberRegistrationBindingModel {
+public class MemberRegistrationBindingModel implements CredentialBindingModel {
 
   private String id;
   private String firstName;
@@ -106,6 +106,11 @@ public class MemberRegistrationBindingModel {
     return "MemberRegistrationBindingModel [id=" + id + ", firstName=" + firstName + ", lastName=" + lastName
         + ", username=" + username + ", password=" + password + ", email=" + email + ", phone=" + phone
         + ", memberType=" + memberType + ", dateRegistered=" + dateRegistered + "]";
+  }
+
+  @Override
+  public String getSecret() {
+    return getPassword();
   }
 
 }

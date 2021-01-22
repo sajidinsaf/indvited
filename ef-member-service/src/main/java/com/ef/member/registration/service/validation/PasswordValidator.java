@@ -2,10 +2,9 @@ package com.ef.member.registration.service.validation;
 
 import java.util.regex.Pattern;
 
-import com.ef.common.validation.Validator;
-import com.ef.model.member.MemberRegistrationBindingModel;
+import com.ef.model.member.CredentialBindingModel;
 
-public class PasswordValidator implements Validator<MemberRegistrationBindingModel, String> {
+public class PasswordValidator {
   public static final String PASSWORD_VALID_CRITERIA_MESSAGE = "password must be 8-20 characters in length, contain at least one number, at least one lower case letter, at least on capital letter, at least one special character '@#$%^&-+=() and no spaces";
   public static final String PASSWORD_NULLOREMPTY_MESSAGE = "password cannot be null or empty";
 //  ^ represents starting character of the string.
@@ -19,13 +18,9 @@ public class PasswordValidator implements Validator<MemberRegistrationBindingMod
   private static final Pattern PASSWORD_CHECK = Pattern
       .compile("^(?=.*[0-9])" + "(?=.*[a-z])(?=.*[A-Z])" + "(?=.*[@#$%^&+=])" + "(?=\\S+$).{8,20}$");
 
-  public PasswordValidator() {
-  }
+  public String validate(CredentialBindingModel cr) {
 
-  @Override
-  public String validate(MemberRegistrationBindingModel data) {
-
-    String pwd = data.getPassword();
+    String pwd = cr.getSecret();
     if (pwd == null || pwd.trim().equals("")) {
       return PASSWORD_NULLOREMPTY_MESSAGE;
     }

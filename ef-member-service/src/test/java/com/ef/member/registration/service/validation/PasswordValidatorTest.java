@@ -2,7 +2,7 @@ package com.ef.member.registration.service.validation;
 
 import static org.junit.Assert.assertThat;
 import static org.mockito.Mockito.when;
-import static org.mockito.MockitoAnnotations.initMocks;
+import static org.mockito.MockitoAnnotations.openMocks;
 
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -13,18 +13,17 @@ import org.junit.Before;
 import org.junit.Test;
 import org.mockito.Mock;
 
-import com.ef.member.registration.service.validation.PasswordValidator;
-import com.ef.model.member.MemberRegistrationBindingModel;
+import com.ef.model.member.CredentialBindingModel;
 
 public class PasswordValidatorTest {
 
   private PasswordValidator passwordValidator;
   @Mock
-  private MemberRegistrationBindingModel member;
+  private CredentialBindingModel member;
 
   @Before
   public void setUp() throws Exception {
-    initMocks(this);
+    openMocks(this);
     passwordValidator = new PasswordValidator();
 
   }
@@ -37,35 +36,35 @@ public class PasswordValidatorTest {
   public void testValidate() {
 
     String validPassword = "Geeks@portal20";
-    when(member.getPassword()).thenReturn(validPassword);
+    when(member.getSecret()).thenReturn(validPassword);
     assertThat(passwordValidator.validate(member), Matchers.nullValue());
 
     String noNumberCharacter = "Geeksf@rgeeks";
-    when(member.getPassword()).thenReturn(noNumberCharacter);
+    when(member.getSecret()).thenReturn(noNumberCharacter);
     assertThat(passwordValidator.validate(member), Matchers.is(PasswordValidator.PASSWORD_VALID_CRITERIA_MESSAGE));
 
     String noSpecialCharacter = "Geeksforgeek$";
-    when(member.getPassword()).thenReturn(noSpecialCharacter);
+    when(member.getSecret()).thenReturn(noSpecialCharacter);
     assertThat(passwordValidator.validate(member), Matchers.is(PasswordValidator.PASSWORD_VALID_CRITERIA_MESSAGE));
 
     String containsSpace = "Geeks@ portal9";
-    when(member.getPassword()).thenReturn(containsSpace);
+    when(member.getSecret()).thenReturn(containsSpace);
     assertThat(passwordValidator.validate(member), Matchers.is(PasswordValidator.PASSWORD_VALID_CRITERIA_MESSAGE));
 
     String noUpperCaseCharacter = "346346rwwew";
-    when(member.getPassword()).thenReturn(noUpperCaseCharacter);
+    when(member.getSecret()).thenReturn(noUpperCaseCharacter);
     assertThat(passwordValidator.validate(member), Matchers.is(PasswordValidator.PASSWORD_VALID_CRITERIA_MESSAGE));
 
     String noLowerCaseCharacter = "34634RDFGTE";
-    when(member.getPassword()).thenReturn(noLowerCaseCharacter);
+    when(member.getSecret()).thenReturn(noLowerCaseCharacter);
     assertThat(passwordValidator.validate(member), Matchers.is(PasswordValidator.PASSWORD_VALID_CRITERIA_MESSAGE));
 
     String lessThan8Characters = "A3rt";
-    when(member.getPassword()).thenReturn(lessThan8Characters);
+    when(member.getSecret()).thenReturn(lessThan8Characters);
     assertThat(passwordValidator.validate(member), Matchers.is(PasswordValidator.PASSWORD_VALID_CRITERIA_MESSAGE));
 
     String moreThan8Characters = "A3sdsdfsgsgsgsgsgsgsgadsgrt";
-    when(member.getPassword()).thenReturn(moreThan8Characters);
+    when(member.getSecret()).thenReturn(moreThan8Characters);
     assertThat(passwordValidator.validate(member), Matchers.is(PasswordValidator.PASSWORD_VALID_CRITERIA_MESSAGE));
 
   }
