@@ -1,7 +1,13 @@
 package com.ef.model.event;
 
-public class EventVenue {
+import com.ef.model.core.Identifiable;
 
+public class EventVenue implements Identifiable {
+
+  /**
+   * 
+   */
+  private static final long serialVersionUID = -2538901031005159933L;
   private int id;
   private String name;
   private String zomatoUrl;

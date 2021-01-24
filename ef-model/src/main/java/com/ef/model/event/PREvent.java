@@ -17,6 +17,7 @@ public class PREvent implements Event {
   private Date createdDate;
   private EventTimeSlot[] eventTimeSlots;
   private EventCriteria[] eventCriteria;
+  private EventDeliverable[] eventDeliverables;
   private int eventTypeId;
   private int domainId;
   private int eventVenueId;
@@ -174,6 +175,14 @@ public class PREvent implements Event {
 
   public void setEventCriteria(EventCriteria[] eventCriteria) {
     this.eventCriteria = eventCriteria;
+  }
+
+  public EventDeliverable[] getEventDeliverables() {
+    return eventDeliverables;
+  }
+
+  public void setEventDeliverables(EventDeliverable[] eventDeliverables) {
+    this.eventDeliverables = eventDeliverables;
   }
 
   @Override

@@ -16,7 +16,7 @@
 	   <param name="maxFileSize" value="1000KB" />
 	   <param name="maxBackupIndex" value="5" />
 
-	   <param name="file" value="/home_ssd/ifaru02/jvm/apache-tomcat-9.0.6/domains/secure.codeczar.co.uk/ef-event-service/logs/event-service.log" />
+	   <param name="file" value="/home_ssd/ifaru02/jvm/apache-tomcat-9.0.6/domains/secure.codeczar.co.uk/ef-event-service/WEB-INF/logs/event-service.log" />
 	   <layout class="org.apache.log4j.PatternLayout">
 		<param name="ConversionPattern"
 			value="%d{yyyy-MM-dd HH:mm:ss} %-5p %c{1}:%L - %m%n" />

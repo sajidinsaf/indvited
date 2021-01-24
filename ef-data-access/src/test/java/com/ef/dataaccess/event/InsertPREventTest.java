@@ -5,6 +5,8 @@ import static org.junit.Assert.assertThat;
 import static org.mockito.MockitoAnnotations.initMocks;
 
 import java.text.SimpleDateFormat;
+import java.util.Arrays;
+import java.util.List;
 
 //import java.util.Arrays;
 //import java.util.Random;
@@ -31,6 +33,7 @@ import com.ef.dataaccess.config.DbTestUtils;
 import com.ef.model.event.PREvent;
 import com.ef.model.event.PREventBindingModel;
 import com.ef.model.event.PREventCriteriaBindingModel;
+import com.ef.model.event.PREventDeliverableBindingModel;
 import com.ef.model.event.PREventLocationBindingModel;
 import com.ef.model.event.PREventTimeSlotBindingModel;
 
@@ -42,16 +45,18 @@ public class InsertPREventTest {
   private PREventBindingModel eventData;
 
   private String eventCreatorEmailId = "dummy2@456.com";
-  private String eventType = "Restaurant Review";
+  private int eventType = 0;
   private String domainName = "Restaurant";
   private PREventTimeSlotBindingModel[] prEventTimeSlotBindingModel = new PREventTimeSlotBindingModel[] {
       new PREventTimeSlotBindingModel("15/01/2021", "1400", "1800"),
       new PREventTimeSlotBindingModel("16/01/2021", "1200", "1700") };
   private String cap = "1 cocktail each / 2 starters / 2 mains";
   private String exclusions = "*no red meat , no fish* IN case u want to order a *dessert or any dish apart of the above cap it would be *PAYABLE*";
-  private PREventCriteriaBindingModel[] eventCriteria = new PREventCriteriaBindingModel[] {
+  private List<PREventCriteriaBindingModel> eventCriteria = Arrays.asList(
       new PREventCriteriaBindingModel("Mininum Zomato reviews", 175),
-      new PREventCriteriaBindingModel("Minimum Instagram followers", 9000) };
+      new PREventCriteriaBindingModel("Minimum Instagram followers", 9000));
+  private List<PREventDeliverableBindingModel> eventDeliverables = Arrays.asList(
+      new PREventDeliverableBindingModel("Zomato Review"), new PREventDeliverableBindingModel("Instagram Post"));
   private PREventLocationBindingModel eventLocation = new PREventLocationBindingModel("Esora",
       "1st Floor, Commerz 2, International Business Park, Oberoi Garden City, Near Oberoi Mall, Goregaon East, Mumbai",
       "http://zoma.to/r/18789802", null);
@@ -83,8 +88,8 @@ public class InsertPREventTest {
 
   @Test
   public void test() {
-    eventData = new PREventBindingModel(eventCreatorEmailId, eventType, domainName, prEventTimeSlotBindingModel, cap,
-        exclusions, eventCriteria, eventLocation, notes);
+    eventData = new PREventBindingModel(eventCreatorEmailId, eventType, domainName, cap, exclusions, eventCriteria,
+        eventDeliverables, eventLocation, notes);
 
     PREvent event = insertPREvent.data(eventData);
 
@@ -97,21 +102,30 @@ public class InsertPREventTest {
     assertThat(event.getMember().getFirstName(), is("dummy2"));
     assertThat(event.getMember().getEmail(), is("dummy2@456.com"));
 
-    assertThat(event.getEventTimeSlots().length, is(2));
-
-    String eventDate0 = dateFormat.format(event.getEventTimeSlots()[0].getEventDate());
-    assertThat(eventDate0, is("15/01/2021"));
-    assertThat(event.getEventTimeSlots()[0].getTimeFrom(), is("1400"));
-
-    String eventDate1 = dateFormat.format(event.getEventTimeSlots()[1].getEventDate());
-    assertThat(eventDate1, is("16/01/2021"));
-    assertThat(event.getEventTimeSlots()[1].getTimeTo(), is("1700"));
+//    assertThat(event.getEventTimeSlots().length, is(2));
+//
+//    String eventDate0 = dateFormat.format(event.getEventTimeSlots()[0].getEventDate());
+//    assertThat(eventDate0, is("15/01/2021"));
+//    assertThat(event.getEventTimeSlots()[0].getTimeFrom(), is("1400"));
+//
+//    String eventDate1 = dateFormat.format(event.getEventTimeSlots()[1].getEventDate());
+//    assertThat(eventDate1, is("16/01/2021"));
+//    assertThat(event.getEventTimeSlots()[1].getTimeTo(), is("1700"));
 
     assertThat(event.getEventVenue().getName(), is("Esora"));
     assertThat(event.getEventVenue().getId(), is(0));
 
     assertThat(event.getEventCriteria()[0].getCriteriValue(), is(175));
     assertThat(event.getEventCriteria()[1].getName(), is("Minimum Instagram followers"));
+
+    assertThat(event.getEventDeliverables()[0].getEventId(), is(event.getId()));
+    assertThat(event.getEventDeliverables()[0].getDeliverableId(), is(0));
+    assertThat(event.getEventDeliverables()[0].getDeliverableName(), is("Zomato Review"));
+
+    assertThat(event.getEventDeliverables()[1].getEventId(), is(event.getId()));
+    assertThat(event.getEventDeliverables()[1].getDeliverableId(), is(1));
+    assertThat(event.getEventDeliverables()[1].getDeliverableName(), is("Instagram Post"));
+
   }
 
 }
@@ -134,6 +148,7 @@ class HsqlDbConfigInsertPREventTest {
         .addScript("classpath:com/ef/dataaccess/member/insertMemberLoginControlData.sql")
         .addScript("classpath:com/ef/dataaccess/event/insertEventTypeData.sql")
         .addScript("classpath:com/ef/dataaccess/event/insertEventCriteriaMeta.sql")
+        .addScript("classpath:com/ef/dataaccess/event/insertEventDeliverableMeta.sql")
         .addScript("classpath:com/ef/dataaccess/event/insertDomains.sql").build();
   }
 

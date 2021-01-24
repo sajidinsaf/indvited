@@ -31,6 +31,14 @@ public class ServiceLoggingUtil {
     logger.warn(sb.toString());
   }
 
+  public void exception(Logger logger, Exception e, Object... info) {
+    StringBuilder sb = new StringBuilder();
+    for (Object s : info) {
+      sb.append(s).append(" ");
+    }
+    logger.error(sb.toString(), e);
+  }
+
   public void logStackTrace(Logger logger, StackTraceElement[] stackTrace) {
     if (logger.isDebugEnabled()) {
       StringBuilder sb = new StringBuilder(Thread.currentThread().getName());

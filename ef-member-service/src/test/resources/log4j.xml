@@ -41,8 +41,8 @@
 		<level value="info" />
 	</logger>
 
-	<logger name="com.ef.member" additivity="false">
-		<level value="info" />
+	<logger name="com.ef" additivity="false">
+		<level value="debug" />
 		<appender-ref ref="file" />
 	</logger>
 	

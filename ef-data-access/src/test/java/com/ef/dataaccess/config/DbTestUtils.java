@@ -16,6 +16,8 @@ public class DbTestUtils {
         .addScript("classpath:com/ef/dataaccess/event/createDomainTable.sql")
         .addScript("classpath:com/ef/dataaccess/event/createEventCriteriaMetaTable.sql")
         .addScript("classpath:com/ef/dataaccess/event/createEventCriteriaDataTable.sql")
+        .addScript("classpath:com/ef/dataaccess/event/createEventDeliverableMetaTable.sql")
+        .addScript("classpath:com/ef/dataaccess/event/createEventDeliverableDataTable.sql")
         .addScript("classpath:com/ef/dataaccess/event/createEventTimeSlotTable.sql")
         .addScript("classpath:com/ef/dataaccess/event/createEventTypeTable.sql")
         .addScript("classpath:com/ef/dataaccess/event/createVenueTable.sql")

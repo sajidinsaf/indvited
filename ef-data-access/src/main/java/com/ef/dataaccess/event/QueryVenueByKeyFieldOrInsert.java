@@ -71,7 +71,7 @@ public class QueryVenueByKeyFieldOrInsert implements Query<PREventLocationBindin
     String value = eventVenueData.getZomatoUrl() != null ? eventVenueData.getZomatoUrl()
         : eventVenueData.getVenueUrl() != null ? eventVenueData.getVenueUrl() : eventVenueData.getVenueName();
 
-    logUtil.debug(logger, "determined key field: ", columnName, " withh value: ", value);
+    logUtil.debug(logger, "determined key field: ", columnName, " with value: ", value);
 
     String query = String.format(SELECT_VENUE, columnName);
     EventVenue eventVenue = jdbcTemplate.queryForObject(query, new Object[] { value }, new EventVenueRowMapper());

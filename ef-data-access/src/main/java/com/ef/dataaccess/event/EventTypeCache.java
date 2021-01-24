@@ -15,7 +15,7 @@ import com.ef.model.event.EventType;
 @Component
 public class EventTypeCache {
 
-  private final String SELECT_EVENT_TYPE = "select id, name from event_type";
+  private final String SELECT_EVENT_TYPE = "select id, name, domain_id from event_type";
 
   private final JdbcTemplate jdbcTemplate;
 

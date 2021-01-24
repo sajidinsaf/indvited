@@ -11,11 +11,11 @@ public class MemberType {
     this.name = name;
   }
 
-  public int getId() {
+  public int getEventId() {
     return id;
   }
 
-  public String getName() {
+  public String getDeliverableName() {
     return name;
   }
 

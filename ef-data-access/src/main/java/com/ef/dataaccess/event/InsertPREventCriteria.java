@@ -1,5 +1,7 @@
 package com.ef.dataaccess.event;
 
+import java.util.List;
+
 import org.apache.commons.lang3.tuple.Pair;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -38,13 +40,13 @@ public class InsertPREventCriteria implements Insert<Pair<PREventBindingModel, P
   @Override
   public PREvent data(Pair<PREventBindingModel, PREvent> input) {
 
-    PREventCriteriaBindingModel[] eventCriteriaModelList = input.getLeft().getEventCriteria();
+    List<PREventCriteriaBindingModel> eventCriteriaModelList = input.getLeft().getEventCriteria();
     PREvent prEvent = input.getRight();
-    if (eventCriteriaModelList == null || eventCriteriaModelList.length == 0) {
+    if (eventCriteriaModelList == null || eventCriteriaModelList.size() == 0) {
       loggingUtil.debug(logger, "No event criteria specified for event: ", input.getRight().getId());
       return input.getRight();
     }
-    EventCriteria[] eventCriteria = new EventCriteria[eventCriteriaModelList.length];
+    EventCriteria[] eventCriteria = new EventCriteria[eventCriteriaModelList.size()];
     int count = 0;
     for (PREventCriteriaBindingModel eventCriteriaModel : eventCriteriaModelList) {
       int eventId = input.getRight().getId();

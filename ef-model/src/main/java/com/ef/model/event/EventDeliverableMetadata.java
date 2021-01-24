@@ -1,39 +1,40 @@
 package com.ef.model.event;
 
-public class EventType {
+public class EventDeliverableMetadata {
 
   private final int id;
   private final String name;
-  private final int domainId;
+  private final String description;
 
-  public EventType(int id, String name, int domainId) {
+  public EventDeliverableMetadata(int id, String name, String description) {
     super();
     this.id = id;
     this.name = name;
-    this.domainId = domainId;
+    this.description = description;
   }
 
   public int getId() {
     return id;
   }
 
-  public String getName() {
+  public String getDeliverableName() {
     return name;
   }
 
-  public int getDomainId() {
-    return id;
+  public String getDescription() {
+    return description;
   }
 
   @Override
   public String toString() {
-    return "EventType [id=" + id + ", name=" + name + ", domainId=" + domainId + "]";
+    return "EventDeliverableMetadata [id=" + id + ", name=" + name + ", description=" + description + "]";
   }
 
   @Override
   public int hashCode() {
     final int prime = 31;
     int result = 1;
+    result = prime * result + ((description == null) ? 0 : description.hashCode());
     result = prime * result + id;
     result = prime * result + ((name == null) ? 0 : name.hashCode());
     return result;
@@ -47,7 +48,12 @@ public class EventType {
       return false;
     if (getClass() != obj.getClass())
       return false;
-    EventType other = (EventType) obj;
+    EventDeliverableMetadata other = (EventDeliverableMetadata) obj;
+    if (description == null) {
+      if (other.description != null)
+        return false;
+    } else if (!description.equals(other.description))
+      return false;
     if (id != other.id)
       return false;
     if (name == null) {

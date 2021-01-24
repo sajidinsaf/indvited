@@ -15,7 +15,6 @@ import org.springframework.stereotype.Component;
 
 import com.ef.common.logging.ServiceLoggingUtil;
 import com.ef.dataaccess.Insert;
-import com.ef.model.event.EventTimeSlot;
 import com.ef.model.event.PREvent;
 import com.ef.model.event.PREventBindingModel;
 import com.ef.model.event.PREventTimeSlotBindingModel;
@@ -39,30 +38,31 @@ public class InsertPREventTimeSlot implements Insert<Pair<PREventBindingModel, P
   @Override
   public PREvent data(Pair<PREventBindingModel, PREvent> input) {
 
-    PREventTimeSlotBindingModel[] eventTimeSlotBindingModelList = input.getLeft().getPrEventTimeSlotBindingModel();
-    PREvent prEvent = input.getRight();
-    if (eventTimeSlotBindingModelList == null || eventTimeSlotBindingModelList.length == 0) {
-      loggingUtil.debug(logger, "No event time slots specified for event: ", input.getRight().getId());
-      return input.getRight();
-    }
-    EventTimeSlot[] eventTimeSlotList = new EventTimeSlot[eventTimeSlotBindingModelList.length];
-    int count = 0;
-    for (PREventTimeSlotBindingModel eventTimeSlotBindingModel : eventTimeSlotBindingModelList) {
-      int eventId = input.getRight().getId();
-      String timeFrom = eventTimeSlotBindingModel.getTimeFrom();
-      String timeTo = eventTimeSlotBindingModel.getTimeTo();
-
-      Date date = getDate(eventTimeSlotBindingModel);
-
-      jdbcTemplate.update(INSERT_STATEMENT, new Object[] { eventId, date, timeFrom, timeTo });
-
-      EventTimeSlot eventTimeSlot = new EventTimeSlot(date, timeFrom, timeTo);
-      eventTimeSlotList[count] = eventTimeSlot;
-      ++count;
-    }
-
-    prEvent.setEventTimeSlots(eventTimeSlotList);
-    return prEvent;
+//    PREventTimeSlotBindingModel[] eventTimeSlotBindingModelList = input.getLeft().getPrEventTimeSlotBindingModel();
+//    PREvent prEvent = input.getRight();
+//    if (eventTimeSlotBindingModelList == null || eventTimeSlotBindingModelList.length == 0) {
+//      loggingUtil.debug(logger, "No event time slots specified for event: ", input.getRight().getId());
+//      return input.getRight();
+//    }
+//    EventTimeSlot[] eventTimeSlotList = new EventTimeSlot[eventTimeSlotBindingModelList.length];
+//    int count = 0;
+//    for (PREventTimeSlotBindingModel eventTimeSlotBindingModel : eventTimeSlotBindingModelList) {
+//      int eventId = input.getRight().getId();
+//      String timeFrom = eventTimeSlotBindingModel.getTimeFrom();
+//      String timeTo = eventTimeSlotBindingModel.getTimeTo();
+//
+//      Date date = getDate(eventTimeSlotBindingModel);
+//
+//      jdbcTemplate.update(INSERT_STATEMENT, new Object[] { eventId, date, timeFrom, timeTo });
+//
+//      EventTimeSlot eventTimeSlot = new EventTimeSlot(date, timeFrom, timeTo);
+//      eventTimeSlotList[count] = eventTimeSlot;
+//      ++count;
+//    }
+//
+//    prEvent.setEventTimeSlots(eventTimeSlotList);
+//    return prEvent;
+    return null;
   }
 
   private Date getDate(PREventTimeSlotBindingModel timeSlot) {

@@ -11,8 +11,7 @@ public class EventTypeRowMapper implements RowMapper<EventType> {
 
   @Override
   public EventType mapRow(ResultSet rs, int rowNum) throws SQLException {
-
-    EventType eventType = new EventType(rs.getInt("ID"), rs.getString("NAME"));
+    EventType eventType = new EventType(rs.getInt("ID"), rs.getString("NAME"), rs.getInt("DOMAIN_ID"));
     return eventType;
   }
 

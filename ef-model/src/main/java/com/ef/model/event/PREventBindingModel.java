@@ -1,36 +1,65 @@
 package com.ef.model.event;
 
+import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.List;
 
 import com.google.gson.Gson;
 
 public class PREventBindingModel {
 
   private String eventCreatorEmailId;
-  private String eventType;
+  private int eventType;
   private String domainName;
-  private PREventTimeSlotBindingModel[] prEventTimeSlotBindingModel;
   private String cap;
   private String exclusions;
-  private PREventCriteriaBindingModel[] eventCriteria;
-  private PREventLocationBindingModel eventLocation;
+  private List<PREventCriteriaBindingModel> eventCriteria;
+  private List<PREventDeliverableBindingModel> eventDeliverable;
+  private PREventLocationBindingModel eventLocation = new PREventLocationBindingModel();
   private String notes;
 
-  public PREventBindingModel() {
+  // These variable were created to overcome the limitation of form element to
+  // Page Variable Object binding on AppGyver
+  private int minZomatoLevel, minZomatoReviews, minInstagramFollowers;
+  private boolean deliverZomatoReview, deliverInstagramPost, deliverInstagramStories, deliverLiveInstagramStories,
+      deliverGoogleReview, deliverPlusOneReview;
+  private InvitedBloggersBindingModel invitedBloggersBindingModel;
+  private String venueName, venueAddress, venueUrl;
 
+  public PREventBindingModel() {
+    this.eventCriteria = new ArrayList<PREventCriteriaBindingModel>();
+    this.eventDeliverable = new ArrayList<PREventDeliverableBindingModel>();
   }
 
-  public PREventBindingModel(String eventCreatorEmailId, String eventType, String domainName,
-      PREventTimeSlotBindingModel[] prEventTimeSlotBindingModel, String cap, String exclusions,
-      PREventCriteriaBindingModel[] eventCriteria, PREventLocationBindingModel eventLocation, String notes) {
+  public PREventBindingModel(String eventCreatorEmailId, int eventType, String domainName, String cap,
+      String exclusions, PREventLocationBindingModel eventLocation, String notes, int minZomatoLevel,
+      int minZomatoReviews, int minInstagramFollowers) {
     super();
     this.eventCreatorEmailId = eventCreatorEmailId;
     this.eventType = eventType;
     this.domainName = domainName;
-    this.prEventTimeSlotBindingModel = prEventTimeSlotBindingModel;
+    this.cap = cap;
+    this.exclusions = exclusions;
+    this.eventCriteria = new ArrayList<PREventCriteriaBindingModel>();
+    this.eventDeliverable = new ArrayList<PREventDeliverableBindingModel>();
+    this.eventLocation = eventLocation;
+    this.notes = notes;
+    this.minZomatoLevel = minZomatoLevel;
+    this.minZomatoReviews = minZomatoReviews;
+    this.minInstagramFollowers = minInstagramFollowers;
+  }
+
+  public PREventBindingModel(String eventCreatorEmailId, int eventType, String domainName, String cap,
+      String exclusions, List<PREventCriteriaBindingModel> eventCriteria,
+      List<PREventDeliverableBindingModel> eventDeliverable, PREventLocationBindingModel eventLocation, String notes) {
+    super();
+    this.eventCreatorEmailId = eventCreatorEmailId;
+    this.eventType = eventType;
+    this.domainName = domainName;
     this.cap = cap;
     this.exclusions = exclusions;
     this.eventCriteria = eventCriteria;
+    this.eventDeliverable = eventDeliverable;
     this.eventLocation = eventLocation;
     this.notes = notes;
   }
@@ -43,11 +72,11 @@ public class PREventBindingModel {
     this.eventCreatorEmailId = eventCreatorEmailId;
   }
 
-  public String getEventType() {
+  public int getEventType() {
     return eventType;
   }
 
-  public void setEventType(String eventType) {
+  public void setEventType(int eventType) {
     this.eventType = eventType;
   }
 
@@ -75,12 +104,37 @@ public class PREventBindingModel {
     this.exclusions = exclusions;
   }
 
-  public PREventCriteriaBindingModel[] getEventCriteria() {
-    return eventCriteria;
+  public int getMinZomatoLevel() {
+    return minZomatoLevel;
   }
 
-  public void setEventCriteria(PREventCriteriaBindingModel[] eventCriteria) {
-    this.eventCriteria = eventCriteria;
+  public void setMinZomatoLevel(int minZomatoLevel) {
+    if (minZomatoLevel > 0) {
+      eventCriteria.add(new PREventCriteriaBindingModel("Minimum Zomato Level", minZomatoLevel));
+    }
+    this.minZomatoLevel = minZomatoLevel;
+  }
+
+  public int getMinZomatoReviews() {
+    return minZomatoReviews;
+  }
+
+  public void setMinZomatoReviews(int minZomatoReviews) {
+    if (minZomatoReviews > 0) {
+      eventCriteria.add(new PREventCriteriaBindingModel("Mininum Zomato reviews", minZomatoReviews));
+    }
+    this.minZomatoReviews = minZomatoReviews;
+  }
+
+  public int getMinInstagramFollowers() {
+    return minInstagramFollowers;
+  }
+
+  public void setMinInstagramFollowers(int minInstagramFollowers) {
+    if (minInstagramFollowers > 0) {
+      eventCriteria.add(new PREventCriteriaBindingModel("Minimum Instagram followers", minInstagramFollowers));
+    }
+    this.minInstagramFollowers = minInstagramFollowers;
   }
 
   public PREventLocationBindingModel getEventLocation() {
@@ -91,28 +145,20 @@ public class PREventBindingModel {
     this.eventLocation = eventLocation;
   }
 
+  public List<PREventCriteriaBindingModel> getEventCriteria() {
+    return eventCriteria;
+  }
+
+  public void setEventCriteria(List<PREventCriteriaBindingModel> eventCriteria) {
+    this.eventCriteria = eventCriteria;
+  }
+
   public String getNotes() {
     return notes;
   }
 
   public void setNotes(String notes) {
     this.notes = notes;
-  }
-
-  public PREventTimeSlotBindingModel[] getPrEventTimeSlotBindingModel() {
-    return prEventTimeSlotBindingModel;
-  }
-
-  public void setPrEventTimeSlotBindingModel(PREventTimeSlotBindingModel[] prEventTimeSlotBindingModel) {
-    this.prEventTimeSlotBindingModel = prEventTimeSlotBindingModel;
-  }
-
-  @Override
-  public String toString() {
-    return "PREventBindingModel [eventCreatorEmailId=" + eventCreatorEmailId + ", eventType=" + eventType
-        + ", prEventTimeSlotBindingModel=" + Arrays.toString(prEventTimeSlotBindingModel) + ", cap=" + cap
-        + ", exclusions=" + exclusions + ", eventCriteria=" + Arrays.toString(eventCriteria) + ", eventLocation="
-        + eventLocation + ", notes=" + notes + "]";
   }
 
   public static void main(String[] args) {
@@ -126,14 +172,19 @@ public class PREventBindingModel {
     PREventCriteriaBindingModel prEventCriteriaBindingModel2 = new PREventCriteriaBindingModel(
         "Minimum Instagram followers", 9000);
 
-    event.setEventCriteria(
-        new PREventCriteriaBindingModel[] { prEventCriteriaBindingModel1, prEventCriteriaBindingModel2 });
+    event.setEventCriteria(Arrays.asList(prEventCriteriaBindingModel1, prEventCriteriaBindingModel2));
+
+    PREventDeliverableBindingModel pREventDeliverableBindingModel = new PREventDeliverableBindingModel("Zomato Review");
+    PREventDeliverableBindingModel pREventDeliverableBindingModel2 = new PREventDeliverableBindingModel(
+        "Instagram Post");
+
+    event.setEventDeliverable(Arrays.asList(pREventDeliverableBindingModel, pREventDeliverableBindingModel2));
 
     PREventLocationBindingModel eventLocation = new PREventLocationBindingModel("Esora",
         "1st Floor, Commerz 2, International Business Park, Oberoi Garden City, Near Oberoi Mall, Goregaon East, Mumbai",
         "http://zoma.to/r/18789802", null);
     event.setEventLocation(eventLocation);
-    event.setEventType("Restaurant Review");
+    event.setEventType(1);
     event.setExclusions(
         "*no red meat , no fish* IN case u want to order a *dessert or any dish apart of the above cap it would be *PAYABLE*");
     event.setNotes(
@@ -167,60 +218,140 @@ public class PREventBindingModel {
     prEventTimeSlot6.setEventDate("17/01/2021");
     prEventTimeSlot6.setTimeFrom("1800");
     prEventTimeSlot6.setTimeTo("2000");
-
-    event.setPrEventTimeSlotBindingModel(new PREventTimeSlotBindingModel[] { prEventTimeSlot1, prEventTimeSlot2,
-        prEventTimeSlot3, prEventTimeSlot4, prEventTimeSlot5, prEventTimeSlot6 });
+//
+//    event.setPrEventTimeSlotBindingModel(new PREventTimeSlotBindingModel[] { prEventTimeSlot1, prEventTimeSlot2,
+//        prEventTimeSlot3, prEventTimeSlot4, prEventTimeSlot5, prEventTimeSlot6 });
 
     System.out.println(new Gson().toJson(event));
   }
 
-  @Override
-  public int hashCode() {
-    final int prime = 31;
-    int result = 1;
-    result = prime * result + ((domainName == null) ? 0 : domainName.hashCode());
-    result = prime * result + ((eventCreatorEmailId == null) ? 0 : eventCreatorEmailId.hashCode());
-    result = prime * result + Arrays.hashCode(eventCriteria);
-    result = prime * result + ((eventLocation == null) ? 0 : eventLocation.hashCode());
-    result = prime * result + ((eventType == null) ? 0 : eventType.hashCode());
-    result = prime * result + Arrays.hashCode(prEventTimeSlotBindingModel);
-    return result;
+  public List<PREventDeliverableBindingModel> getEventDeliverable() {
+    return eventDeliverable;
+  }
+
+  public void setEventDeliverable(List<PREventDeliverableBindingModel> eventDeliverable) {
+    this.eventDeliverable = eventDeliverable;
+  }
+
+  public boolean isDeliverZomatoReview() {
+    return deliverZomatoReview;
+  }
+
+//  INSERT INTO `event_deliverable_meta`(`name`, `description`) VALUES ("Zomato Review","Zomato Review Required");
+//  INSERT INTO `event_deliverable_meta`(`name`, `description`) VALUES ("Instagram Post","Instagram Post Required");
+//  INSERT INTO `event_deliverable_meta`(`name`, `description`) VALUES ("Instagram Stories","Instagram Stories Required");
+//  INSERT INTO `event_deliverable_meta`(`name`, `description`) VALUES ("Live Instagram Stories","Live Instagram Stories Required");
+//  INSERT INTO `event_deliverable_meta`(`name`, `description`) VALUES ("Google Review","Google Review Required");
+//  
+  public void setDeliverZomatoReview(boolean isZomatoReviewRequired) {
+    if (isZomatoReviewRequired) {
+      eventDeliverable.add(new PREventDeliverableBindingModel("Zomato Review"));
+    }
+    this.deliverZomatoReview = isZomatoReviewRequired;
+  }
+
+  public boolean isDeliverInstagramPost() {
+    return deliverInstagramPost;
+  }
+
+  public void setDeliverInstagramPost(boolean isInstagramPostRequired) {
+    if (isInstagramPostRequired) {
+      eventDeliverable.add(new PREventDeliverableBindingModel("Instagram Post"));
+    }
+    this.deliverInstagramPost = isInstagramPostRequired;
+  }
+
+  public boolean isDeliverInstagramStories() {
+    return deliverInstagramStories;
+  }
+
+  public void setDeliverInstagramStories(boolean isInstagramStoriesRquired) {
+    if (isInstagramStoriesRquired) {
+      eventDeliverable.add(new PREventDeliverableBindingModel("Instagram Stories"));
+    }
+    this.deliverInstagramStories = isInstagramStoriesRquired;
+  }
+
+  public boolean isDeliverLiveInstagramStories() {
+    return deliverLiveInstagramStories;
+  }
+
+  public void setDeliverLiveInstagramStories(boolean isLiveInstagramStoriesRequired) {
+    if (isLiveInstagramStoriesRequired) {
+      eventDeliverable.add(new PREventDeliverableBindingModel("Live Instagram Stories"));
+    }
+    this.deliverLiveInstagramStories = isLiveInstagramStoriesRequired;
+  }
+
+  public boolean isDeliverGoogleReview() {
+    return deliverGoogleReview;
+  }
+
+  public void setDeliverGoogleReview(boolean isGoogleReviewRequired) {
+    if (isGoogleReviewRequired) {
+      eventDeliverable.add(new PREventDeliverableBindingModel("Google Review"));
+    }
+    this.deliverGoogleReview = isGoogleReviewRequired;
+  }
+
+  public boolean isDeliverPlusOneReview() {
+    return deliverPlusOneReview;
+  }
+
+  public void setDeliverPlusOneReview(boolean deliverPlusOneReview) {
+    if (deliverPlusOneReview) {
+      eventDeliverable.add(new PREventDeliverableBindingModel("Plus One Review"));
+    }
+    this.deliverPlusOneReview = deliverPlusOneReview;
+  }
+
+  public InvitedBloggersBindingModel getInvitedBloggersBindingModel() {
+    return invitedBloggersBindingModel;
+  }
+
+  public void setInvitedBloggersBindingModel(InvitedBloggersBindingModel invitedBloggersBindingModel) {
+    this.invitedBloggersBindingModel = invitedBloggersBindingModel;
+  }
+
+  public String getVenueName() {
+    return venueName;
+  }
+
+  public void setVenueName(String venueName) {
+    eventLocation.setVenueName(venueName);
+    this.venueName = venueName;
+  }
+
+  public String getVenueAddress() {
+    return venueAddress;
+  }
+
+  public void setVenueAddress(String venueAddress) {
+    eventLocation.setVenueAddress(venueAddress);
+    this.venueAddress = venueAddress;
+  }
+
+  public String getVenueUrl() {
+    return venueUrl;
+  }
+
+  public void setVenueUrl(String venueUrl) {
+    eventLocation.setVenueUrl(venueUrl);
+    this.venueUrl = venueUrl;
   }
 
   @Override
-  public boolean equals(Object obj) {
-    if (this == obj)
-      return true;
-    if (obj == null)
-      return false;
-    if (getClass() != obj.getClass())
-      return false;
-    PREventBindingModel other = (PREventBindingModel) obj;
-    if (domainName == null) {
-      if (other.domainName != null)
-        return false;
-    } else if (!domainName.equals(other.domainName))
-      return false;
-    if (eventCreatorEmailId == null) {
-      if (other.eventCreatorEmailId != null)
-        return false;
-    } else if (!eventCreatorEmailId.equals(other.eventCreatorEmailId))
-      return false;
-    if (!Arrays.equals(eventCriteria, other.eventCriteria))
-      return false;
-    if (eventLocation == null) {
-      if (other.eventLocation != null)
-        return false;
-    } else if (!eventLocation.equals(other.eventLocation))
-      return false;
-    if (eventType == null) {
-      if (other.eventType != null)
-        return false;
-    } else if (!eventType.equals(other.eventType))
-      return false;
-    if (!Arrays.equals(prEventTimeSlotBindingModel, other.prEventTimeSlotBindingModel))
-      return false;
-    return true;
+  public String toString() {
+    return "PREventBindingModel [eventCreatorEmailId=" + eventCreatorEmailId + ", eventType=" + eventType
+        + ", domainName=" + domainName + ", cap=" + cap + ", exclusions=" + exclusions + ", eventCriteria="
+        + eventCriteria + ", eventDeliverable=" + eventDeliverable + ", eventLocation=" + eventLocation + ", notes="
+        + notes + ", minZomatoLevel=" + minZomatoLevel + ", minZomatoReviews=" + minZomatoReviews
+        + ", minInstagramFollowers=" + minInstagramFollowers + ", deliverZomatoReview=" + deliverZomatoReview
+        + ", deliverInstagramPost=" + deliverInstagramPost + ", deliverInstagramStories=" + deliverInstagramStories
+        + ", deliverLiveInstagramStories=" + deliverLiveInstagramStories + ", deliverGoogleReview="
+        + deliverGoogleReview + ", deliverPlusOneReview=" + deliverPlusOneReview + ", invitedBloggersBindingModel="
+        + invitedBloggersBindingModel + ", venueName=" + venueName + ", venueAddress=" + venueAddress + ", venueUrl="
+        + venueUrl + "]";
   }
 
 }

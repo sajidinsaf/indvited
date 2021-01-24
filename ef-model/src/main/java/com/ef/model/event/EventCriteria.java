@@ -1,7 +1,13 @@
 package com.ef.model.event;
 
-public class EventCriteria {
+import com.ef.model.core.Identifiable;
 
+public class EventCriteria implements Identifiable {
+
+  /**
+   * 
+   */
+  private static final long serialVersionUID = -3443436689819945665L;
   private int id;
   private String name;
   private int criteriValue;
