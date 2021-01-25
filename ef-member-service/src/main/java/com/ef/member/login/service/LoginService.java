@@ -20,6 +20,7 @@ public class LoginService {
   private final ServiceLoggingUtil logUtil = new ServiceLoggingUtil();
   private final Query<MemberLoginBindingModel, Member> loginMember;
   private final List<Validator<MemberLoginBindingModel, String>> validators;
+  public static final String CREDENTIALS_INVALID_MESSAGE = "Username not found, password not matched or member not enabled";
 
   public LoginService(Query<MemberLoginBindingModel, Member> loginMember) {
     this.loginMember = loginMember;
@@ -33,7 +34,7 @@ public class LoginService {
   }
 
   public Response<Member> loginMember(MemberLoginBindingModel memberLoginData) {
-    logUtil.info(logger, "registering member: " + memberLoginData);
+    logUtil.info(logger, "logging in member: ", memberLoginData);
 
     List<String> validationResults = validate(memberLoginData);
 
@@ -45,7 +46,8 @@ public class LoginService {
 
     if (member == null) {
       validationResults = new ArrayList<String>();
-      validationResults.add("Username not found or password not matched");
+      validationResults.add(CREDENTIALS_INVALID_MESSAGE);
+      logUtil.info(logger, "member login failed", CREDENTIALS_INVALID_MESSAGE);
       return new Response<Member>(validationResults, StatusCode.PRECONDITION_FAILED);
     }
 

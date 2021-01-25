@@ -17,14 +17,14 @@ import com.ef.model.member.MemberType;
 @Component(value = "loginMember")
 public class LoginMember implements Query<MemberLoginBindingModel, Member> {
 
-  private final String SELECT_MEMBER = "select id, firstname, password, lastname, username, email, phone, date_registered, timestamp_of_last_login from member where email=?";
+  private final String SELECT_MEMBER = "select id, firstname, password, lastname, username, email, phone, date_registered, timestamp_of_last_login, is_enabled from member where email=?";
 
   private final JdbcTemplate jdbcTemplate;
   private final Query<String, MemberType> queryMemberTypeByEmail;
   private final PasswordEncoder encoder;
   private final Query<String, String> emailFormatterForDb;
   private final Query<String, MemberLoginControl> queryLoginControlByEmail;
-  
+
   @Autowired
   public LoginMember(@Qualifier("indvitedDbJdbcTemplate") JdbcTemplate jdbcTemplate,
       @Qualifier("queryMemberTypeByEmail") Query<String, MemberType> queryMemberTypeByEmail,
@@ -54,11 +54,11 @@ public class LoginMember implements Query<MemberLoginBindingModel, Member> {
       return null;
     }
     MemberLoginControl memberLoginControl = queryLoginControlByEmail.data(email);
-    
+
     Member member = jdbcTemplate.queryForObject(SELECT_MEMBER, new Object[] { email },
         new MemberRowMapperWithPassword(memberType, memberLoginControl));
 
-    if (!encoder.matches(data.getPassword(), member.getPassword())) {
+    if (!member.isEnabled() || !encoder.matches(data.getPassword(), member.getPassword())) {
       return null;
     }
 

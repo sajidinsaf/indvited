@@ -47,6 +47,7 @@ public class LoginServiceTest {
   private LoginService loginService;
 
   private String email = "ashish@hotmail.com";
+  private String email_sajid = "sajidinsaf@hotmail.com";
   private String password = "Bh1m@n1Street";
 
   @SuppressWarnings("resource")
@@ -100,7 +101,7 @@ public class LoginServiceTest {
 
     List<String> errors = response.getFailureReasons();
 
-    assertThat(errors.get(0), Matchers.is("Username not found or password not matched"));
+    assertThat(errors.get(0), Matchers.is(LoginService.CREDENTIALS_INVALID_MESSAGE));
 
   }
 
@@ -120,7 +121,7 @@ public class LoginServiceTest {
 
     List<String> errors = response.getFailureReasons();
 
-    assertThat(errors.get(0), Matchers.is("Username not found or password not matched"));
+    assertThat(errors.get(0), Matchers.is(LoginService.CREDENTIALS_INVALID_MESSAGE));
 
   }
 
@@ -201,6 +202,26 @@ public class LoginServiceTest {
     List<String> errors = response.getFailureReasons();
 
     assertThat(errors.get(0), Matchers.is("password has null or empty value"));
+
+  }
+
+  @Test
+  public void isUnsuccessfulLoginWhenMemberNotEnaled() {
+
+    when(memberData.getPassword()).thenReturn(password);
+    when(memberData.getEmail()).thenReturn(email_sajid);
+
+    Response<Member> response = loginService.loginMember(memberData);
+
+    StatusCode statusCode = response.getStatusCode();
+
+    assertThat(statusCode, Matchers.is(StatusCode.PRECONDITION_FAILED));
+
+    assertThat(response.getResponseResult(), Matchers.nullValue());
+
+    List<String> errors = response.getFailureReasons();
+
+    assertThat(errors.get(0), Matchers.is(LoginService.CREDENTIALS_INVALID_MESSAGE));
 
   }
 }

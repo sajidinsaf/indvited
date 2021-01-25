@@ -20,13 +20,14 @@ public class Member implements Serializable {
   private Timestamp date_registered;
   private Timestamp timestamp_of_last_login;
   private MemberLoginControl memberLoginControl;
+  private boolean enabled;
 
   public Member() {
 
   }
 
   public Member(int id, String firstname, String lastname, String username, String email, String phone,
-      MemberType memberType, Timestamp date_registered, Timestamp timestamp_of_last_login) {
+      MemberType memberType, Timestamp date_registered, Timestamp timestamp_of_last_login, boolean enabled) {
     super();
     this.id = id;
     this.firstname = firstname;
@@ -37,11 +38,12 @@ public class Member implements Serializable {
     this.memberType = memberType;
     this.date_registered = date_registered;
     this.timestamp_of_last_login = timestamp_of_last_login;
+    this.enabled = enabled;
   }
 
   public Member(int id, String firstname, String lastname, String username, String email, String phone,
       MemberType memberType, Timestamp date_registered, Timestamp timestamp_of_last_login,
-      MemberLoginControl memberLoginControl) {
+      MemberLoginControl memberLoginControl, boolean enabled) {
     super();
     this.id = id;
     this.firstname = firstname;
@@ -57,7 +59,7 @@ public class Member implements Serializable {
 
   public Member(int id, String firstname, String lastname, String username, String email, String phone, String password,
       MemberType memberType, Timestamp date_registered, Timestamp timestamp_of_last_login,
-      MemberLoginControl memberLoginControl) {
+      MemberLoginControl memberLoginControl, boolean enabled) {
     super();
     this.id = id;
     this.firstname = firstname;
@@ -70,6 +72,7 @@ public class Member implements Serializable {
     this.date_registered = date_registered;
     this.timestamp_of_last_login = timestamp_of_last_login;
     this.memberLoginControl = memberLoginControl;
+    this.enabled = enabled;
   }
 
   public int getId() {
@@ -168,13 +171,6 @@ public class Member implements Serializable {
   }
 
   @Override
-  public String toString() {
-    return "Member [id=" + id + ", firstname=" + firstname + ", lastname=" + lastname + ", username=" + username
-        + ", email=" + email + ", phone=" + phone + ", memberType=" + memberType + ", date_registered="
-        + date_registered + ", timestamp_of_last_login=" + timestamp_of_last_login + "]";
-  }
-
-  @Override
   public int hashCode() {
     final int prime = 31;
     int result = 1;
@@ -247,6 +243,18 @@ public class Member implements Serializable {
 
   public void setMemberLoginControl(MemberLoginControl memberLoginControl) {
     this.memberLoginControl = memberLoginControl;
+  }
+
+  public boolean isEnabled() {
+    return enabled;
+  }
+
+  @Override
+  public String toString() {
+    return "Member [id=" + id + ", firstname=" + firstname + ", lastname=" + lastname + ", username=" + username
+        + ", email=" + email + ", phone=" + phone + ", password=" + password + ", memberType=" + memberType
+        + ", date_registered=" + date_registered + ", timestamp_of_last_login=" + timestamp_of_last_login
+        + ", memberLoginControl=" + memberLoginControl + ", enabled=" + enabled + "]";
   }
 
 }

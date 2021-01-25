@@ -22,7 +22,7 @@ public class LoginMemberAuthToken implements Query<MemberTokenAuthBindingModel, 
   private static final Logger logger = LoggerFactory.getLogger(LoginMemberAuthToken.class);
   private ServiceLoggingUtil logUtil = new ServiceLoggingUtil();
 
-  private final String SELECT_MEMBER = "select id, firstname, password, lastname, username, email, phone, date_registered, timestamp_of_last_login from member where email=?";
+  private final String SELECT_MEMBER = "select id, firstname, password, lastname, username, email, phone, date_registered, timestamp_of_last_login, is_enabled from member where email=?";
 
   private final JdbcTemplate jdbcTemplate;
   private final Query<String, MemberType> queryMemberTypeByEmail;
