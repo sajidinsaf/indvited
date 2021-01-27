@@ -34,13 +34,14 @@ import com.ef.dataaccess.Insert;
 import com.ef.dataaccess.Query;
 import com.ef.member.login.service.LoginService;
 import com.ef.member.login.service.TokenAuthService;
+import com.ef.member.login.service.validation.EmailAndMemberTypeCombinationValidator;
 import com.ef.member.login.service.validation.EmailNotNullOrEmptyValidator;
+import com.ef.member.login.service.validation.MemberTokenAuthBindingModelPasswordValidator;
 import com.ef.member.login.service.validation.PasswordNotNullOrEmptyValidator;
 import com.ef.member.registration.model.RegistrationConfirmationMessageModel;
 import com.ef.member.registration.service.RegistrationConfirmationService;
 import com.ef.member.registration.service.RegistrationService;
 import com.ef.member.registration.service.validation.MemberRegistrationBindingModelPasswordValidator;
-import com.ef.member.registration.service.validation.MemberTokenAuthBindingModelPasswordValidator;
 import com.ef.member.registration.service.validation.UniqueValueValidator;
 import com.ef.member.registration.service.worker.ConfirmEmailSenderWorker;
 import com.ef.member.registration.service.worker.JavaMailEmailSender;
@@ -95,9 +96,11 @@ public class ServiceContextConfig implements WebMvcConfigurer {
 
   @Bean
   public LoginService loginService(
-      @Autowired @Qualifier("loginMember") Query<MemberLoginBindingModel, Member> loginMember) {
+      @Autowired @Qualifier("loginMember") Query<MemberLoginBindingModel, Member> loginMember,
+      @Autowired @Qualifier("queryMemberIdByEmailAndMemberType") Query<MemberLoginBindingModel, Integer> queryMemberIdByEmailAndMemberType) {
 
-    List<Validator<MemberLoginBindingModel, String>> validators = loginDataValidators();
+    List<Validator<MemberLoginBindingModel, String>> validators = loginDataValidators(
+        queryMemberIdByEmailAndMemberType);
     return new LoginService(loginMember, validators);
   }
 
@@ -109,11 +112,13 @@ public class ServiceContextConfig implements WebMvcConfigurer {
     return new TokenAuthService(loginMember, validators);
   }
 
-  private List<Validator<MemberLoginBindingModel, String>> loginDataValidators() {
+  private List<Validator<MemberLoginBindingModel, String>> loginDataValidators(
+      Query<MemberLoginBindingModel, Integer> queryMemberIdByEmailAndMemberType) {
     List<Validator<MemberLoginBindingModel, String>> validators = new ArrayList<Validator<MemberLoginBindingModel, String>>();
 
     validators.add(new EmailNotNullOrEmptyValidator());
     validators.add(new PasswordNotNullOrEmptyValidator());
+    validators.add(new EmailAndMemberTypeCombinationValidator(queryMemberIdByEmailAndMemberType));
     return validators;
   }
 

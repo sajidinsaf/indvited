@@ -1,6 +1,7 @@
-package com.ef.member.registration.service.validation;
+package com.ef.member.login.service.validation;
 
 import com.ef.common.validation.Validator;
+import com.ef.member.registration.service.validation.PasswordValidator;
 import com.ef.model.member.MemberTokenAuthBindingModel;
 
 public class MemberTokenAuthBindingModelPasswordValidator extends PasswordValidator
