@@ -4,6 +4,7 @@ public class MemberLoginBindingModel {
 
   private String email;
   private String password;
+  private MemberType memberType;
 
   public MemberLoginBindingModel() {
 
@@ -32,9 +33,17 @@ public class MemberLoginBindingModel {
     this.email = email;
   }
 
+  public MemberType getMemberType() {
+    return memberType;
+  }
+
+  public void setMemberType(MemberType memberType) {
+    this.memberType = memberType;
+  }
+
   @Override
   public String toString() {
-    return "MemberLoginBindingModel [email=" + email + ", password=" + password + "]";
+    return "MemberLoginBindingModel [email=" + email + ", password=" + password + ", memberType=" + memberType + "]";
   }
 
 }

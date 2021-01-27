@@ -5,6 +5,7 @@ public class MemberTokenAuthBindingModel implements CredentialBindingModel {
   private String email;
   private String token;
   private long expires;
+  private MemberType memberType;
 
   public MemberTokenAuthBindingModel() {
 
@@ -41,14 +42,23 @@ public class MemberTokenAuthBindingModel implements CredentialBindingModel {
     this.expires = expires;
   }
 
-  @Override
-  public String toString() {
-    return "MemberTokenAuthBindingModel [email=" + email + ", token=" + token + ", expires=" + expires + "]";
+  public MemberType getMemberType() {
+    return memberType;
+  }
+
+  public void setMemberType(MemberType memberType) {
+    this.memberType = memberType;
   }
 
   @Override
   public String getSecret() {
     return getToken();
+  }
+
+  @Override
+  public String toString() {
+    return "MemberTokenAuthBindingModel [email=" + email + ", token=" + token + ", expires=" + expires + ", memberType="
+        + memberType + "]";
   }
 
 }

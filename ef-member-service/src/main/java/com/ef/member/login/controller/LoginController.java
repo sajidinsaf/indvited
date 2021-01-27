@@ -1,7 +1,14 @@
 package com.ef.member.login.controller;
 
-import static com.ef.member.login.controller.LoginControllerConstants.LOGIN_WITH_EMAIL_AND_TOKEN;
-import static com.ef.member.login.controller.LoginControllerConstants.LOGIN_WITH_USERNAME_AND_PASSWORD;
+import static com.ef.member.login.controller.LoginControllerConstants.LOGIN_WITH_EMAIL_AND_TOKEN_ADMIN;
+import static com.ef.member.login.controller.LoginControllerConstants.LOGIN_WITH_EMAIL_AND_TOKEN_BLOGGER;
+import static com.ef.member.login.controller.LoginControllerConstants.LOGIN_WITH_EMAIL_AND_TOKEN_PR;
+import static com.ef.member.login.controller.LoginControllerConstants.LOGIN_WITH_USERNAME_AND_PASSWORD_ADMIN;
+import static com.ef.member.login.controller.LoginControllerConstants.LOGIN_WITH_USERNAME_AND_PASSWORD_BLOGGER;
+import static com.ef.member.login.controller.LoginControllerConstants.LOGIN_WITH_USERNAME_AND_PASSWORD_PR;
+import static com.ef.model.member.MemberType.ADMIN;
+import static com.ef.model.member.MemberType.BLOGGER;
+import static com.ef.model.member.MemberType.PR;
 
 import java.util.List;
 
@@ -46,9 +53,30 @@ public class LoginController {
     this.tokenAuthService = tokenAuthService;
   }
 
+  @PostMapping(LOGIN_WITH_USERNAME_AND_PASSWORD_ADMIN)
+  public ResponseEntity<?> adminLoginWithEmailAndPassword(@RequestBody MemberLoginBindingModel memberLoginData,
+      HttpSession httpSession) {
+    memberLoginData.setMemberType(ADMIN);
+    return loginWithEmailAndPassword(memberLoginData, httpSession);
+  }
+
 //  curl -i -H "Accept: application/json" -H "Content-Type:application/json" -X POST --data '{"id":"1232455663","type":"PREvent","scheduledDate":"2020/12/25","scheduledTime":"18:03:51","location":"Mainland China","description":"Review Food Event"}' "http://secure.codeczar.co.uk/event-service/rest/event/publish"
-  @PostMapping(LOGIN_WITH_USERNAME_AND_PASSWORD)
-  public ResponseEntity<?> loginWithEmailAndPassword(@RequestBody MemberLoginBindingModel memberLoginData,
+  @PostMapping(LOGIN_WITH_USERNAME_AND_PASSWORD_PR)
+  public ResponseEntity<?> prLoginWithEmailAndPassword(@RequestBody MemberLoginBindingModel memberLoginData,
+      HttpSession httpSession) {
+    memberLoginData.setMemberType(PR);
+    return loginWithEmailAndPassword(memberLoginData, httpSession);
+  }
+
+  @PostMapping(LOGIN_WITH_USERNAME_AND_PASSWORD_BLOGGER)
+  public ResponseEntity<?> bloggerLoginWithEmailAndPassword(@RequestBody MemberLoginBindingModel memberLoginData,
+      HttpSession httpSession) {
+
+    memberLoginData.setMemberType(BLOGGER);
+    return loginWithEmailAndPassword(memberLoginData, httpSession);
+  }
+
+  private ResponseEntity<?> loginWithEmailAndPassword(MemberLoginBindingModel memberLoginData,
       HttpSession httpSession) {
     logUtil.debug(logger, "Logging in member: " + memberLoginData);
 
@@ -71,8 +99,28 @@ public class LoginController {
         HttpStatus.valueOf(loginStatus.getStatusCode().name()));
   }
 
-  @PostMapping(LOGIN_WITH_EMAIL_AND_TOKEN)
-  public ResponseEntity<?> loginWithEmailAndToken(@RequestBody MemberTokenAuthBindingModel memberLoginData,
+  @PostMapping(LOGIN_WITH_EMAIL_AND_TOKEN_ADMIN)
+  public ResponseEntity<?> loginWithEmailAndTokenAdmin(@RequestBody MemberTokenAuthBindingModel memberLoginData,
+      HttpSession httpSession) {
+    memberLoginData.setMemberType(ADMIN);
+    return loginWithEmailAndToken(memberLoginData, httpSession);
+  }
+
+  @PostMapping(LOGIN_WITH_EMAIL_AND_TOKEN_PR)
+  public ResponseEntity<?> loginWithEmailAndTokenPr(@RequestBody MemberTokenAuthBindingModel memberLoginData,
+      HttpSession httpSession) {
+    memberLoginData.setMemberType(PR);
+    return loginWithEmailAndToken(memberLoginData, httpSession);
+  }
+
+  @PostMapping(LOGIN_WITH_EMAIL_AND_TOKEN_BLOGGER)
+  public ResponseEntity<?> loginWithEmailAndTokenBlogger(@RequestBody MemberTokenAuthBindingModel memberLoginData,
+      HttpSession httpSession) {
+    memberLoginData.setMemberType(BLOGGER);
+    return loginWithEmailAndToken(memberLoginData, httpSession);
+  }
+
+  private ResponseEntity<?> loginWithEmailAndToken(MemberTokenAuthBindingModel memberLoginData,
       HttpSession httpSession) {
     logUtil.debug(logger, "Logging in member: " + memberLoginData);
 
@@ -94,5 +142,4 @@ public class LoginController {
     return new ResponseEntity<MemberLoginControl>(member.getMemberLoginControl(),
         HttpStatus.valueOf(loginStatus.getStatusCode().name()));
   }
-
 }
