@@ -10,22 +10,22 @@ import com.ef.dataaccess.spring.member.rowmapper.MemberLoginControlRowMapper;
 import com.ef.model.member.MemberLoginControl;
 
 @Component(value = "queryMemberLoginControlByEmail")
-public class QueryMemberLoginControlByEmail implements Query<String, MemberLoginControl> {
+public class QueryMemberLoginControlByMemberId implements Query<String, MemberLoginControl> {
 
   private final String SELECT_MEMBER_LOGIN_CONTROL = "select member_email_id, token, creation_timestamp, expiry_timestamp from member_login_control where member_email_id=?";
 
   private final JdbcTemplate jdbcTemplate;
 
   @Autowired
-  public QueryMemberLoginControlByEmail(@Qualifier("indvitedDbJdbcTemplate") JdbcTemplate jdbcTemplate) {
+  public QueryMemberLoginControlByMemberId(@Qualifier("indvitedDbJdbcTemplate") JdbcTemplate jdbcTemplate) {
     this.jdbcTemplate = jdbcTemplate;
   }
 
   @Override
-  public MemberLoginControl data(String email) {
+  public MemberLoginControl data(String memberId) {
 
     MemberLoginControl memberLoginControl = jdbcTemplate.queryForObject(SELECT_MEMBER_LOGIN_CONTROL,
-        new Object[] { email }, new MemberLoginControlRowMapper());
+        new Object[] { memberId }, new MemberLoginControlRowMapper());
 
     return memberLoginControl;
   }

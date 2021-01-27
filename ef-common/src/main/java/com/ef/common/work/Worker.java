@@ -1,4 +1,4 @@
-package com.ef.eventservice.scheduler.worker;
+package com.ef.common.work;
 
 public interface Worker<T, R> {
 

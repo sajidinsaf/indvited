@@ -7,12 +7,12 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.ef.common.logging.ServiceLoggingUtil;
+import com.ef.common.message.Response;
+import com.ef.common.message.StatusCode;
 import com.ef.common.validation.Validator;
 import com.ef.dataaccess.Query;
 import com.ef.model.member.Member;
 import com.ef.model.member.MemberLoginBindingModel;
-import com.ef.model.response.Response;
-import com.ef.model.response.StatusCode;
 import com.google.gson.Gson;
 
 public class LoginService {

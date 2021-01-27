@@ -22,17 +22,17 @@ import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 import org.springframework.web.servlet.mvc.method.annotation.RequestMappingHandlerAdapter;
 import org.springframework.web.servlet.view.InternalResourceViewResolver;
 
+import com.ef.common.message.MessagePacket;
+import com.ef.common.message.Publisher;
+import com.ef.common.message.Response;
+import com.ef.common.work.Worker;
 import com.ef.dataaccess.Insert;
-import com.ef.eventservice.scheduler.MessagePacket;
 import com.ef.eventservice.scheduler.PREventPublisher;
-import com.ef.eventservice.scheduler.Publisher;
 import com.ef.eventservice.scheduler.Subscriber;
 import com.ef.eventservice.scheduler.worker.MailSenderWorker;
 import com.ef.eventservice.scheduler.worker.SimpleEmailAddressProvider;
-import com.ef.eventservice.scheduler.worker.Worker;
 import com.ef.model.event.PREvent;
 import com.ef.model.event.PREventBindingModel;
-import com.ef.model.response.Response;
 
 import redis.clients.jedis.Jedis;
 import redis.clients.jedis.JedisPool;
@@ -128,8 +128,8 @@ public class ServiceContextConfig implements WebMvcConfigurer {
     }).start();
   }
 
-  private List<Worker<MessagePacket, Response<String>>> workers() {
-    List<Worker<MessagePacket, Response<String>>> workers = new ArrayList<Worker<MessagePacket, Response<String>>>();
+  private List<Worker<MessagePacket<String>, Response<String>>> workers() {
+    List<Worker<MessagePacket<String>, Response<String>>> workers = new ArrayList<Worker<MessagePacket<String>, Response<String>>>();
 
     MailSenderWorker mailsenderWorker = new MailSenderWorker(mailSender(), SENDER_EMAIL_ADDRESS,
         new SimpleEmailAddressProvider());

@@ -28,6 +28,8 @@ import org.springframework.jdbc.datasource.embedded.EmbeddedDatabaseType;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
+import com.ef.common.message.Response;
+import com.ef.common.message.StatusCode;
 import com.ef.common.validation.Validator;
 import com.ef.dataaccess.Query;
 import com.ef.dataaccess.config.DbTestUtils;
@@ -36,8 +38,6 @@ import com.ef.member.login.service.validation.EmailNotNullOrEmptyValidator;
 import com.ef.member.login.service.validation.PasswordNotNullOrEmptyValidator;
 import com.ef.model.member.Member;
 import com.ef.model.member.MemberLoginBindingModel;
-import com.ef.model.response.Response;
-import com.ef.model.response.StatusCode;
 
 public class LoginServiceTest {
   private JdbcTemplate jdbcTemplate;

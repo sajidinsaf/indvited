@@ -5,7 +5,7 @@ import static org.junit.Assert.assertThat;
 //import static org.mockito.Mockito.never;
 //import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
-import static org.mockito.MockitoAnnotations.initMocks;
+import static org.mockito.MockitoAnnotations.openMocks;
 
 import java.util.Random;
 
@@ -38,6 +38,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import com.ef.dataaccess.config.DbTestUtils;
 import com.ef.model.member.Member;
 import com.ef.model.member.MemberRegistrationBindingModel;
+import com.ef.model.member.PreconfirmationMemberRegistrationModel;
 
 public class InsertMemberTest {
 
@@ -57,7 +58,7 @@ public class InsertMemberTest {
   @SuppressWarnings("resource")
   @Before
   public void setUp() {
-    initMocks(this);
+    openMocks(this);
     AnnotationConfigApplicationContext appContext = new AnnotationConfigApplicationContext(
         HsqlDbConfigInsertMemberTest.class);
     insertMember = appContext.getBean(InsertMember.class);
@@ -82,7 +83,9 @@ public class InsertMemberTest {
     when(memberData.getPhone()).thenReturn(phone);
     when(memberData.getMemberType()).thenReturn(memberTypeName);
 
-    Member member = insertMember.data(memberData);
+    PreconfirmationMemberRegistrationModel pmrMember = insertMember.data(memberData);
+
+    Member member = pmrMember.getMember();
 
     assertThat(member.getFirstName(), Matchers.is(firstName));
     assertThat(member.getLastName(), Matchers.is(lastName));

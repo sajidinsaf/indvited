@@ -1,6 +1,4 @@
-package com.ef.eventservice.scheduler;
-
-import com.ef.model.response.Response;
+package com.ef.common.message;
 
 public interface Publisher<T> {
 

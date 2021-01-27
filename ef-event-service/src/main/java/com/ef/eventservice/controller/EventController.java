@@ -19,9 +19,9 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 
 import com.ef.common.logging.ServiceLoggingUtil;
-import com.ef.eventservice.scheduler.Publisher;
+import com.ef.common.message.Publisher;
+import com.ef.common.message.Response;
 import com.ef.model.event.PREventBindingModel;
-import com.ef.model.response.Response;
 
 /**
  * Handles requests for the event service.

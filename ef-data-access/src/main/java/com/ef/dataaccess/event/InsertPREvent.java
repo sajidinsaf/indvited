@@ -13,13 +13,13 @@ import com.ef.common.LRPair;
 import com.ef.common.logging.ServiceLoggingUtil;
 import com.ef.dataaccess.Insert;
 import com.ef.dataaccess.Query;
+import com.ef.dataaccess.common.UuidGenerator;
 import com.ef.model.event.EventType;
 import com.ef.model.event.EventVenue;
 import com.ef.model.event.PREvent;
 import com.ef.model.event.PREventBindingModel;
 import com.ef.model.event.PREventLocationBindingModel;
 import com.ef.model.member.Member;
-import com.fasterxml.uuid.Generators;
 
 @Component("insertPREvent")
 public class InsertPREvent implements Insert<PREventBindingModel, PREvent> {
@@ -37,6 +37,7 @@ public class InsertPREvent implements Insert<PREventBindingModel, PREvent> {
   private final Insert<Pair<PREventBindingModel, PREvent>, PREvent> insertEventDeliverables;
   private final Query<PREventLocationBindingModel, EventVenue> queryVenueByKeyFieldOrInsert;
   private final Query<String, Member> queryMemberByEmail;
+  private final UuidGenerator uuidGenerator;
 
   @Autowired
   public InsertPREvent(@Qualifier("indvitedDbJdbcTemplate") JdbcTemplate jdbcTemplate,
@@ -45,7 +46,8 @@ public class InsertPREvent implements Insert<PREventBindingModel, PREvent> {
       @Qualifier("insertPREventCriteria") Insert<Pair<PREventBindingModel, PREvent>, PREvent> insertEventCriteria,
       @Qualifier("insertPREventDeliverables") Insert<Pair<PREventBindingModel, PREvent>, PREvent> insertEventDeliverables,
       @Qualifier("queryVenueByKeyFieldOrInsert") Query<PREventLocationBindingModel, EventVenue> queryVenueByKeyFieldOrInsert,
-      @Qualifier("queryMemberByEmail") Query<String, Member> queryMemberByEmail) {
+      @Qualifier("queryMemberByEmail") Query<String, Member> queryMemberByEmail,
+      @Qualifier("uuidGenerator") UuidGenerator uuidGenerator) {
     this.jdbcTemplate = jdbcTemplate;
     this.queryEventByUuid = queryEventByUuid;
     this.eventTypeCache = eventTypeCache;
@@ -54,6 +56,7 @@ public class InsertPREvent implements Insert<PREventBindingModel, PREvent> {
     this.insertEventDeliverables = insertEventDeliverables;
     this.queryVenueByKeyFieldOrInsert = queryVenueByKeyFieldOrInsert;
     this.queryMemberByEmail = queryMemberByEmail;
+    this.uuidGenerator = uuidGenerator;
   }
 
 //  private PREventTimeSlotBindingModel[] prEventTimeSlotBindingModel;
@@ -76,7 +79,7 @@ public class InsertPREvent implements Insert<PREventBindingModel, PREvent> {
       return null;
     }
 
-    String uuid = Generators.timeBasedGenerator().generate().toString();
+    String uuid = uuidGenerator.getUuid();
 
     EventVenue eventVenue = queryVenueByKeyFieldOrInsert.data(input.getEventLocation());
     input.getEventLocation().setId(eventVenue.getId());

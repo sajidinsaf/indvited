@@ -1,4 +1,4 @@
-package com.ef.model.response;
+package com.ef.common.message;
 
 public enum StatusCode {
 

@@ -9,21 +9,21 @@ import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSender;
 
 import com.ef.common.logging.ServiceLoggingUtil;
-import com.ef.eventservice.scheduler.MessagePacket;
-import com.ef.eventservice.scheduler.Subscriber;
-import com.ef.model.response.Response;
-import com.ef.model.response.StatusCode;
+import com.ef.common.message.MessagePacket;
+import com.ef.common.message.Response;
+import com.ef.common.message.StatusCode;
+import com.ef.common.work.Worker;
 
-public class MailSenderWorker implements Worker<MessagePacket, Response<String>> {
+public class MailSenderWorker implements Worker<MessagePacket<String>, Response<String>> {
 
   private final JavaMailSender mailSender;
-  private final Worker<MessagePacket, List<String>> emailAddressProvider;
+  private final Worker<MessagePacket<String>, List<String>> emailAddressProvider;
   private final ServiceLoggingUtil loggingUtil;
-  private final Logger logger = LoggerFactory.getLogger(Subscriber.class);
+  private final Logger logger = LoggerFactory.getLogger(MailSenderWorker.class);
   private final String senderEmailAddress;
 
   public MailSenderWorker(JavaMailSender mailSender, String senderEmailAddress,
-      Worker<MessagePacket, List<String>> emailAddressProvider) {
+      Worker<MessagePacket<String>, List<String>> emailAddressProvider) {
     this.mailSender = mailSender;
     this.emailAddressProvider = emailAddressProvider;
     loggingUtil = new ServiceLoggingUtil();
@@ -31,7 +31,7 @@ public class MailSenderWorker implements Worker<MessagePacket, Response<String>>
   }
 
   @Override
-  public Response<String> perform(MessagePacket messagePacket) {
+  public Response<String> perform(MessagePacket<String> messagePacket) {
 
     List<String> emailAddresses = emailAddressProvider.perform(messagePacket);
 
@@ -40,7 +40,7 @@ public class MailSenderWorker implements Worker<MessagePacket, Response<String>>
       simpleMailMessage.setFrom(senderEmailAddress);
       simpleMailMessage.setTo(toEmail);
       simpleMailMessage.setSubject("Message from PR to " + toEmail);
-      simpleMailMessage.setText(messagePacket.getMessage());
+      simpleMailMessage.setText(messagePacket.getPayload());
       simpleMailMessage.setReplyTo("indvited@codeczar.co.uk");
       simpleMailMessage.setSentDate(new Date());
       logger.info("Sending mail message to:" + simpleMailMessage.getTo()[0]);

@@ -1,11 +1,15 @@
-package com.ef.member.registration.model;
+package com.ef.member.registration.service;
 
 import static org.junit.Assert.assertThat;
 import static org.mockito.Mockito.when;
 import static org.mockito.MockitoAnnotations.initMocks;
 
+import java.util.Properties;
 import java.util.Random;
 
+import javax.mail.PasswordAuthentication;
+import javax.mail.Session;
+import javax.mail.internet.MimeMessage;
 import javax.sql.DataSource;
 
 import org.hamcrest.Matchers;
@@ -24,13 +28,18 @@ import org.springframework.jdbc.datasource.embedded.EmbeddedDatabaseType;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
+import com.ef.common.EmailSender;
+import com.ef.common.message.MessagePacket;
+import com.ef.common.message.Response;
+import com.ef.common.message.StatusCode;
+import com.ef.common.work.Worker;
 import com.ef.dataaccess.config.DbTestUtils;
 import com.ef.dataaccess.member.InsertMember;
+import com.ef.member.registration.model.RegistrationPreconfirmationMessageModel;
 import com.ef.member.registration.service.RegistrationService;
+import com.ef.member.registration.service.worker.ConfirmEmailSenderWorker;
 import com.ef.model.member.Member;
 import com.ef.model.member.MemberRegistrationBindingModel;
-import com.ef.model.response.Response;
-import com.ef.model.response.StatusCode;
 
 public class RegistrationServiceTest {
   private JdbcTemplate jdbcTemplate;
@@ -112,6 +121,46 @@ class HsqlDbConfigRegistrationServiceTest {
 
   @Bean
   public RegistrationService registrationService(@Autowired InsertMember insertMember) {
-    return new RegistrationService(insertMember);
+    return new RegistrationService(insertMember, confirmEmailWorker());
   }
+
+  public Worker<MessagePacket<RegistrationPreconfirmationMessageModel>, Response<String>> confirmEmailWorker() {
+    return new ConfirmEmailSenderWorker(mailSender(), mailSession(), "indvited@codeczar.co.uk");
+  }
+
+  public EmailSender<MimeMessage, String> mailSender() {
+    EmailSender<MimeMessage, String> sender = new EmailSender<MimeMessage, String>() {
+
+      @Override
+      public Response<String> send(MimeMessage message) {
+        return new Response<String>("success", StatusCode.OK);
+      }
+    };
+
+    return sender;
+  }
+
+  private Session mailSession() {
+    final String username = "indvited@codeczar.co.uk";// change accordingly
+    final String password = "@SilverGun95@";// change accordingly
+
+    // Assuming you are sending email through relay.jangosmtp.net
+    String host = "mail.codeczar.co.uk";
+
+    Properties props = new Properties();
+    props.put("mail.smtp.auth", "true");
+    props.put("mail.smtp.starttls.enable", "true");
+    props.put("mail.smtp.host", host);
+    props.put("mail.smtp.port", "465");
+
+    // Get the Session object.
+    Session session = Session.getInstance(props, new javax.mail.Authenticator() {
+      protected PasswordAuthentication getPasswordAuthentication() {
+        return new PasswordAuthentication(username, password);
+      }
+    });
+
+    return session;
+  }
+
 }

@@ -6,19 +6,18 @@ import java.util.function.Predicate;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.ef.eventservice.scheduler.worker.Worker;
-import com.ef.model.response.Response;
+import com.ef.common.message.MessagePacket;
+import com.ef.common.message.Response;
+import com.ef.common.work.Worker;
 
 import redis.clients.jedis.JedisPubSub;
 
 public class Subscriber extends JedisPubSub {
 
-  private final List<Worker<MessagePacket, Response<String>>> workers;
+  private final List<Worker<MessagePacket<String>, Response<String>>> workers;
   private final Predicate<String>[] predicates;
 
-  private int i = 0;
-
-  public Subscriber(List<Worker<MessagePacket, Response<String>>> workers, Predicate<String>... predicates) {
+  public Subscriber(List<Worker<MessagePacket<String>, Response<String>>> workers, Predicate<String>... predicates) {
     this.workers = workers;
     this.predicates = predicates;
   }
@@ -30,9 +29,9 @@ public class Subscriber extends JedisPubSub {
 
     logger.info("Message received. Channel: {}, Msg: {}", channel, message);
 
-    MessagePacket messagePacket = new MessagePacket(message, predicates);
+    MessagePacket<String> messagePacket = new MessagePacket<String>(message, predicates);
 
-    for (Worker<MessagePacket, Response<String>> worker : workers) {
+    for (Worker<MessagePacket<String>, Response<String>> worker : workers) {
       worker.perform(messagePacket);
     }
   }

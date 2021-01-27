@@ -5,7 +5,6 @@ import org.springframework.jdbc.datasource.embedded.EmbeddedDatabaseBuilder;
 public class DbTestUtils {
 
   public DbTestUtils() {
-    // TODO Auto-generated constructor stub
   }
 
   public EmbeddedDatabaseBuilder addCreateScripts(EmbeddedDatabaseBuilder embeddedDatabaseBuilder) {
@@ -13,6 +12,7 @@ public class DbTestUtils {
         .addScript("classpath:com/ef/dataaccess/member/createMemberCriteriaDataTable.sql")
         .addScript("classpath:com/ef/dataaccess/member/createMemberTable.sql")
         .addScript("classpath:com/ef/dataaccess/member/createMemberTypeTable.sql")
+        .addScript("classpath:com/ef/dataaccess/member/createMemberRegistrationControlTable.sql")
         .addScript("classpath:com/ef/dataaccess/event/createDomainTable.sql")
         .addScript("classpath:com/ef/dataaccess/event/createEventCriteriaMetaTable.sql")
         .addScript("classpath:com/ef/dataaccess/event/createEventCriteriaDataTable.sql")

@@ -1,4 +1,4 @@
-package com.ef.model.response;
+package com.ef.common.message;
 
 import java.util.ArrayList;
 import java.util.List;

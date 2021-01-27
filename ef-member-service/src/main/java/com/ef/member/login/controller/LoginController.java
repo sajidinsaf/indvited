@@ -18,13 +18,13 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 
 import com.ef.common.logging.ServiceLoggingUtil;
+import com.ef.common.message.Response;
 import com.ef.member.login.service.LoginService;
 import com.ef.member.login.service.TokenAuthService;
 import com.ef.model.member.Member;
 import com.ef.model.member.MemberLoginBindingModel;
 import com.ef.model.member.MemberLoginControl;
 import com.ef.model.member.MemberTokenAuthBindingModel;
-import com.ef.model.response.Response;
 
 /**
  * Handles requests for the event service.

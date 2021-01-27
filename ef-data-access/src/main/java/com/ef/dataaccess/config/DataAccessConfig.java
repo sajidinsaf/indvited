@@ -15,6 +15,8 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
+import com.ef.dataaccess.common.UuidGenerator;
+
 @Configuration
 //@EnableWebMvc
 //@PropertySource("classpath:controller.properties")
@@ -41,5 +43,10 @@ public class DataAccessConfig implements WebMvcConfigurer {
   @Bean
   public PasswordEncoder encoder() {
     return new BCryptPasswordEncoder();
+  }
+
+  @Bean
+  public UuidGenerator uuidGenerator() {
+    return new UuidGenerator();
   }
 }
