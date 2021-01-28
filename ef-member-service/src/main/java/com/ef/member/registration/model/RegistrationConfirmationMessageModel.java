@@ -40,7 +40,7 @@ public class RegistrationConfirmationMessageModel {
     sb.append("Please quote this member id when communicating with customer services.");
     sb.append(LINE_BREAK);
     sb.append(LINE_BREAK);
-    sb.append("Your username is: ").append(member.getUsername());
+    sb.append("Your are registered as a: ").append(member.getMemberType().getName());
     sb.append(LINE_BREAK);
     sb.append(LINE_BREAK);
     sb.append("You can now login to the Invited Application");

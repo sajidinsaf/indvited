@@ -25,14 +25,18 @@ import org.springframework.web.servlet.view.InternalResourceViewResolver;
 import com.ef.common.message.MessagePacket;
 import com.ef.common.message.Publisher;
 import com.ef.common.message.Response;
+import com.ef.common.validation.Validator;
 import com.ef.common.work.Worker;
 import com.ef.dataaccess.Insert;
+import com.ef.dataaccess.Query;
 import com.ef.eventservice.scheduler.PREventPublisher;
 import com.ef.eventservice.scheduler.Subscriber;
 import com.ef.eventservice.scheduler.worker.MailSenderWorker;
 import com.ef.eventservice.scheduler.worker.SimpleEmailAddressProvider;
+import com.ef.eventservice.validation.MemberTypeValidator;
 import com.ef.model.event.PREvent;
 import com.ef.model.event.PREventBindingModel;
+import com.ef.model.member.Member;
 
 import redis.clients.jedis.Jedis;
 import redis.clients.jedis.JedisPool;
@@ -73,13 +77,21 @@ public class ServiceContextConfig implements WebMvcConfigurer {
 
   @Bean
   public Publisher<PREventBindingModel> prEventPublisher(@Autowired JedisPool jedisPool,
-      @Autowired @Qualifier("insertPREvent") Insert<PREventBindingModel, PREvent> eventPersistor) {
+      @Autowired @Qualifier("insertPREvent") Insert<PREventBindingModel, PREvent> eventPersistor,
+      @Autowired @Qualifier("queryMemberByEmail") Query<String, Member> queryMemberByEmail) {
     logger.info("starting subscribers");
     startSubscribers(getNewJedisInstance(jedisPool));
     logger.info("started subscribers successfully");
     logger.info("creating PREventPublisher instance");
-    return new PREventPublisher(getNewJedisInstance(jedisPool), eventPersistor);
+    List<Validator<PREventBindingModel, String>> validators = validators(queryMemberByEmail);
+    return new PREventPublisher(getNewJedisInstance(jedisPool), eventPersistor, validators);
 
+  }
+
+  private List<Validator<PREventBindingModel, String>> validators(Query<String, Member> queryMemberByEmail) {
+    List<Validator<PREventBindingModel, String>> validators = new ArrayList<Validator<PREventBindingModel, String>>();
+    validators.add(new MemberTypeValidator(queryMemberByEmail));
+    return validators;
   }
 
   @Bean

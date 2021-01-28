@@ -71,7 +71,7 @@ public class MemberTypeCacheTest {
 }
 
 @Configuration
-@ComponentScan("com.ef.dataaccess.member")
+@ComponentScan("com.ef.dataaccess.config,com.ef.dataaccess.member")
 class HsqlDbConfigQueryMemberTest {
 
   @Bean

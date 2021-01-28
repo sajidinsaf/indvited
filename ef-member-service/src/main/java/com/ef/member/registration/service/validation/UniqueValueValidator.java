@@ -9,13 +9,10 @@ import com.ef.model.member.MemberRegistrationBindingModel;
 
 public class UniqueValueValidator implements Validator<MemberRegistrationBindingModel, String> {
 
-  private final Query<String, Member> queryMemberByUsername;
   private final Query<String, Member> queryMemberByEmail;
   private final Query<String, Member> queryMemberByPhone;
 
-  public UniqueValueValidator(Query<String, Member> queryMemberByUsername, Query<String, Member> queryMemberByEmail,
-      Query<String, Member> queryMemberByPhone) {
-    this.queryMemberByUsername = queryMemberByUsername;
+  public UniqueValueValidator(Query<String, Member> queryMemberByEmail, Query<String, Member> queryMemberByPhone) {
     this.queryMemberByEmail = queryMemberByEmail;
     this.queryMemberByPhone = queryMemberByPhone;
   }
@@ -25,16 +22,8 @@ public class UniqueValueValidator implements Validator<MemberRegistrationBinding
 
     StringBuilder sb = null;
 
-    if (isNotUnique(queryMemberByUsername, data.getUsername())) {
-      sb = new StringBuilder();
-      sb.append("username not unique");
-    }
     if (isNotUnique(queryMemberByEmail, data.getEmail())) {
-      if (sb == null) {
-        sb = new StringBuilder();
-      } else {
-        sb.append(",");
-      }
+      sb = new StringBuilder();
       sb.append("email not unique");
     }
     if (isNotUnique(queryMemberByPhone, data.getPhone())) {

@@ -227,7 +227,7 @@ public class LoginServiceTest {
 }
 
 @Configuration
-@ComponentScan(basePackages = { "com.ef.member", "com.ef.dataaccess.member" })
+@ComponentScan(basePackages = { "com.ef.member", "com.ef.dataaccess.member", "com.ef.dataaccess.config" })
 class HsqlDbConfigLoginServiceTest {
 
   @Bean

@@ -11,18 +11,21 @@ import org.springframework.stereotype.Component;
 import com.ef.dataaccess.Insert;
 import com.ef.dataaccess.Query;
 import com.ef.model.member.Member;
+import com.ef.model.member.MemberLoginBindingModel;
 import com.ef.model.member.MemberRegistrationBindingModel;
 import com.ef.model.member.MemberRegistrationControlModel;
+import com.ef.model.member.MemberType;
 import com.ef.model.member.PreconfirmationMemberRegistrationModel;
 import com.fasterxml.uuid.Generators;
 
 @Component("insertMember")
 public class InsertMember implements Insert<MemberRegistrationBindingModel, PreconfirmationMemberRegistrationModel> {
 
-  private final String INSERT_STATEMENT_MEMBER = "INSERT INTO member(firstname, lastname, username, password, email, phone, member_type_id) VALUES (?,?,?,?,?,?,?)";
+  private final String INSERT_STATEMENT_MEMBER = "INSERT INTO member(firstname, lastname, password, email, phone, member_type_id) VALUES (?,?,?,?,?,?)";
   private final String INSERT_STATEMENT_MEMBER_CONTROL = "INSERT INTO member_login_control(member_email_id,token,expiry_timestamp) VALUES (?,?,?)";
   private final JdbcTemplate jdbcTemplate;
-  private final Query<String, Member> queryMemberByUsername;
+  private final Query<MemberLoginBindingModel, Integer> queryMemberIdByEmailAndMemberType;
+  private final Query<Integer, Member> queryMemberById;
   private final MemberTypeCache memberTypeCache;
   private final PasswordEncoder encoder;
   private final Query<String, String> emailFormatterForDb;
@@ -33,12 +36,14 @@ public class InsertMember implements Insert<MemberRegistrationBindingModel, Prec
 
   @Autowired
   public InsertMember(@Qualifier("indvitedDbJdbcTemplate") JdbcTemplate jdbcTemplate,
-      @Qualifier("queryMemberByUsername") Query<String, Member> queryMemberByUsername,
+      @Qualifier("queryMemberIdByEmailAndMemberType") Query<MemberLoginBindingModel, Integer> queryMemberIdByEmailAndMemberType,
+      @Qualifier("queryMemberById") Query<Integer, Member> queryMemberById,
       @Qualifier("emailFormatterForDb") Query<String, String> emailFormatterForDb, MemberTypeCache memberTypeCache,
       PasswordEncoder encoder,
       @Qualifier("insertRegistrationConfirmationCode") Insert<Member, MemberRegistrationControlModel> insertRegistrationConfirmationCode) {
     this.jdbcTemplate = jdbcTemplate;
-    this.queryMemberByUsername = queryMemberByUsername;
+    this.queryMemberIdByEmailAndMemberType = queryMemberIdByEmailAndMemberType;
+    this.queryMemberById = queryMemberById;
     this.memberTypeCache = memberTypeCache;
     this.encoder = encoder;
     this.emailFormatterForDb = emailFormatterForDb;
@@ -52,10 +57,14 @@ public class InsertMember implements Insert<MemberRegistrationBindingModel, Prec
     String password = encryptPassword(input.getPassword());
 
     String email = emailFormatterForDb.data(input.getEmail());
-    jdbcTemplate.update(INSERT_STATEMENT_MEMBER, new Object[] { input.getFirstName(), input.getLastName(),
-        input.getUsername(), password, email, input.getPhone(), memberTypeId });
+    jdbcTemplate.update(INSERT_STATEMENT_MEMBER,
+        new Object[] { input.getFirstName(), input.getLastName(), password, email, input.getPhone(), memberTypeId });
 
-    Member member = queryMemberByUsername.data(input.getUsername());
+    MemberType memberType = memberTypeCache.getMemberType(memberTypeId);
+
+    int memberId = queryMemberIdByEmailAndMemberType.data(new MemberLoginBindingModel(email, "", memberType));
+
+    Member member = queryMemberById.data(memberId);
 
     long loginExpiryTime = System.currentTimeMillis() + login_session_expiry_period_in_milliseconds;
     String member_login_control_token = Generators.timeBasedGenerator().generate().toString();

@@ -2,7 +2,6 @@ CREATE TABLE member (
   id INTEGER IDENTITY, 
   firstname varchar(16), 
   lastname varchar(16),
-  username varchar(50),
   password varchar(250),
   email varchar(75),
   phone VARCHAR(12),

@@ -11,6 +11,7 @@ import com.ef.common.logging.ServiceLoggingUtil;
 import com.ef.common.message.Publisher;
 import com.ef.common.message.Response;
 import com.ef.common.message.StatusCode;
+import com.ef.common.validation.Validator;
 import com.ef.dataaccess.Insert;
 import com.ef.model.event.PREvent;
 import com.ef.model.event.PREventBindingModel;
@@ -25,11 +26,13 @@ public class PREventPublisher implements Publisher<PREventBindingModel> {
 
   private final Jedis jedis;
   private final Insert<PREventBindingModel, PREvent> eventPersistor;
+  private final List<Validator<PREventBindingModel, String>> validators;
 
-  public PREventPublisher(Jedis jedis,
-      @Qualifier("insertPREvent") Insert<PREventBindingModel, PREvent> eventPersistor) {
+  public PREventPublisher(Jedis jedis, @Qualifier("insertPREvent") Insert<PREventBindingModel, PREvent> eventPersistor,
+      List<Validator<PREventBindingModel, String>> validators) {
     this.jedis = jedis;
     this.eventPersistor = eventPersistor;
+    this.validators = validators;
   }
 
   @SuppressWarnings({ "unchecked", "rawtypes" })
@@ -38,7 +41,7 @@ public class PREventPublisher implements Publisher<PREventBindingModel> {
     List<String> validationResults = validate(event);
 
     if (validationResults != null && validationResults.size() > 0) {
-      return new Response(validationResults, StatusCode.OK);
+      return new Response(validationResults, StatusCode.PRECONDITION_FAILED);
     }
 
     PREvent prEvent = eventPersistor.data(event);
@@ -57,7 +60,14 @@ public class PREventPublisher implements Publisher<PREventBindingModel> {
   }
 
   private List<String> validate(PREventBindingModel event) {
-    return null;
+    List<String> validationResults = new ArrayList<String>();
+    for (Validator<PREventBindingModel, String> validator : validators) {
+      String validationResult = validator.validate(event);
+      if (validationResult != null) {
+        validationResults.add(validationResult);
+      }
+    }
+    return validationResults;
   }
 
 }

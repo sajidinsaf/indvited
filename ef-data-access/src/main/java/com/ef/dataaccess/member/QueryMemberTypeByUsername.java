@@ -8,7 +8,7 @@ import org.springframework.stereotype.Component;
 import com.ef.dataaccess.Query;
 import com.ef.model.member.MemberType;
 
-@Component(value = "queryMemberTypeByUsername")
+//@Component(value = "queryMemberTypeByUsername")
 public class QueryMemberTypeByUsername implements Query<String, MemberType> {
 
   private final String SELECT_MEMBER = "select member_type_id from member where username=?";

@@ -12,7 +12,6 @@ public class Member implements Serializable {
   private int id;
   private String firstname;
   private String lastname;
-  private String username;
   private String email;
   private String phone;
   private String password;
@@ -26,13 +25,12 @@ public class Member implements Serializable {
 
   }
 
-  public Member(int id, String firstname, String lastname, String username, String email, String phone,
-      MemberType memberType, Timestamp date_registered, Timestamp timestamp_of_last_login, boolean enabled) {
+  public Member(int id, String firstname, String lastname, String email, String phone, MemberType memberType,
+      Timestamp date_registered, Timestamp timestamp_of_last_login, boolean enabled) {
     super();
     this.id = id;
     this.firstname = firstname;
     this.lastname = lastname;
-    this.username = username;
     this.email = email;
     this.phone = phone;
     this.memberType = memberType;
@@ -41,14 +39,13 @@ public class Member implements Serializable {
     this.enabled = enabled;
   }
 
-  public Member(int id, String firstname, String lastname, String username, String email, String phone,
-      MemberType memberType, Timestamp date_registered, Timestamp timestamp_of_last_login,
-      MemberLoginControl memberLoginControl, boolean enabled) {
+  public Member(int id, String firstname, String lastname, String email, String phone, MemberType memberType,
+      Timestamp date_registered, Timestamp timestamp_of_last_login, MemberLoginControl memberLoginControl,
+      boolean enabled) {
     super();
     this.id = id;
     this.firstname = firstname;
     this.lastname = lastname;
-    this.username = username;
     this.email = email;
     this.phone = phone;
     this.memberType = memberType;
@@ -57,14 +54,13 @@ public class Member implements Serializable {
     this.memberLoginControl = memberLoginControl;
   }
 
-  public Member(int id, String firstname, String lastname, String username, String email, String phone, String password,
+  public Member(int id, String firstname, String lastname, String email, String phone, String password,
       MemberType memberType, Timestamp date_registered, Timestamp timestamp_of_last_login,
       MemberLoginControl memberLoginControl, boolean enabled) {
     super();
     this.id = id;
     this.firstname = firstname;
     this.lastname = lastname;
-    this.username = username;
     this.email = email;
     this.phone = phone;
     this.password = password;
@@ -100,15 +96,6 @@ public class Member implements Serializable {
   public void setLastName(String lastname) {
     checkForMutation(lastname, "lastname");
     this.lastname = lastname;
-  }
-
-  public String getUsername() {
-    return username;
-  }
-
-  public void setUsername(String username) {
-    checkForMutation(username, "username");
-    this.username = username;
   }
 
   public String getEmail() {
@@ -182,7 +169,6 @@ public class Member implements Serializable {
     result = prime * result + ((memberType == null) ? 0 : memberType.hashCode());
     result = prime * result + ((phone == null) ? 0 : phone.hashCode());
     result = prime * result + ((timestamp_of_last_login == null) ? 0 : timestamp_of_last_login.hashCode());
-    result = prime * result + ((username == null) ? 0 : username.hashCode());
     return result;
   }
 
@@ -229,11 +215,6 @@ public class Member implements Serializable {
         return false;
     } else if (!timestamp_of_last_login.equals(other.timestamp_of_last_login))
       return false;
-    if (username == null) {
-      if (other.username != null)
-        return false;
-    } else if (!username.equals(other.username))
-      return false;
     return true;
   }
 
@@ -251,10 +232,10 @@ public class Member implements Serializable {
 
   @Override
   public String toString() {
-    return "Member [id=" + id + ", firstname=" + firstname + ", lastname=" + lastname + ", username=" + username
-        + ", email=" + email + ", phone=" + phone + ", password=" + password + ", memberType=" + memberType
-        + ", date_registered=" + date_registered + ", timestamp_of_last_login=" + timestamp_of_last_login
-        + ", memberLoginControl=" + memberLoginControl + ", enabled=" + enabled + "]";
+    return "Member [id=" + id + ", firstname=" + firstname + ", lastname=" + lastname + ", email=" + email + ", phone="
+        + phone + ", password=" + password + ", memberType=" + memberType + ", date_registered=" + date_registered
+        + ", timestamp_of_last_login=" + timestamp_of_last_login + ", memberLoginControl=" + memberLoginControl
+        + ", enabled=" + enabled + "]";
   }
 
 }

@@ -28,14 +28,13 @@ public class MemberRowMapper implements RowMapper<Member> {
   public Member mapRow(ResultSet rs, int rowNum) throws SQLException {
     Member member = null;
     if (memberLoginControl != null) {
-      member = new Member(rs.getInt("ID"), rs.getString("FIRSTNAME"), rs.getString("LASTNAME"),
-          rs.getString("USERNAME"), rs.getString("EMAIL"), rs.getString("PHONE"), memberType,
-          rs.getTimestamp("DATE_REGISTERED"), rs.getTimestamp("TIMESTAMP_OF_LAST_LOGIN"), memberLoginControl,
-          rs.getBoolean("IS_ENABLED"));
+      member = new Member(rs.getInt("ID"), rs.getString("FIRSTNAME"), rs.getString("LASTNAME"), rs.getString("EMAIL"),
+          rs.getString("PHONE"), memberType, rs.getTimestamp("DATE_REGISTERED"),
+          rs.getTimestamp("TIMESTAMP_OF_LAST_LOGIN"), memberLoginControl, rs.getBoolean("IS_ENABLED"));
     } else {
-      member = new Member(rs.getInt("ID"), rs.getString("FIRSTNAME"), rs.getString("LASTNAME"),
-          rs.getString("USERNAME"), rs.getString("EMAIL"), rs.getString("PHONE"), memberType,
-          rs.getTimestamp("DATE_REGISTERED"), rs.getTimestamp("TIMESTAMP_OF_LAST_LOGIN"), rs.getBoolean("IS_ENABLED"));
+      member = new Member(rs.getInt("ID"), rs.getString("FIRSTNAME"), rs.getString("LASTNAME"), rs.getString("EMAIL"),
+          rs.getString("PHONE"), memberType, rs.getTimestamp("DATE_REGISTERED"),
+          rs.getTimestamp("TIMESTAMP_OF_LAST_LOGIN"), rs.getBoolean("IS_ENABLED"));
 
     }
     return member;

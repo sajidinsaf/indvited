@@ -145,12 +145,11 @@ public class ServiceContextConfig implements WebMvcConfigurer {
   @Bean
   public RegistrationService registrationService(
       @Autowired @Qualifier("insertMember") Insert<MemberRegistrationBindingModel, PreconfirmationMemberRegistrationModel> insertMember,
-      @Qualifier("queryMemberByUsername") Query<String, Member> queryMemberByUsername,
       @Qualifier("queryMemberByEmail") Query<String, Member> queryMemberByEmail,
       @Qualifier("queryMemberByPhone") Query<String, Member> queryMemberByPhone) {
 
-    List<Validator<MemberRegistrationBindingModel, String>> validators = registrationDataValidators(
-        queryMemberByUsername, queryMemberByEmail, queryMemberByPhone);
+    List<Validator<MemberRegistrationBindingModel, String>> validators = registrationDataValidators(queryMemberByEmail,
+        queryMemberByPhone);
     return new RegistrationService(insertMember, validators, confirmEmailSenderWorker());
   }
 
@@ -174,11 +173,10 @@ public class ServiceContextConfig implements WebMvcConfigurer {
   }
 
   private List<Validator<MemberRegistrationBindingModel, String>> registrationDataValidators(
-      Query<String, Member> queryMemberByUsername, Query<String, Member> queryMemberByEmail,
-      Query<String, Member> queryMemberByPhone) {
+      Query<String, Member> queryMemberByEmail, Query<String, Member> queryMemberByPhone) {
     List<Validator<MemberRegistrationBindingModel, String>> validators = new ArrayList<Validator<MemberRegistrationBindingModel, String>>();
 
-    validators.add(new UniqueValueValidator(queryMemberByUsername, queryMemberByEmail, queryMemberByPhone));
+    validators.add(new UniqueValueValidator(queryMemberByEmail, queryMemberByPhone));
     validators.add(new MemberRegistrationBindingModelPasswordValidator());
 
     return validators;

@@ -80,7 +80,7 @@ public class InsertMemberCriteriaDataTest {
 }
 
 @Configuration
-@ComponentScan(basePackages = { "com.ef.dataaccess.member", "com.ef.dataaccess.event" })
+@ComponentScan(basePackages = { "com.ef.dataaccess.config", "com.ef.dataaccess.member", "com.ef.dataaccess.event" })
 class HsqlDbConfigInsertMemberCriteriaDataTest {
 
   @Bean

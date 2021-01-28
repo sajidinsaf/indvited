@@ -89,7 +89,6 @@ public class InsertMemberTest {
 
     assertThat(member.getFirstName(), Matchers.is(firstName));
     assertThat(member.getLastName(), Matchers.is(lastName));
-    assertThat(member.getUsername(), Matchers.is(username));
     assertThat(member.getPhone(), Matchers.is(phone));
     assertThat(member.getMemberType().getName(), Matchers.is(memberTypeName));
 
@@ -98,7 +97,7 @@ public class InsertMemberTest {
 }
 
 @Configuration
-@ComponentScan("com.ef.dataaccess.member")
+@ComponentScan("com.ef.dataaccess.config, com.ef.dataaccess.member")
 class HsqlDbConfigInsertMemberTest {
 
   @Bean

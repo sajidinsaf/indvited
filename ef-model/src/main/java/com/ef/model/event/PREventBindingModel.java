@@ -189,35 +189,35 @@ public class PREventBindingModel {
         "*no red meat , no fish* IN case u want to order a *dessert or any dish apart of the above cap it would be *PAYABLE*");
     event.setNotes(
         "Find this restaurant on Zomato | Bhukkad, Shop 13, Mohid Heights, R. T. O. Road, Andheri Lokhandwala, Andheri West, Mumbai  http://zoma.to/r/19213346 (You have to place an order for 1 dish from menu lowest item need to be ordered  amount for which will not be refunded). *Timings 12pm till 3pm & 7pm till 9pm Available From Monday Till Sunday Only on Friday & Saturday  Available From 12pm till 3pm*");
-    PREventTimeSlotBindingModel prEventTimeSlot1 = new PREventTimeSlotBindingModel();
-    prEventTimeSlot1.setEventDate("15/01/2021");
-    prEventTimeSlot1.setTimeFrom("1200");
-    prEventTimeSlot1.setTimeTo("1600");
-
-    PREventTimeSlotBindingModel prEventTimeSlot2 = new PREventTimeSlotBindingModel();
-    prEventTimeSlot2.setEventDate("15/01/2021");
-    prEventTimeSlot2.setTimeFrom("1800");
-    prEventTimeSlot2.setTimeTo("2000");
-
-    PREventTimeSlotBindingModel prEventTimeSlot3 = new PREventTimeSlotBindingModel();
-    prEventTimeSlot3.setEventDate("16/01/2021");
-    prEventTimeSlot3.setTimeFrom("1200");
-    prEventTimeSlot3.setTimeTo("1600");
-
-    PREventTimeSlotBindingModel prEventTimeSlot4 = new PREventTimeSlotBindingModel();
-    prEventTimeSlot4.setEventDate("16/01/2021");
-    prEventTimeSlot4.setTimeFrom("1800");
-    prEventTimeSlot4.setTimeTo("2000");
-
-    PREventTimeSlotBindingModel prEventTimeSlot5 = new PREventTimeSlotBindingModel();
-    prEventTimeSlot5.setEventDate("17/01/2021");
-    prEventTimeSlot5.setTimeFrom("1200");
-    prEventTimeSlot5.setTimeTo("1600");
-
-    PREventTimeSlotBindingModel prEventTimeSlot6 = new PREventTimeSlotBindingModel();
-    prEventTimeSlot6.setEventDate("17/01/2021");
-    prEventTimeSlot6.setTimeFrom("1800");
-    prEventTimeSlot6.setTimeTo("2000");
+//    PREventTimeSlotBindingModel prEventTimeSlot1 = new PREventTimeSlotBindingModel();
+//    prEventTimeSlot1.setEventDate("15/01/2021");
+//    prEventTimeSlot1.setTimeFrom("1200");
+//    prEventTimeSlot1.setTimeTo("1600");
+//
+//    PREventTimeSlotBindingModel prEventTimeSlot2 = new PREventTimeSlotBindingModel();
+//    prEventTimeSlot2.setEventDate("15/01/2021");
+//    prEventTimeSlot2.setTimeFrom("1800");
+//    prEventTimeSlot2.setTimeTo("2000");
+//
+//    PREventTimeSlotBindingModel prEventTimeSlot3 = new PREventTimeSlotBindingModel();
+//    prEventTimeSlot3.setEventDate("16/01/2021");
+//    prEventTimeSlot3.setTimeFrom("1200");
+//    prEventTimeSlot3.setTimeTo("1600");
+//
+//    PREventTimeSlotBindingModel prEventTimeSlot4 = new PREventTimeSlotBindingModel();
+//    prEventTimeSlot4.setEventDate("16/01/2021");
+//    prEventTimeSlot4.setTimeFrom("1800");
+//    prEventTimeSlot4.setTimeTo("2000");
+//
+//    PREventTimeSlotBindingModel prEventTimeSlot5 = new PREventTimeSlotBindingModel();
+//    prEventTimeSlot5.setEventDate("17/01/2021");
+//    prEventTimeSlot5.setTimeFrom("1200");
+//    prEventTimeSlot5.setTimeTo("1600");
+//
+//    PREventTimeSlotBindingModel prEventTimeSlot6 = new PREventTimeSlotBindingModel();
+//    prEventTimeSlot6.setEventDate("17/01/2021");
+//    prEventTimeSlot6.setTimeFrom("1800");
+//    prEventTimeSlot6.setTimeTo("2000");
 //
 //    event.setPrEventTimeSlotBindingModel(new PREventTimeSlotBindingModel[] { prEventTimeSlot1, prEventTimeSlot2,
 //        prEventTimeSlot3, prEventTimeSlot4, prEventTimeSlot5, prEventTimeSlot6 });

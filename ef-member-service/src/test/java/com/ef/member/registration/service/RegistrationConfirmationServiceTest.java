@@ -34,7 +34,6 @@ import com.ef.common.work.Worker;
 import com.ef.dataaccess.Insert;
 import com.ef.dataaccess.config.DbTestUtils;
 import com.ef.member.registration.model.RegistrationConfirmationMessageModel;
-import com.ef.member.registration.service.RegistrationConfirmationService;
 import com.ef.member.registration.service.worker.RegistrationConfirmationEmailSenderWorker;
 import com.ef.model.member.Member;
 
@@ -71,7 +70,6 @@ public class RegistrationConfirmationServiceTest {
 
     assertThat(member.getFirstName(), Matchers.is("Alishba"));
     assertThat(member.getLastName(), Matchers.is("Insaf"));
-    assertThat(member.getUsername(), Matchers.is("alishba"));
     assertThat(member.getPhone(), Matchers.is("7984711178"));
     assertThat(member.getMemberType().getName(), Matchers.is("pr"));
   }

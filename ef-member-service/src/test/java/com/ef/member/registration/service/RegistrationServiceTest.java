@@ -36,7 +36,6 @@ import com.ef.common.work.Worker;
 import com.ef.dataaccess.config.DbTestUtils;
 import com.ef.dataaccess.member.InsertMember;
 import com.ef.member.registration.model.RegistrationPreconfirmationMessageModel;
-import com.ef.member.registration.service.RegistrationService;
 import com.ef.member.registration.service.worker.ConfirmEmailSenderWorker;
 import com.ef.model.member.Member;
 import com.ef.model.member.MemberRegistrationBindingModel;
@@ -91,7 +90,6 @@ public class RegistrationServiceTest {
 
     assertThat(member.getFirstName(), Matchers.is(firstName));
     assertThat(member.getLastName(), Matchers.is(lastName));
-    assertThat(member.getUsername(), Matchers.is(username));
     assertThat(member.getPhone(), Matchers.is(phone));
     assertThat(member.getMemberType().getName(), Matchers.is(memberTypeName));
   }
@@ -99,7 +97,7 @@ public class RegistrationServiceTest {
 }
 
 @Configuration
-@ComponentScan("com.ef.member")
+@ComponentScan("com.ef.dataaccess.config,com.ef.member")
 class HsqlDbConfigRegistrationServiceTest {
 
   @Bean

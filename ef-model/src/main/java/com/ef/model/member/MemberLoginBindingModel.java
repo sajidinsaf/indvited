@@ -11,10 +11,14 @@ public class MemberLoginBindingModel {
   }
 
   public MemberLoginBindingModel(String email, String password) {
-    super();
     this.email = email;
     this.password = password;
+  }
 
+  public MemberLoginBindingModel(String email, String password, MemberType memberType) {
+    this.email = email;
+    this.password = password;
+    this.memberType = memberType;
   }
 
   public String getPassword() {
