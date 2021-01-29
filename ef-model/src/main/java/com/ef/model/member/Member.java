@@ -13,6 +13,7 @@ public class Member implements Serializable {
   private String firstname;
   private String lastname;
   private String email;
+  private String gender;
   private String phone;
   private String password;
   private MemberType memberType;
@@ -25,13 +26,14 @@ public class Member implements Serializable {
 
   }
 
-  public Member(int id, String firstname, String lastname, String email, String phone, MemberType memberType,
-      Timestamp date_registered, Timestamp timestamp_of_last_login, boolean enabled) {
+  public Member(int id, String firstname, String lastname, String email, String gender, String phone,
+      MemberType memberType, Timestamp date_registered, Timestamp timestamp_of_last_login, boolean enabled) {
     super();
     this.id = id;
     this.firstname = firstname;
     this.lastname = lastname;
     this.email = email;
+    this.gender = gender;
     this.phone = phone;
     this.memberType = memberType;
     this.date_registered = date_registered;
@@ -39,22 +41,7 @@ public class Member implements Serializable {
     this.enabled = enabled;
   }
 
-  public Member(int id, String firstname, String lastname, String email, String phone, MemberType memberType,
-      Timestamp date_registered, Timestamp timestamp_of_last_login, MemberLoginControl memberLoginControl,
-      boolean enabled) {
-    super();
-    this.id = id;
-    this.firstname = firstname;
-    this.lastname = lastname;
-    this.email = email;
-    this.phone = phone;
-    this.memberType = memberType;
-    this.date_registered = date_registered;
-    this.timestamp_of_last_login = timestamp_of_last_login;
-    this.memberLoginControl = memberLoginControl;
-  }
-
-  public Member(int id, String firstname, String lastname, String email, String phone, String password,
+  public Member(int id, String firstname, String lastname, String email, String gender, String phone,
       MemberType memberType, Timestamp date_registered, Timestamp timestamp_of_last_login,
       MemberLoginControl memberLoginControl, boolean enabled) {
     super();
@@ -62,6 +49,23 @@ public class Member implements Serializable {
     this.firstname = firstname;
     this.lastname = lastname;
     this.email = email;
+    this.gender = gender;
+    this.phone = phone;
+    this.memberType = memberType;
+    this.date_registered = date_registered;
+    this.timestamp_of_last_login = timestamp_of_last_login;
+    this.memberLoginControl = memberLoginControl;
+  }
+
+  public Member(int id, String firstname, String lastname, String email, String gender, String phone, String password,
+      MemberType memberType, Timestamp date_registered, Timestamp timestamp_of_last_login,
+      MemberLoginControl memberLoginControl, boolean enabled) {
+    super();
+    this.id = id;
+    this.firstname = firstname;
+    this.lastname = lastname;
+    this.email = email;
+    this.gender = gender;
     this.phone = phone;
     this.password = password;
     this.memberType = memberType;
@@ -105,6 +109,15 @@ public class Member implements Serializable {
   public void setEmail(String email) {
     checkForMutation(email, "email");
     this.email = email;
+  }
+
+  public String getGender() {
+    return gender;
+  }
+
+  public void setGender(String gender) {
+    checkForMutation(gender, "gender");
+    this.gender = gender;
   }
 
   public String getPassword() {

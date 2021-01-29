@@ -29,11 +29,11 @@ public class MemberRowMapper implements RowMapper<Member> {
     Member member = null;
     if (memberLoginControl != null) {
       member = new Member(rs.getInt("ID"), rs.getString("FIRSTNAME"), rs.getString("LASTNAME"), rs.getString("EMAIL"),
-          rs.getString("PHONE"), memberType, rs.getTimestamp("DATE_REGISTERED"),
+          rs.getString("GENDER"), rs.getString("PHONE"), memberType, rs.getTimestamp("DATE_REGISTERED"),
           rs.getTimestamp("TIMESTAMP_OF_LAST_LOGIN"), memberLoginControl, rs.getBoolean("IS_ENABLED"));
     } else {
       member = new Member(rs.getInt("ID"), rs.getString("FIRSTNAME"), rs.getString("LASTNAME"), rs.getString("EMAIL"),
-          rs.getString("PHONE"), memberType, rs.getTimestamp("DATE_REGISTERED"),
+          rs.getString("GENDER"), rs.getString("PHONE"), memberType, rs.getTimestamp("DATE_REGISTERED"),
           rs.getTimestamp("TIMESTAMP_OF_LAST_LOGIN"), rs.getBoolean("IS_ENABLED"));
 
     }

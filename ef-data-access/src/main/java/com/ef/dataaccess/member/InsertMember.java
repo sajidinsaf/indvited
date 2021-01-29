@@ -21,7 +21,7 @@ import com.fasterxml.uuid.Generators;
 @Component("insertMember")
 public class InsertMember implements Insert<MemberRegistrationBindingModel, PreconfirmationMemberRegistrationModel> {
 
-  private final String INSERT_STATEMENT_MEMBER = "INSERT INTO member(firstname, lastname, password, email, phone, member_type_id) VALUES (?,?,?,?,?,?)";
+  private final String INSERT_STATEMENT_MEMBER = "INSERT INTO member(firstname, lastname, password, email, gender, phone, member_type_id) VALUES (?,?,?,?,?,?,?)";
   private final String INSERT_STATEMENT_MEMBER_CONTROL = "INSERT INTO member_login_control(member_email_id,token,expiry_timestamp) VALUES (?,?,?)";
   private final JdbcTemplate jdbcTemplate;
   private final Query<MemberLoginBindingModel, Integer> queryMemberIdByEmailAndMemberType;
@@ -57,8 +57,9 @@ public class InsertMember implements Insert<MemberRegistrationBindingModel, Prec
     String password = encryptPassword(input.getPassword());
 
     String email = emailFormatterForDb.data(input.getEmail());
-    jdbcTemplate.update(INSERT_STATEMENT_MEMBER,
-        new Object[] { input.getFirstName(), input.getLastName(), password, email, input.getPhone(), memberTypeId });
+    String gender = input.getGender().toUpperCase();
+    jdbcTemplate.update(INSERT_STATEMENT_MEMBER, new Object[] { input.getFirstName(), input.getLastName(), password,
+        email, gender, input.getPhone(), memberTypeId });
 
     MemberType memberType = memberTypeCache.getMemberType(memberTypeId);
 

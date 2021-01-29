@@ -43,7 +43,7 @@
 				Please quote this member id when communicating with customer services. <br />
 									<br />
 				
-				Your username is: ${member.username} <br />
+				Your registered email is: ${member.email} <br />
 									<br />
 				
 				You can now login to the Invited Application <br />

@@ -10,6 +10,7 @@ public class MemberRegistrationBindingModel implements CredentialBindingModel {
   private String username;
   private String password;
   private String email;
+  private String gender;
   private String phone;
   private String memberType;
   private Date dateRegistered;
@@ -19,7 +20,7 @@ public class MemberRegistrationBindingModel implements CredentialBindingModel {
   }
 
   public MemberRegistrationBindingModel(String id, String firstname, String lastname, String username, String password,
-      String email, String phone, String memberType) {
+      String email, String gender, String phone, String memberType) {
     super();
     this.id = id;
     this.firstName = firstname;
@@ -81,6 +82,14 @@ public class MemberRegistrationBindingModel implements CredentialBindingModel {
     this.email = email;
   }
 
+  public String getGender() {
+    return gender;
+  }
+
+  public void setGender(String gender) {
+    this.gender = gender;
+  }
+
   public String getPhone() {
     return phone;
   }
@@ -102,15 +111,15 @@ public class MemberRegistrationBindingModel implements CredentialBindingModel {
   }
 
   @Override
-  public String toString() {
-    return "MemberRegistrationBindingModel [id=" + id + ", firstName=" + firstName + ", lastName=" + lastName
-        + ", username=" + username + ", password=" + password + ", email=" + email + ", phone=" + phone
-        + ", memberType=" + memberType + ", dateRegistered=" + dateRegistered + "]";
+  public String getSecret() {
+    return getPassword();
   }
 
   @Override
-  public String getSecret() {
-    return getPassword();
+  public String toString() {
+    return "MemberRegistrationBindingModel [id=" + id + ", firstName=" + firstName + ", lastName=" + lastName
+        + ", username=" + username + ", password=" + password + ", email=" + email + ", gender=" + gender + ", phone="
+        + phone + ", memberType=" + memberType + ", dateRegistered=" + dateRegistered + "]";
   }
 
 }

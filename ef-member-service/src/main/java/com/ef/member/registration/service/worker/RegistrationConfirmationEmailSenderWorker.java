@@ -48,7 +48,7 @@ public class RegistrationConfirmationEmailSenderWorker
       mailMessage.setSender(new InternetAddress(senderEmailAddress));
 
       mailMessage.setRecipients(Message.RecipientType.TO, InternetAddress.parse(toEmail));
-      mailMessage.setSubject("Action Required: Confirm your registration at Invited");
+      mailMessage.setSubject("Welcome to Invited");
       mailMessage.setContent(messageBody, "text/html");
 
       mailMessage.setSentDate(new Date());

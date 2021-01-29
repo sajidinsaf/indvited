@@ -13,7 +13,7 @@ import com.ef.model.member.MemberType;
 @Component(value = "queryMemberByPhone")
 public class QueryMemberByPhone implements Query<String, Member> {
 
-  private final String SELECT_MEMBER = "select id, firstname, lastname, username, email, phone, date_registered, timestamp_of_last_login, is_enabled from member where phone=?";
+  private final String SELECT_MEMBER = "select id, firstname, lastname, username, email, gender, phone, date_registered, timestamp_of_last_login, is_enabled from member where phone=?";
 
   private final JdbcTemplate jdbcTemplate;
   private final Query<String, MemberType> queryMemberTypeByPhone;

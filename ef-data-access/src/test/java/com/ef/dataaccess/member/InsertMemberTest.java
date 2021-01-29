@@ -54,6 +54,7 @@ public class InsertMemberTest {
   private String password = "passwd" + new Random().nextInt(1000) + "@asds.com";
   private String phone = new Random().nextInt(10) + "";
   private String memberTypeName = new String[] { "admin", "pr", "blogger" }[new Random().nextInt(2)];
+  private String gender = "F";
 
   @SuppressWarnings("resource")
   @Before
@@ -80,6 +81,7 @@ public class InsertMemberTest {
     when(memberData.getUsername()).thenReturn(username);
     when(memberData.getPassword()).thenReturn(password);
     when(memberData.getEmail()).thenReturn(email);
+    when(memberData.getGender()).thenReturn(gender);
     when(memberData.getPhone()).thenReturn(phone);
     when(memberData.getMemberType()).thenReturn(memberTypeName);
 
@@ -90,6 +92,7 @@ public class InsertMemberTest {
     assertThat(member.getFirstName(), Matchers.is(firstName));
     assertThat(member.getLastName(), Matchers.is(lastName));
     assertThat(member.getPhone(), Matchers.is(phone));
+    assertThat(member.getGender(), Matchers.is(gender));
     assertThat(member.getMemberType().getName(), Matchers.is(memberTypeName));
 
   }

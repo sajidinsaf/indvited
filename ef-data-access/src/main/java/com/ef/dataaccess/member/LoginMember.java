@@ -17,7 +17,7 @@ import com.ef.model.member.MemberType;
 @Component(value = "loginMember")
 public class LoginMember implements Query<MemberLoginBindingModel, Member> {
 
-  private final String SELECT_MEMBER = "select id, firstname, password, lastname, email, phone, date_registered, timestamp_of_last_login, is_enabled from member where email=?";
+  private final String SELECT_MEMBER = "select id, firstname, password, lastname, email, gender, phone, date_registered, timestamp_of_last_login, is_enabled from member where email=?";
 
   private final JdbcTemplate jdbcTemplate;
   private final Query<String, MemberType> queryMemberTypeByEmail;
