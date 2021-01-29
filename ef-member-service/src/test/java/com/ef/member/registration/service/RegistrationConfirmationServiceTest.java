@@ -26,6 +26,7 @@ import org.springframework.jdbc.datasource.embedded.EmbeddedDatabaseBuilder;
 import org.springframework.jdbc.datasource.embedded.EmbeddedDatabaseType;
 
 import com.ef.common.EmailSender;
+import com.ef.common.MapBasedContext;
 import com.ef.common.message.MessagePacket;
 import com.ef.common.message.Response;
 import com.ef.common.message.StatusCode;
@@ -101,7 +102,7 @@ class HsqlDbConfigRegistrationConfirmationServiceTest {
     return new RegistrationConfirmationService(confirmMember, validators, confirmEmailWorker());
   }
 
-  public Worker<MessagePacket<RegistrationConfirmationMessageModel>, Response<String>> confirmEmailWorker() {
+  public Worker<MessagePacket<RegistrationConfirmationMessageModel>, Response<String>, MapBasedContext> confirmEmailWorker() {
     return new RegistrationConfirmationEmailSenderWorker(mailSender(), mailSession(), "indvited@codeczar.co.uk");
   }
 

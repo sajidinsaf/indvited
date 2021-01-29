@@ -6,6 +6,7 @@ import java.util.List;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import com.ef.common.MapBasedContext;
 import com.ef.common.logging.ServiceLoggingUtil;
 import com.ef.common.message.MessagePacket;
 import com.ef.common.message.Response;
@@ -23,11 +24,11 @@ public class RegistrationService {
   private final ServiceLoggingUtil logUtil = new ServiceLoggingUtil();
   private final Insert<MemberRegistrationBindingModel, PreconfirmationMemberRegistrationModel> insertMember;
   private final List<Validator<MemberRegistrationBindingModel, String>> validators;
-  private final Worker<MessagePacket<RegistrationPreconfirmationMessageModel>, Response<String>> confirmationEmailSender;
+  private final Worker<MessagePacket<RegistrationPreconfirmationMessageModel>, Response<String>, MapBasedContext> confirmationEmailSender;
 
   public RegistrationService(
       Insert<MemberRegistrationBindingModel, PreconfirmationMemberRegistrationModel> insertMember,
-      Worker<MessagePacket<RegistrationPreconfirmationMessageModel>, Response<String>> confirmationEmailSender) {
+      Worker<MessagePacket<RegistrationPreconfirmationMessageModel>, Response<String>, MapBasedContext> confirmationEmailSender) {
     this.insertMember = insertMember;
     validators = new ArrayList<Validator<MemberRegistrationBindingModel, String>>();
     this.confirmationEmailSender = confirmationEmailSender;
@@ -36,7 +37,7 @@ public class RegistrationService {
   public RegistrationService(
       Insert<MemberRegistrationBindingModel, PreconfirmationMemberRegistrationModel> insertMember,
       List<Validator<MemberRegistrationBindingModel, String>> validators,
-      Worker<MessagePacket<RegistrationPreconfirmationMessageModel>, Response<String>> confirmationEmailSender) {
+      Worker<MessagePacket<RegistrationPreconfirmationMessageModel>, Response<String>, MapBasedContext> confirmationEmailSender) {
     this.insertMember = insertMember;
     this.validators = validators;
     this.confirmationEmailSender = confirmationEmailSender;
@@ -66,7 +67,7 @@ public class RegistrationService {
     MessagePacket<RegistrationPreconfirmationMessageModel> job = new MessagePacket<RegistrationPreconfirmationMessageModel>(
         rcmModel);
     job.setPayload(rcmModel);
-    return confirmationEmailSender.perform(job).getResponseResult();
+    return confirmationEmailSender.perform(job, new MapBasedContext()).getResponseResult();
   }
 
   private List<String> validate(MemberRegistrationBindingModel memberRegistationData) {

@@ -7,6 +7,7 @@ import java.util.List;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import com.ef.common.MapBasedContext;
 import com.ef.common.logging.ServiceLoggingUtil;
 import com.ef.common.message.MessagePacket;
 import com.ef.common.message.Response;
@@ -22,11 +23,11 @@ public class RegistrationConfirmationService {
   private final ServiceLoggingUtil logUtil = new ServiceLoggingUtil();
   private final Insert<String, Member> confirmMember;
   private final List<Validator<String, String>> validators;
-  private final Worker<MessagePacket<RegistrationConfirmationMessageModel>, Response<String>> registrationConfirmedEmailSender;
+  private final Worker<MessagePacket<RegistrationConfirmationMessageModel>, Response<String>, MapBasedContext> registrationConfirmedEmailSender;
 
   public RegistrationConfirmationService(Insert<String, Member> confirmMember,
       List<Validator<String, String>> validators,
-      Worker<MessagePacket<RegistrationConfirmationMessageModel>, Response<String>> registrationConfirmedEmailSender) {
+      Worker<MessagePacket<RegistrationConfirmationMessageModel>, Response<String>, MapBasedContext> registrationConfirmedEmailSender) {
     this.confirmMember = confirmMember;
     this.validators = validators;
     this.registrationConfirmedEmailSender = registrationConfirmedEmailSender;
@@ -60,7 +61,7 @@ public class RegistrationConfirmationService {
     @SuppressWarnings("unchecked")
     MessagePacket<RegistrationConfirmationMessageModel> job = new MessagePacket<RegistrationConfirmationMessageModel>(
         registrationConfirmationMessageModel);
-    return registrationConfirmedEmailSender.perform(job).getResponseResult();
+    return registrationConfirmedEmailSender.perform(job, new MapBasedContext()).getResponseResult();
   }
 
   private List<String> validate(String memberRegistationData) {

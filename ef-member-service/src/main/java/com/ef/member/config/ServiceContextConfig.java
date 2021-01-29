@@ -26,6 +26,7 @@ import org.springframework.web.servlet.mvc.method.annotation.RequestMappingHandl
 import org.springframework.web.servlet.view.InternalResourceViewResolver;
 
 import com.ef.common.EmailSender;
+import com.ef.common.MapBasedContext;
 import com.ef.common.message.MessagePacket;
 import com.ef.common.message.Response;
 import com.ef.common.validation.Validator;
@@ -161,7 +162,7 @@ public class ServiceContextConfig implements WebMvcConfigurer {
     return new RegistrationConfirmationService(confirmMember, validators, registrationConfirmationEmailSenderWorker());
   }
 
-  private Worker<MessagePacket<RegistrationConfirmationMessageModel>, Response<String>> registrationConfirmationEmailSenderWorker() {
+  private Worker<MessagePacket<RegistrationConfirmationMessageModel>, Response<String>, MapBasedContext> registrationConfirmationEmailSenderWorker() {
     RegistrationConfirmationEmailSenderWorker worker = new RegistrationConfirmationEmailSenderWorker(mailSender(),
         mailSession(), SENDER_EMAIL_ADDRESS);
     return worker;

@@ -8,22 +8,23 @@ import org.slf4j.LoggerFactory;
 import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSender;
 
+import com.ef.common.MapBasedContext;
 import com.ef.common.logging.ServiceLoggingUtil;
 import com.ef.common.message.MessagePacket;
 import com.ef.common.message.Response;
 import com.ef.common.message.StatusCode;
 import com.ef.common.work.Worker;
 
-public class MailSenderWorker implements Worker<MessagePacket<String>, Response<String>> {
+public class MailSenderWorker implements Worker<MessagePacket<String>, Response<String>, MapBasedContext> {
 
   private final JavaMailSender mailSender;
-  private final Worker<MessagePacket<String>, List<String>> emailAddressProvider;
+  private final Worker<MessagePacket<String>, List<String>, MapBasedContext> emailAddressProvider;
   private final ServiceLoggingUtil loggingUtil;
   private final Logger logger = LoggerFactory.getLogger(MailSenderWorker.class);
   private final String senderEmailAddress;
 
   public MailSenderWorker(JavaMailSender mailSender, String senderEmailAddress,
-      Worker<MessagePacket<String>, List<String>> emailAddressProvider) {
+      Worker<MessagePacket<String>, List<String>, MapBasedContext> emailAddressProvider) {
     this.mailSender = mailSender;
     this.emailAddressProvider = emailAddressProvider;
     loggingUtil = new ServiceLoggingUtil();
@@ -31,9 +32,9 @@ public class MailSenderWorker implements Worker<MessagePacket<String>, Response<
   }
 
   @Override
-  public Response<String> perform(MessagePacket<String> messagePacket) {
+  public Response<String> perform(MessagePacket<String> messagePacket, MapBasedContext context) {
 
-    List<String> emailAddresses = emailAddressProvider.perform(messagePacket);
+    List<String> emailAddresses = emailAddressProvider.perform(messagePacket, context);
 
     for (String toEmail : emailAddresses) {
       SimpleMailMessage simpleMailMessage = new SimpleMailMessage();

@@ -11,6 +11,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.ef.common.EmailSender;
+import com.ef.common.MapBasedContext;
 import com.ef.common.logging.ServiceLoggingUtil;
 import com.ef.common.message.MessagePacket;
 import com.ef.common.message.Response;
@@ -19,7 +20,7 @@ import com.ef.common.work.Worker;
 import com.ef.member.registration.model.RegistrationConfirmationMessageModel;
 
 public class RegistrationConfirmationEmailSenderWorker
-    implements Worker<MessagePacket<RegistrationConfirmationMessageModel>, Response<String>> {
+    implements Worker<MessagePacket<RegistrationConfirmationMessageModel>, Response<String>, MapBasedContext> {
 
   private final EmailSender<MimeMessage, String> mailSender;
   private final ServiceLoggingUtil loggingUtil;
@@ -37,7 +38,8 @@ public class RegistrationConfirmationEmailSenderWorker
   }
 
   @Override
-  public Response<String> perform(MessagePacket<RegistrationConfirmationMessageModel> messagePacket) {
+  public Response<String> perform(MessagePacket<RegistrationConfirmationMessageModel> messagePacket,
+      MapBasedContext context) {
 
     String toEmail = messagePacket.getPayload().getToEmailAddress();
     String messageBody = messagePacket.getPayload().getMessage();

@@ -22,6 +22,7 @@ import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 import org.springframework.web.servlet.mvc.method.annotation.RequestMappingHandlerAdapter;
 import org.springframework.web.servlet.view.InternalResourceViewResolver;
 
+import com.ef.common.MapBasedContext;
 import com.ef.common.message.MessagePacket;
 import com.ef.common.message.Publisher;
 import com.ef.common.message.Response;
@@ -140,8 +141,8 @@ public class ServiceContextConfig implements WebMvcConfigurer {
     }).start();
   }
 
-  private List<Worker<MessagePacket<String>, Response<String>>> workers() {
-    List<Worker<MessagePacket<String>, Response<String>>> workers = new ArrayList<Worker<MessagePacket<String>, Response<String>>>();
+  private List<Worker<MessagePacket<String>, Response<String>, MapBasedContext>> workers() {
+    List<Worker<MessagePacket<String>, Response<String>, MapBasedContext>> workers = new ArrayList<Worker<MessagePacket<String>, Response<String>, MapBasedContext>>();
 
     MailSenderWorker mailsenderWorker = new MailSenderWorker(mailSender(), SENDER_EMAIL_ADDRESS,
         new SimpleEmailAddressProvider());

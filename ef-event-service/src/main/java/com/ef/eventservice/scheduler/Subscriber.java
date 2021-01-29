@@ -6,6 +6,7 @@ import java.util.function.Predicate;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import com.ef.common.MapBasedContext;
 import com.ef.common.message.MessagePacket;
 import com.ef.common.message.Response;
 import com.ef.common.work.Worker;
@@ -14,10 +15,11 @@ import redis.clients.jedis.JedisPubSub;
 
 public class Subscriber extends JedisPubSub {
 
-  private final List<Worker<MessagePacket<String>, Response<String>>> workers;
+  private final List<Worker<MessagePacket<String>, Response<String>, MapBasedContext>> workers;
   private final Predicate<String>[] predicates;
 
-  public Subscriber(List<Worker<MessagePacket<String>, Response<String>>> workers, Predicate<String>... predicates) {
+  public Subscriber(List<Worker<MessagePacket<String>, Response<String>, MapBasedContext>> workers,
+      Predicate<String>... predicates) {
     this.workers = workers;
     this.predicates = predicates;
   }
@@ -31,8 +33,8 @@ public class Subscriber extends JedisPubSub {
 
     MessagePacket<String> messagePacket = new MessagePacket<String>(message, predicates);
 
-    for (Worker<MessagePacket<String>, Response<String>> worker : workers) {
-      worker.perform(messagePacket);
+    for (Worker<MessagePacket<String>, Response<String>, MapBasedContext> worker : workers) {
+      worker.perform(messagePacket, new MapBasedContext());
     }
   }
 

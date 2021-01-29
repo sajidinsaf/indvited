@@ -29,6 +29,7 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
 import com.ef.common.EmailSender;
+import com.ef.common.MapBasedContext;
 import com.ef.common.message.MessagePacket;
 import com.ef.common.message.Response;
 import com.ef.common.message.StatusCode;
@@ -124,7 +125,7 @@ class HsqlDbConfigRegistrationServiceTest {
     return new RegistrationService(insertMember, confirmEmailWorker());
   }
 
-  public Worker<MessagePacket<RegistrationPreconfirmationMessageModel>, Response<String>> confirmEmailWorker() {
+  public Worker<MessagePacket<RegistrationPreconfirmationMessageModel>, Response<String>, MapBasedContext> confirmEmailWorker() {
     return new ConfirmEmailSenderWorker(mailSender(), mailSession(), "indvited@codeczar.co.uk");
   }
 
