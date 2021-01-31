@@ -20,6 +20,8 @@ import com.ef.model.event.PREvent;
 import com.ef.model.event.PREventBindingModel;
 import com.ef.model.event.PREventLocationBindingModel;
 import com.ef.model.member.Member;
+import com.ef.model.member.MemberLoginBindingModel;
+import com.ef.model.member.MemberType;
 
 @Component("insertPREvent")
 public class InsertPREvent implements Insert<PREventBindingModel, PREvent> {
@@ -36,7 +38,7 @@ public class InsertPREvent implements Insert<PREventBindingModel, PREvent> {
   private final Insert<Pair<PREventBindingModel, PREvent>, PREvent> insertEventCriteria;
   private final Insert<Pair<PREventBindingModel, PREvent>, PREvent> insertEventDeliverables;
   private final Query<PREventLocationBindingModel, EventVenue> queryVenueByKeyFieldOrInsert;
-  private final Query<String, Member> queryMemberByEmail;
+  private final Query<MemberLoginBindingModel, Member> queryMemberByEmailAndMemberType;
   private final UuidGenerator uuidGenerator;
 
   @Autowired
@@ -46,7 +48,7 @@ public class InsertPREvent implements Insert<PREventBindingModel, PREvent> {
       @Qualifier("insertPREventCriteria") Insert<Pair<PREventBindingModel, PREvent>, PREvent> insertEventCriteria,
       @Qualifier("insertPREventDeliverables") Insert<Pair<PREventBindingModel, PREvent>, PREvent> insertEventDeliverables,
       @Qualifier("queryVenueByKeyFieldOrInsert") Query<PREventLocationBindingModel, EventVenue> queryVenueByKeyFieldOrInsert,
-      @Qualifier("queryMemberByEmail") Query<String, Member> queryMemberByEmail,
+      @Qualifier("queryMemberByEmailAndMemberType") Query<MemberLoginBindingModel, Member> queryMemberByEmailAndMemberType,
       @Qualifier("uuidGenerator") UuidGenerator uuidGenerator) {
     this.jdbcTemplate = jdbcTemplate;
     this.queryEventByUuid = queryEventByUuid;
@@ -55,7 +57,7 @@ public class InsertPREvent implements Insert<PREventBindingModel, PREvent> {
     this.insertEventCriteria = insertEventCriteria;
     this.insertEventDeliverables = insertEventDeliverables;
     this.queryVenueByKeyFieldOrInsert = queryVenueByKeyFieldOrInsert;
-    this.queryMemberByEmail = queryMemberByEmail;
+    this.queryMemberByEmailAndMemberType = queryMemberByEmailAndMemberType;
     this.uuidGenerator = uuidGenerator;
   }
 
@@ -72,8 +74,9 @@ public class InsertPREvent implements Insert<PREventBindingModel, PREvent> {
     Member member = null;
     String emailId = input.getEventCreatorEmailId();
     try {
-
-      member = queryMemberByEmail.data(emailId);
+      MemberLoginBindingModel emailAndType = new MemberLoginBindingModel(emailId, null);
+      emailAndType.setMemberType(MemberType.PR);
+      member = queryMemberByEmailAndMemberType.data(emailAndType);
     } catch (EmptyResultDataAccessException e) {
       logUtil.warn(logger, "No member information found for emailId: ", emailId, " Input Event Details: ", input);
       return null;

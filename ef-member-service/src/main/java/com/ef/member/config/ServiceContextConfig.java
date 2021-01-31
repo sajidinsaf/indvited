@@ -8,6 +8,7 @@ import javax.mail.PasswordAuthentication;
 import javax.mail.Session;
 import javax.mail.internet.MimeMessage;
 
+import org.apache.commons.lang3.tuple.Pair;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -33,6 +34,7 @@ import com.ef.common.validation.Validator;
 import com.ef.common.work.Worker;
 import com.ef.dataaccess.Insert;
 import com.ef.dataaccess.Query;
+import com.ef.dataaccess.member.MemberTypeCache;
 import com.ef.member.login.service.LoginService;
 import com.ef.member.login.service.TokenAuthService;
 import com.ef.member.login.service.validation.EmailAndMemberTypeCombinationValidator;
@@ -51,6 +53,7 @@ import com.ef.model.member.Member;
 import com.ef.model.member.MemberLoginBindingModel;
 import com.ef.model.member.MemberRegistrationBindingModel;
 import com.ef.model.member.MemberTokenAuthBindingModel;
+import com.ef.model.member.MemberType;
 import com.ef.model.member.PreconfirmationMemberRegistrationModel;
 
 @Configuration
@@ -145,11 +148,12 @@ public class ServiceContextConfig implements WebMvcConfigurer {
   @Bean
   public RegistrationService registrationService(
       @Autowired @Qualifier("insertMember") Insert<MemberRegistrationBindingModel, PreconfirmationMemberRegistrationModel> insertMember,
-      @Qualifier("queryMemberByEmail") Query<String, Member> queryMemberByEmail,
-      @Qualifier("queryMemberByPhone") Query<String, Member> queryMemberByPhone) {
+      @Qualifier("queryMemberByEmailAndMemberType") Query<MemberLoginBindingModel, Member> queryMemberByEmailAndMemberType,
+      @Qualifier("queryMemberByPhoneAndMemberType") Query<Pair<String, MemberType>, Member> queryMemberByPhoneAndMemberType,
+      @Qualifier("memberTypeCache") MemberTypeCache memberTypeCache) {
 
-    List<Validator<MemberRegistrationBindingModel, String>> validators = registrationDataValidators(queryMemberByEmail,
-        queryMemberByPhone);
+    List<Validator<MemberRegistrationBindingModel, String>> validators = registrationDataValidators(memberTypeCache,
+        queryMemberByEmailAndMemberType, queryMemberByPhoneAndMemberType);
     return new RegistrationService(insertMember, validators, confirmEmailSenderWorker());
   }
 
@@ -173,10 +177,12 @@ public class ServiceContextConfig implements WebMvcConfigurer {
   }
 
   private List<Validator<MemberRegistrationBindingModel, String>> registrationDataValidators(
-      Query<String, Member> queryMemberByEmail, Query<String, Member> queryMemberByPhone) {
+      MemberTypeCache memberTypeCache, Query<MemberLoginBindingModel, Member> queryMemberByEmailAndMemberType,
+      Query<Pair<String, MemberType>, Member> queryMemberByPhoneAndMemberType) {
     List<Validator<MemberRegistrationBindingModel, String>> validators = new ArrayList<Validator<MemberRegistrationBindingModel, String>>();
 
-    validators.add(new UniqueValueValidator(queryMemberByEmail, queryMemberByPhone));
+    validators.add(
+        new UniqueValueValidator(memberTypeCache, queryMemberByEmailAndMemberType, queryMemberByPhoneAndMemberType));
     validators.add(new MemberRegistrationBindingModelPasswordValidator());
 
     return validators;

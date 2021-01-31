@@ -5,6 +5,7 @@ import java.util.List;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.dao.EmptyResultDataAccessException;
 
 import com.ef.common.logging.ServiceLoggingUtil;
 import com.ef.common.message.Response;
@@ -42,7 +43,12 @@ public class LoginService {
       return new Response<Member>(validationResults, StatusCode.PRECONDITION_FAILED);
     }
 
-    Member member = loginMember.data(memberLoginData);
+    Member member = null;
+    try {
+      member = loginMember.data(memberLoginData);
+    } catch (EmptyResultDataAccessException e) {
+      logUtil.info(logger, "member login failed", e);
+    }
 
     if (member == null) {
       validationResults = new ArrayList<String>();

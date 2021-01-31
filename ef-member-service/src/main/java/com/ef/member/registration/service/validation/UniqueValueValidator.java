@@ -1,20 +1,29 @@
 package com.ef.member.registration.service.validation;
 
+import org.apache.commons.lang3.tuple.Pair;
 import org.springframework.dao.EmptyResultDataAccessException;
 
+import com.ef.common.LRPair;
 import com.ef.common.validation.Validator;
 import com.ef.dataaccess.Query;
+import com.ef.dataaccess.member.MemberTypeCache;
 import com.ef.model.member.Member;
+import com.ef.model.member.MemberLoginBindingModel;
 import com.ef.model.member.MemberRegistrationBindingModel;
+import com.ef.model.member.MemberType;
 
 public class UniqueValueValidator implements Validator<MemberRegistrationBindingModel, String> {
 
-  private final Query<String, Member> queryMemberByEmail;
-  private final Query<String, Member> queryMemberByPhone;
+  private final Query<MemberLoginBindingModel, Member> queryMemberByEmailAndMemberType;
+  private final Query<Pair<String, MemberType>, Member> queryMemberByPhoneAndMemberType;
+  private final MemberTypeCache memberTypeCache;
 
-  public UniqueValueValidator(Query<String, Member> queryMemberByEmail, Query<String, Member> queryMemberByPhone) {
-    this.queryMemberByEmail = queryMemberByEmail;
-    this.queryMemberByPhone = queryMemberByPhone;
+  public UniqueValueValidator(MemberTypeCache memberTypeCache,
+      Query<MemberLoginBindingModel, Member> queryMemberByEmailAndMemberType,
+      Query<Pair<String, MemberType>, Member> queryMemberByPhoneAndMemberType) {
+    this.queryMemberByEmailAndMemberType = queryMemberByEmailAndMemberType;
+    this.queryMemberByPhoneAndMemberType = queryMemberByPhoneAndMemberType;
+    this.memberTypeCache = memberTypeCache;
   }
 
   @Override
@@ -22,11 +31,31 @@ public class UniqueValueValidator implements Validator<MemberRegistrationBinding
 
     StringBuilder sb = null;
 
-    if (isNotUnique(queryMemberByEmail, data.getEmail())) {
+    MemberType memberType = memberTypeCache.getMemberType(data.getMemberType());
+    MemberLoginBindingModel loginModel = new MemberLoginBindingModel(data.getEmail(), null);
+    loginModel.setMemberType(memberType);
+
+    Member member = null;
+
+    try {
+      member = queryMemberByEmailAndMemberType.data(loginModel);
+    } catch (EmptyResultDataAccessException e) {
+    }
+
+    if (member != null) {
       sb = new StringBuilder();
       sb.append("email not unique");
     }
-    if (isNotUnique(queryMemberByPhone, data.getPhone())) {
+
+    member = null;
+    try {
+      LRPair<String, MemberType> phoneAndMemberType = new LRPair<String, MemberType>(data.getPhone(), memberType);
+      member = queryMemberByPhoneAndMemberType.data(phoneAndMemberType);
+    } catch (EmptyResultDataAccessException e) {
+
+    }
+
+    if (member != null) {
       if (sb == null) {
         sb = new StringBuilder();
       } else {
@@ -34,19 +63,7 @@ public class UniqueValueValidator implements Validator<MemberRegistrationBinding
       }
       sb.append("phone not unique");
     }
-
     return sb == null ? null : sb.toString();
-  }
-
-  private boolean isNotUnique(Query<String, Member> query, String data) {
-    try {
-      Member member = query.data(data);
-      if (member != null) {
-        return true;
-      }
-    } catch (EmptyResultDataAccessException e) {
-    }
-    return false;
   }
 
 }

@@ -22,20 +22,17 @@ public class LoginMemberAuthToken implements Query<MemberTokenAuthBindingModel, 
   private static final Logger logger = LoggerFactory.getLogger(LoginMemberAuthToken.class);
   private ServiceLoggingUtil logUtil = new ServiceLoggingUtil();
 
-  private final String SELECT_MEMBER = "select id, firstname, password, lastname, username, email, gender, phone, date_registered, timestamp_of_last_login, is_enabled from member where email=?";
+  private final String SELECT_MEMBER = "select id, firstname, password, lastname, username, email, gender, phone, date_registered, timestamp_of_last_login, is_enabled from member where email=? and member_type_id=?";
 
   private final JdbcTemplate jdbcTemplate;
-  private final Query<String, MemberType> queryMemberTypeByEmail;
   private final Query<String, String> emailFormatterForDb;
   private final Query<String, MemberLoginControl> queryLoginControlByEmail;
 
   @Autowired
   public LoginMemberAuthToken(@Qualifier("indvitedDbJdbcTemplate") JdbcTemplate jdbcTemplate,
-      @Qualifier("queryMemberTypeByEmail") Query<String, MemberType> queryMemberTypeByEmail,
       @Qualifier("emailFormatterForDb") Query<String, String> emailFormatterForDb,
       @Qualifier("queryMemberLoginControlByEmail") Query<String, MemberLoginControl> queryLoginControlByEmail) {
     this.jdbcTemplate = jdbcTemplate;
-    this.queryMemberTypeByEmail = queryMemberTypeByEmail;
     this.emailFormatterForDb = emailFormatterForDb;
     this.queryLoginControlByEmail = queryLoginControlByEmail;
 
@@ -47,15 +44,7 @@ public class LoginMemberAuthToken implements Query<MemberTokenAuthBindingModel, 
     MemberType memberType = null;
     String email = emailFormatterForDb.data(data.getEmail());
 
-    try {
-      memberType = queryMemberTypeByEmail.data(email);
-    } catch (EmptyResultDataAccessException e) {
-      return null;
-    }
-
-    if (memberType == null) {
-      return null;
-    }
+    memberType = data.getMemberType();
 
     MemberLoginControl memberLoginControl = null;
 
@@ -67,7 +56,7 @@ public class LoginMemberAuthToken implements Query<MemberTokenAuthBindingModel, 
       return null;
     }
 
-    Member member = jdbcTemplate.queryForObject(SELECT_MEMBER, new Object[] { email },
+    Member member = jdbcTemplate.queryForObject(SELECT_MEMBER, new Object[] { email, memberType.getId() },
         new MemberRowMapperWithPassword(memberType, memberLoginControl));
 
     return member;

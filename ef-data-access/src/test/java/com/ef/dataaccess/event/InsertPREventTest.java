@@ -1,8 +1,9 @@
 package com.ef.dataaccess.event;
 
 import static org.hamcrest.Matchers.is;
+import static org.hamcrest.Matchers.nullValue;
 import static org.junit.Assert.assertThat;
-import static org.mockito.MockitoAnnotations.initMocks;
+import static org.mockito.MockitoAnnotations.openMocks;
 
 import java.text.SimpleDateFormat;
 import java.util.Arrays;
@@ -44,7 +45,7 @@ public class InsertPREventTest {
   @Mock
   private PREventBindingModel eventData;
 
-  private String eventCreatorEmailId = "dummy2@456.com";
+  private String eventCreatorEmailId = "dummy@123.com";
   private int eventType = 0;
   private String domainName = "Restaurant";
   private PREventTimeSlotBindingModel[] prEventTimeSlotBindingModel = new PREventTimeSlotBindingModel[] {
@@ -64,7 +65,7 @@ public class InsertPREventTest {
   @SuppressWarnings("resource")
   @Before
   public void setUp() {
-    initMocks(this);
+    openMocks(this);
     AnnotationConfigApplicationContext appContext = new AnnotationConfigApplicationContext(
         HsqlDbConfigInsertPREventTest.class);
     insertPREvent = appContext.getBean(InsertPREvent.class);
@@ -86,7 +87,7 @@ public class InsertPREventTest {
   }
 
   @Test
-  public void test() {
+  public void shouldInsertEventSuccessfully() {
     eventData = new PREventBindingModel(eventCreatorEmailId, eventType, domainName, cap, exclusions, eventCriteria,
         eventDeliverables, eventLocation, notes);
 
@@ -97,9 +98,9 @@ public class InsertPREventTest {
     SimpleDateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy");
     assertThat(dateFormat.format(event.getCreatedDate()), is(dateFormat.format(new java.util.Date())));
 
-    assertThat(event.getMember().getId(), is(1));
-    assertThat(event.getMember().getFirstName(), is("dummy2"));
-    assertThat(event.getMember().getEmail(), is("dummy2@456.com"));
+    assertThat(event.getMember().getId(), is(0));
+    assertThat(event.getMember().getFirstName(), is("dummy"));
+    assertThat(event.getMember().getEmail(), is("dummy@123.com"));
 
 //    assertThat(event.getEventTimeSlots().length, is(2));
 //
@@ -124,6 +125,19 @@ public class InsertPREventTest {
     assertThat(event.getEventDeliverables()[1].getEventId(), is(event.getId()));
     assertThat(event.getEventDeliverables()[1].getDeliverableId(), is(1));
     assertThat(event.getEventDeliverables()[1].getDeliverableName(), is("Instagram Post"));
+
+  }
+
+  @Test
+  public void shouldNotCreateEventWhenMenerTypeNotPR() {
+    eventCreatorEmailId = "dummy2@456.com";
+
+    eventData = new PREventBindingModel(eventCreatorEmailId, eventType, domainName, cap, exclusions, eventCriteria,
+        eventDeliverables, eventLocation, notes);
+
+    PREvent event = insertPREvent.data(eventData);
+
+    assertThat(event, nullValue());
 
   }
 

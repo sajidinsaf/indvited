@@ -33,6 +33,7 @@ import com.ef.common.message.StatusCode;
 import com.ef.common.validation.Validator;
 import com.ef.dataaccess.Query;
 import com.ef.dataaccess.config.DbTestUtils;
+import com.ef.dataaccess.member.MemberTypeCache;
 import com.ef.member.login.service.LoginService;
 import com.ef.member.login.service.validation.EmailNotNullOrEmptyValidator;
 import com.ef.member.login.service.validation.PasswordNotNullOrEmptyValidator;
@@ -46,6 +47,8 @@ public class LoginServiceTest {
 
   private LoginService loginService;
 
+  private MemberTypeCache memberTypeCache;
+
   private String email = "ashish@hotmail.com";
   private String email_sajid = "sajidinsaf@hotmail.com";
   private String password = "Bh1m@n1Street";
@@ -58,6 +61,8 @@ public class LoginServiceTest {
         HsqlDbConfigLoginServiceTest.class);
     jdbcTemplate = appContext.getBean(JdbcTemplate.class);
     loginService = appContext.getBean("loginService", LoginService.class);
+    memberTypeCache = appContext.getBean("memberTypeCache", MemberTypeCache.class);
+
   }
 
   @After
@@ -71,6 +76,7 @@ public class LoginServiceTest {
 
     when(memberData.getPassword()).thenReturn(password);
     when(memberData.getEmail()).thenReturn(email);
+    when(memberData.getMemberType()).thenReturn(memberTypeCache.getMemberType(2));
 
     Response<Member> response = loginService.loginMember(memberData);
 
@@ -86,10 +92,11 @@ public class LoginServiceTest {
   }
 
   @Test
-  public void isUnsuccessfulLoginWhenUsernameDoesntMatch() {
+  public void isUnsuccessfulLoginWhenEmailDoesntMatch() {
 
     when(memberData.getPassword()).thenReturn("someotherpwd" + new Random(100000));
     when(memberData.getEmail()).thenReturn(email);
+    when(memberData.getMemberType()).thenReturn(memberTypeCache.getMemberType(2));
 
     Response<Member> response = loginService.loginMember(memberData);
 
@@ -110,6 +117,7 @@ public class LoginServiceTest {
 
     when(memberData.getPassword()).thenReturn(password);
     when(memberData.getEmail()).thenReturn("someotheremail" + new Random(500) + "a3b4.com");
+    when(memberData.getMemberType()).thenReturn(memberTypeCache.getMemberType(2));
 
     Response<Member> response = loginService.loginMember(memberData);
 
@@ -130,6 +138,7 @@ public class LoginServiceTest {
 
     when(memberData.getPassword()).thenReturn(password);
     when(memberData.getEmail()).thenReturn(null);
+    when(memberData.getMemberType()).thenReturn(memberTypeCache.getMemberType(2));
 
     Response<Member> response = loginService.loginMember(memberData);
 
@@ -210,7 +219,7 @@ public class LoginServiceTest {
 
     when(memberData.getPassword()).thenReturn(password);
     when(memberData.getEmail()).thenReturn(email_sajid);
-
+    when(memberData.getMemberType()).thenReturn(memberTypeCache.getMemberType(3));
     Response<Member> response = loginService.loginMember(memberData);
 
     StatusCode statusCode = response.getStatusCode();
