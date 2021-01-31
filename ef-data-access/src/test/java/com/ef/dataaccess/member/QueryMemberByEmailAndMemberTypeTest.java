@@ -48,7 +48,7 @@ public class QueryMemberByEmailAndMemberTypeTest {
   @Before
   public void setUp() {
     AnnotationConfigApplicationContext appContext = new AnnotationConfigApplicationContext(
-        HsqlDbConfigQueryMemberIdByEmailAndMemberTypeTest.class);
+        HsqlDbConfigQueryMemberByEmailAndMemberTypeTest.class);
     queryMemberByEmailAndMemberType = appContext.getBean("queryMemberByEmailAndMemberType", Query.class);
 
     jdbcTemplate = appContext.getBean(JdbcTemplate.class);

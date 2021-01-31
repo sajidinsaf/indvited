@@ -24,7 +24,7 @@ public class InsertMember implements Insert<MemberRegistrationBindingModel, Prec
   private final String INSERT_STATEMENT_MEMBER = "INSERT INTO member(firstname, lastname, password, email, gender, phone, member_type_id) VALUES (?,?,?,?,?,?,?)";
   private final String INSERT_STATEMENT_MEMBER_CONTROL = "INSERT INTO member_login_control(member_email_id,token,expiry_timestamp) VALUES (?,?,?)";
   private final JdbcTemplate jdbcTemplate;
-  private final Query<MemberLoginBindingModel, Integer> queryMemberIdByEmailAndMemberType;
+  private final Query<MemberLoginBindingModel, Member> queryMemberByEmailAndMemberType;
   private final Query<Integer, Member> queryMemberById;
   private final MemberTypeCache memberTypeCache;
   private final PasswordEncoder encoder;
@@ -36,13 +36,13 @@ public class InsertMember implements Insert<MemberRegistrationBindingModel, Prec
 
   @Autowired
   public InsertMember(@Qualifier("indvitedDbJdbcTemplate") JdbcTemplate jdbcTemplate,
-      @Qualifier("queryMemberIdByEmailAndMemberType") Query<MemberLoginBindingModel, Integer> queryMemberIdByEmailAndMemberType,
+      @Qualifier("queryMemberByEmailAndMemberType") Query<MemberLoginBindingModel, Member> queryMemberByEmailAndMemberType,
       @Qualifier("queryMemberById") Query<Integer, Member> queryMemberById,
       @Qualifier("emailFormatterForDb") Query<String, String> emailFormatterForDb, MemberTypeCache memberTypeCache,
       PasswordEncoder encoder,
       @Qualifier("insertRegistrationConfirmationCode") Insert<Member, MemberRegistrationControlModel> insertRegistrationConfirmationCode) {
     this.jdbcTemplate = jdbcTemplate;
-    this.queryMemberIdByEmailAndMemberType = queryMemberIdByEmailAndMemberType;
+    this.queryMemberByEmailAndMemberType = queryMemberByEmailAndMemberType;
     this.queryMemberById = queryMemberById;
     this.memberTypeCache = memberTypeCache;
     this.encoder = encoder;
@@ -63,9 +63,7 @@ public class InsertMember implements Insert<MemberRegistrationBindingModel, Prec
 
     MemberType memberType = memberTypeCache.getMemberType(memberTypeId);
 
-    int memberId = queryMemberIdByEmailAndMemberType.data(new MemberLoginBindingModel(email, "", memberType));
-
-    Member member = queryMemberById.data(memberId);
+    Member member = queryMemberByEmailAndMemberType.data(new MemberLoginBindingModel(email, "", memberType));
 
     long loginExpiryTime = System.currentTimeMillis() + login_session_expiry_period_in_milliseconds;
     String member_login_control_token = Generators.timeBasedGenerator().generate().toString();

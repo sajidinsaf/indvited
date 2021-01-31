@@ -98,10 +98,9 @@ public class ServiceContextConfig implements WebMvcConfigurer {
   @Bean
   public LoginService loginService(
       @Autowired @Qualifier("loginMember") Query<MemberLoginBindingModel, Member> loginMember,
-      @Autowired @Qualifier("queryMemberIdByEmailAndMemberType") Query<MemberLoginBindingModel, Integer> queryMemberIdByEmailAndMemberType) {
+      @Autowired @Qualifier("queryMemberByEmailAndMemberType") Query<MemberLoginBindingModel, Member> queryMemberByEmailAndMemberType) {
 
-    List<Validator<MemberLoginBindingModel, String>> validators = loginDataValidators(
-        queryMemberIdByEmailAndMemberType);
+    List<Validator<MemberLoginBindingModel, String>> validators = loginDataValidators(queryMemberByEmailAndMemberType);
     return new LoginService(loginMember, validators);
   }
 
@@ -114,7 +113,7 @@ public class ServiceContextConfig implements WebMvcConfigurer {
   }
 
   private List<Validator<MemberLoginBindingModel, String>> loginDataValidators(
-      Query<MemberLoginBindingModel, Integer> queryMemberIdByEmailAndMemberType) {
+      Query<MemberLoginBindingModel, Member> queryMemberIdByEmailAndMemberType) {
     List<Validator<MemberLoginBindingModel, String>> validators = new ArrayList<Validator<MemberLoginBindingModel, String>>();
 
     validators.add(new EmailNotNullOrEmptyValidator());
