@@ -48,8 +48,7 @@ public class InsertPREventTest {
   private int eventType = 0;
   private String domainName = "Restaurant";
   private PREventTimeSlotBindingModel[] prEventTimeSlotBindingModel = new PREventTimeSlotBindingModel[] {
-      new PREventTimeSlotBindingModel("15/01/2021", "1400", "1800"),
-      new PREventTimeSlotBindingModel("16/01/2021", "1200", "1700") };
+      new PREventTimeSlotBindingModel("1400", "1800"), new PREventTimeSlotBindingModel("1200", "1700") };
   private String cap = "1 cocktail each / 2 starters / 2 mains";
   private String exclusions = "*no red meat , no fish* IN case u want to order a *dessert or any dish apart of the above cap it would be *PAYABLE*";
   private List<PREventCriteriaBindingModel> eventCriteria = Arrays.asList(

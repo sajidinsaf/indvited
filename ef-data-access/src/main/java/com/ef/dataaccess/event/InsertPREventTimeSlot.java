@@ -2,7 +2,6 @@
 package com.ef.dataaccess.event;
 
 import java.sql.Date;
-import java.text.ParseException;
 import java.text.SimpleDateFormat;
 
 import org.apache.commons.lang3.tuple.Pair;
@@ -68,13 +67,13 @@ public class InsertPREventTimeSlot implements Insert<Pair<PREventBindingModel, P
   private Date getDate(PREventTimeSlotBindingModel timeSlot) {
 
     SimpleDateFormat format = new SimpleDateFormat("dd/MM/yyyy");
-    java.util.Date parsed;
-    try {
-      parsed = format.parse(timeSlot.getEventDate());
-    } catch (ParseException e) {
-      throw new RuntimeException(
-          "Exception while parsing event time slot date: " + timeSlot.getEventDate() + " with format dd/MM/yyyy");
-    }
+    java.util.Date parsed = new java.util.Date();
+//    try {
+//      // parsed = format.parse(timeSlot.getEventDate());
+//    } catch (ParseException e) {
+//      throw new RuntimeException(
+//          "Exception while parsing event time slot date: " + timeSlot.getEventDate() + " with format dd/MM/yyyy");
+//    }
     return new java.sql.Date(parsed.getTime());
 
   }
