@@ -6,9 +6,6 @@ import static com.ef.member.login.controller.LoginControllerConstants.LOGIN_WITH
 import static com.ef.member.login.controller.LoginControllerConstants.LOGIN_WITH_USERNAME_AND_PASSWORD_ADMIN;
 import static com.ef.member.login.controller.LoginControllerConstants.LOGIN_WITH_USERNAME_AND_PASSWORD_BLOGGER;
 import static com.ef.member.login.controller.LoginControllerConstants.LOGIN_WITH_USERNAME_AND_PASSWORD_PR;
-import static com.ef.model.member.MemberType.ADMIN;
-import static com.ef.model.member.MemberType.BLOGGER;
-import static com.ef.model.member.MemberType.PR;
 
 import java.util.List;
 
@@ -26,12 +23,14 @@ import org.springframework.web.bind.annotation.RequestBody;
 
 import com.ef.common.logging.ServiceLoggingUtil;
 import com.ef.common.message.Response;
+import com.ef.dataaccess.member.MemberTypeCache;
 import com.ef.member.login.service.LoginService;
 import com.ef.member.login.service.TokenAuthService;
 import com.ef.model.member.Member;
 import com.ef.model.member.MemberLoginBindingModel;
 import com.ef.model.member.MemberLoginControl;
 import com.ef.model.member.MemberTokenAuthBindingModel;
+import com.ef.model.member.MemberType;
 
 /**
  * Handles requests for the event service.
@@ -46,11 +45,20 @@ public class LoginController {
 
   private final ServiceLoggingUtil logUtil = new ServiceLoggingUtil();
 
+  private final MemberType PR;
+  private final MemberType ADMIN;
+  private final MemberType BLOGGER;
+
   @Autowired
   public LoginController(@Qualifier("loginService") LoginService loginService,
-      @Qualifier("tokenAuthService") TokenAuthService tokenAuthService) {
+      @Qualifier("tokenAuthService") TokenAuthService tokenAuthService,
+      @Qualifier("memberTypeCache") MemberTypeCache memberTypeCache) {
     this.loginService = loginService;
     this.tokenAuthService = tokenAuthService;
+    this.ADMIN = memberTypeCache.getMemberType(1);
+    this.PR = memberTypeCache.getMemberType(2);
+    this.BLOGGER = memberTypeCache.getMemberType(3);
+
   }
 
   @PostMapping(LOGIN_WITH_USERNAME_AND_PASSWORD_ADMIN)

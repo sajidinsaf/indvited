@@ -43,6 +43,7 @@ public class QueryMemberByEmailAndMemberTypeTest {
 
   private Query<MemberLoginBindingModel, Member> queryMemberByEmailAndMemberType;
   private JdbcTemplate jdbcTemplate;
+  private MemberTypeCache memberTypeCache;
 
   @SuppressWarnings({ "resource", "unchecked" })
   @Before
@@ -52,6 +53,7 @@ public class QueryMemberByEmailAndMemberTypeTest {
     queryMemberByEmailAndMemberType = appContext.getBean("queryMemberByEmailAndMemberType", Query.class);
 
     jdbcTemplate = appContext.getBean(JdbcTemplate.class);
+    memberTypeCache = appContext.getBean(MemberTypeCache.class);
   }
 
   @After
@@ -65,7 +67,7 @@ public class QueryMemberByEmailAndMemberTypeTest {
   public void shouldFindMemberId() {
     String doesntMatterPassword = "sgsdf9rskf" + new Random().nextInt(999999);
     MemberLoginBindingModel loginModel = new MemberLoginBindingModel("dummy@123.com", doesntMatterPassword);
-    MemberType memberType = MemberType.PR;
+    MemberType memberType = memberTypeCache.getMemberType(2);
     loginModel.setMemberType(memberType);
     Member member = queryMemberByEmailAndMemberType.data(loginModel);
     assertThat(member.getId(), Matchers.is(0));
@@ -76,10 +78,9 @@ public class QueryMemberByEmailAndMemberTypeTest {
   public void shouldThrowEmptyResultsetExceptionWhenMemberTypeDoesntMatch() {
     String doesntMatterPassword = "slkgytrskf" + new Random().nextInt(999999);
     MemberLoginBindingModel loginModel = new MemberLoginBindingModel("dummy@123.com", doesntMatterPassword);
-    MemberType memberType = MemberType.BLOGGER;
+    MemberType memberType = memberTypeCache.getMemberType(3);
     loginModel.setMemberType(memberType);
     Member member = queryMemberByEmailAndMemberType.data(loginModel);
-    assertThat(member.getId(), Matchers.is(0));
 
   }
 
@@ -98,7 +99,8 @@ class HsqlDbConfigQueryMemberByEmailAndMemberTypeTest {
   private DataSource dataSource() {
     EmbeddedDatabaseBuilder embeddedDatabaseBuilder = new EmbeddedDatabaseBuilder().setType(EmbeddedDatabaseType.HSQL);
     return new DbTestUtils().addCreateScripts(embeddedDatabaseBuilder)
-        .addScript("classpath:com/ef/dataaccess/member/insertMemberData.sql").build();
+        .addScript("classpath:com/ef/dataaccess/member/insertMemberData.sql")
+        .addScript("classpath:com/ef/dataaccess/member/insertMemberTypeData.sql").build();
 
   }
 

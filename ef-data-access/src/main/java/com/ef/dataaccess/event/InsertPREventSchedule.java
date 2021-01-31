@@ -16,11 +16,11 @@ import org.springframework.stereotype.Component;
 
 import com.ef.common.logging.ServiceLoggingUtil;
 import com.ef.dataaccess.Insert;
+import com.ef.dataaccess.member.MemberTypeCache;
 import com.ef.model.event.AbstractPREventScheduleBindingModel;
 import com.ef.model.event.PREvent;
 import com.ef.model.event.PREventBindingModel;
 import com.ef.model.member.MemberLoginBindingModel;
-import com.ef.model.member.MemberType;
 
 @Component("insertPREventSchedule")
 public class InsertPREventSchedule<T extends AbstractPREventScheduleBindingModel> implements Insert<T, PREvent> {
@@ -33,10 +33,13 @@ public class InsertPREventSchedule<T extends AbstractPREventScheduleBindingModel
   private final String INSERT_TIMESLOT_STATEMENT = "INSERT INTO event_schedule_timeslot(event_schedule_id, start_time, end_time) VALUES (?,?,?)";
 
   private final JdbcTemplate jdbcTemplate;
+  private final MemberTypeCache memberTypeCache;
 
   @Autowired
-  public InsertPREventSchedule(@Qualifier("indvitedDbJdbcTemplate") JdbcTemplate jdbcTemplate) {
+  public InsertPREventSchedule(@Qualifier("indvitedDbJdbcTemplate") JdbcTemplate jdbcTemplate,
+      @Qualifier("memberTypeCache") MemberTypeCache memberTypeCache) {
     this.jdbcTemplate = jdbcTemplate;
+    this.memberTypeCache = memberTypeCache;
 
   }
 
@@ -77,7 +80,7 @@ public class InsertPREventSchedule<T extends AbstractPREventScheduleBindingModel
       String emailId = input.getEventCreatorEmailId();
       MemberLoginBindingModel emailAndType = new MemberLoginBindingModel();
       emailAndType.setEmail(emailId);
-      emailAndType.setMemberType(MemberType.PR);
+      emailAndType.setMemberType(memberTypeCache.getMemberType(1));
 
       return -1;
 

@@ -4,10 +4,6 @@ import java.io.Serializable;
 
 public class MemberType implements Serializable {
 
-  public static final MemberType ADMIN = new MemberType(1, "admin");
-  public static final MemberType PR = new MemberType(2, "pr");
-  public static final MemberType BLOGGER = new MemberType(3, "blogger");
-
   private static final long serialVersionUID = 897249091518055980L;
   private final int id;
   private final String name;
