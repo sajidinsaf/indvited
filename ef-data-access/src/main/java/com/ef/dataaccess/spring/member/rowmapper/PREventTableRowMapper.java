@@ -12,10 +12,7 @@ public class PREventTableRowMapper implements RowMapper<PREvent> {
   @Override
   public PREvent mapRow(ResultSet rs, int rowNum) throws SQLException {
 
-//    public PREvent(int id, String uuid, String cap, String notes, Date createdDate, int eventTypeId, int domainId,
-//        int eventVenueId, String exclusions, int memberId) {
-
-    PREvent prEvent = new PREvent(rs.getInt("ID"), rs.getString("UUID"), rs.getString("CAP"), rs.getString("NOTES"),
+    PREvent prEvent = new PREvent(rs.getInt("ID"), rs.getString("CAP"), rs.getString("NOTES"),
         rs.getDate("CREATED_DATE"), rs.getInt("EVENT_TYPE_ID"), rs.getInt("DOMAIN_ID"), rs.getInt("EVENT_VENUE_ID"),
         rs.getString("EXCLUSIONS"), rs.getString("MEMBER_EMAIL_ID"));
     return prEvent;

@@ -1,6 +1,5 @@
 CREATE TABLE event (
  id INTEGER IDENTITY,
- uuid varchar(50),
  event_type_id INTEGER,
  domain_id INTEGER,
  cap varchar(250),

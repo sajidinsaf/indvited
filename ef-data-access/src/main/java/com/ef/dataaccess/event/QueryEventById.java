@@ -12,7 +12,7 @@ import com.ef.model.event.PREvent;
 @Component(value = "queryEventById")
 public class QueryEventById implements Query<Integer, PREvent> {
 
-  private final String SELECT_EVENT = "select id, uuid, event_type_id, domain_id, event_venue_id, cap, created_date, exclusions, member_email_id, notes from event where id=?";
+  private final String SELECT_EVENT = "select id, event_type_id, domain_id, event_venue_id, cap, created_date, exclusions, member_email_id, notes from event where id=?";
 
   private final JdbcTemplate jdbcTemplate;
 //  private final Query<String, MemberType> queryMemberTypeByEmail;

@@ -8,7 +8,6 @@ import com.ef.model.member.Member;
 public class PREvent implements Event {
 
   private int id;
-  private String uuid;
   private EventType eventType;
   private String cap;
   private Member member;
@@ -28,11 +27,10 @@ public class PREvent implements Event {
 
   }
 
-  public PREvent(int id, String uuid, String cap, String notes, Date createdDate, int eventTypeId, int domainId,
-      int eventVenueId, String exclusions, String memberEmailId) {
+  public PREvent(int id, String cap, String notes, Date createdDate, int eventTypeId, int domainId, int eventVenueId,
+      String exclusions, String memberEmailId) {
     super();
     this.id = id;
-    this.uuid = uuid;
     this.cap = cap;
     this.notes = notes;
     this.createdDate = createdDate;
@@ -43,11 +41,10 @@ public class PREvent implements Event {
     this.memberEmailId = memberEmailId;
   }
 
-  public PREvent(int id, String uuid, EventType eventType, String cap, Member member, EventVenue eventVenue,
-      String notes, Date createdDate, EventTimeSlot[] eventTimeSlots) {
+  public PREvent(int id, EventType eventType, String cap, Member member, EventVenue eventVenue, String notes,
+      Date createdDate, EventTimeSlot[] eventTimeSlots) {
     super();
     this.id = id;
-    this.uuid = uuid;
     this.eventType = eventType;
     this.cap = cap;
     this.member = member;
@@ -63,14 +60,6 @@ public class PREvent implements Event {
 
   public void setId(int id) {
     this.id = id;
-  }
-
-  public String getUuid() {
-    return uuid;
-  }
-
-  public void setUuid(String uuid) {
-    this.uuid = uuid;
   }
 
   public int getEventTypeId() {
@@ -187,8 +176,8 @@ public class PREvent implements Event {
 
   @Override
   public String toString() {
-    return "PREvent [id=" + id + ", uuid=" + uuid + ", eventType=" + eventType + ", cap=" + cap + ", member=" + member
-        + ", eventVenue=" + eventVenue + ", notes=" + notes + ", createdDate=" + createdDate + ", eventTimeSlots="
+    return "PREvent [id=" + id + ", eventType=" + eventType + ", cap=" + cap + ", member=" + member + ", eventVenue="
+        + eventVenue + ", notes=" + notes + ", createdDate=" + createdDate + ", eventTimeSlots="
         + Arrays.toString(eventTimeSlots) + ", eventCriteria=" + Arrays.toString(eventCriteria) + ", eventTypeId="
         + eventTypeId + ", domainId=" + domainId + ", eventVenueId=" + eventVenueId + ", exclusions=" + exclusions
         + ", memberEmailId=" + memberEmailId + "]";
@@ -199,7 +188,6 @@ public class PREvent implements Event {
     final int prime = 31;
     int result = 1;
     result = prime * result + id;
-    result = prime * result + ((uuid == null) ? 0 : uuid.hashCode());
     return result;
   }
 
@@ -213,11 +201,6 @@ public class PREvent implements Event {
       return false;
     PREvent other = (PREvent) obj;
     if (id != other.id)
-      return false;
-    if (uuid == null) {
-      if (other.uuid != null)
-        return false;
-    } else if (!uuid.equals(other.uuid))
       return false;
     return true;
   }
