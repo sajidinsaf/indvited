@@ -21,17 +21,16 @@ public class LoginMember implements Query<MemberLoginBindingModel, Member> {
   private final JdbcTemplate jdbcTemplate;
   private final PasswordEncoder encoder;
   private final Query<String, String> emailFormatterForDb;
-  private final Query<String, MemberLoginControl> queryLoginControlByEmail;
+  private final Query<Integer, MemberLoginControl> queryLoginControlByEmail;
 
   @Autowired
   public LoginMember(@Qualifier("indvitedDbJdbcTemplate") JdbcTemplate jdbcTemplate,
       @Qualifier("emailFormatterForDb") Query<String, String> emailFormatterForDb, PasswordEncoder encoder,
-      @Qualifier("queryMemberLoginControlByEmail") Query<String, MemberLoginControl> queryLoginControlByEmail) {
+      @Qualifier("queryMemberLoginControlByMemberId") Query<Integer, MemberLoginControl> queryLoginControlByEmail) {
     this.jdbcTemplate = jdbcTemplate;
     this.emailFormatterForDb = emailFormatterForDb;
     this.encoder = encoder;
     this.queryLoginControlByEmail = queryLoginControlByEmail;
-
   }
 
   @Override
@@ -42,10 +41,12 @@ public class LoginMember implements Query<MemberLoginBindingModel, Member> {
 
     memberType = data.getMemberType();
 
-    MemberLoginControl memberLoginControl = queryLoginControlByEmail.data(email);
-
     Member member = jdbcTemplate.queryForObject(SELECT_MEMBER, new Object[] { email, memberType.getId() },
-        new MemberRowMapperWithPassword(memberType, memberLoginControl));
+        new MemberRowMapperWithPassword(memberType, null));
+
+    MemberLoginControl memberLoginControl = queryLoginControlByEmail.data(member.getId());
+
+    member.setMemberLoginControl(memberLoginControl);
 
     if (!member.isEnabled() || !encoder.matches(data.getPassword(), member.getPassword())) {
       return null;

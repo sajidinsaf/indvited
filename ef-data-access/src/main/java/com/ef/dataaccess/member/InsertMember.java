@@ -31,7 +31,7 @@ public class InsertMember implements Insert<MemberRegistrationBindingModel, Prec
   private final ServiceLoggingUtil logUtil = new ServiceLoggingUtil();
 
   private final String INSERT_STATEMENT_MEMBER = "INSERT INTO member(firstname, lastname, password, email, gender, phone, member_type_id) VALUES (?,?,?,?,?,?,?)";
-  private final String INSERT_STATEMENT_MEMBER_CONTROL = "INSERT INTO member_login_control(member_email_id,token,expiry_timestamp) VALUES (?,?,?)";
+  private final String INSERT_STATEMENT_MEMBER_CONTROL = "INSERT INTO member_login_control(member_id,token,expiry_timestamp) VALUES (?,?,?)";
   private final JdbcTemplate jdbcTemplate;
   private final Query<Integer, Member> queryMemberById;
   private final MemberTypeCache memberTypeCache;
@@ -74,7 +74,7 @@ public class InsertMember implements Insert<MemberRegistrationBindingModel, Prec
     String member_login_control_token = Generators.timeBasedGenerator().generate().toString();
 
     jdbcTemplate.update(INSERT_STATEMENT_MEMBER_CONTROL,
-        new Object[] { member.getEmail(), member_login_control_token, new Timestamp(loginExpiryTime) });
+        new Object[] { memberId, member_login_control_token, new Timestamp(loginExpiryTime) });
 
     MemberRegistrationControlModel registrationConfirmationCode = insertRegistrationConfirmationCode.data(member);
 

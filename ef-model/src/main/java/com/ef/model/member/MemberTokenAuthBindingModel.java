@@ -3,12 +3,20 @@ package com.ef.model.member;
 public class MemberTokenAuthBindingModel implements CredentialBindingModel {
 
   private String email;
+  private int memberId;
   private String token;
   private long expires;
   private MemberType memberType;
 
   public MemberTokenAuthBindingModel() {
 
+  }
+
+  public MemberTokenAuthBindingModel(int memberId, String token, long expires) {
+    super();
+    this.memberId = memberId;
+    this.token = token;
+    this.expires = expires;
   }
 
   public MemberTokenAuthBindingModel(String email, String token, long expires) {
@@ -55,10 +63,18 @@ public class MemberTokenAuthBindingModel implements CredentialBindingModel {
     return getToken();
   }
 
+  public int getMemberId() {
+    return memberId;
+  }
+
+  public void setMemberId(int memberId) {
+    this.memberId = memberId;
+  }
+
   @Override
   public String toString() {
-    return "MemberTokenAuthBindingModel [email=" + email + ", token=" + token + ", expires=" + expires + ", memberType="
-        + memberType + "]";
+    return "MemberTokenAuthBindingModel [email=" + email + ", memberId=" + memberId + ", token=" + token + ", expires="
+        + expires + ", memberType=" + memberType + "]";
   }
 
 }

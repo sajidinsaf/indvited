@@ -12,8 +12,8 @@ public class MemberLoginControlRowMapper implements RowMapper<MemberLoginControl
   @Override
   public MemberLoginControl mapRow(ResultSet rs, int rowNum) throws SQLException {
 
-    MemberLoginControl memberLoginControl = new MemberLoginControl(rs.getString("member_email_id"),
-        rs.getString("TOKEN"), rs.getTimestamp("CREATION_TIMESTAMP"), rs.getTimestamp("EXPIRY_TIMESTAMP"));
+    MemberLoginControl memberLoginControl = new MemberLoginControl(rs.getInt("member_id"), rs.getString("TOKEN"),
+        rs.getTimestamp("CREATION_TIMESTAMP"), rs.getTimestamp("EXPIRY_TIMESTAMP"));
     return memberLoginControl;
   }
 
