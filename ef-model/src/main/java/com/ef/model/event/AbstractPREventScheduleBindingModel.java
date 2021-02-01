@@ -1,12 +1,11 @@
 package com.ef.model.event;
 
 import java.util.Calendar;
-import java.util.Date;
 
 public abstract class AbstractPREventScheduleBindingModel {
 
   private int eventId;
-  private Date startDate, endDate;
+  private String startDate, endDate, scheduleDate, scheduleTime;
   private boolean monday, tuesday, wednesday, thursday, friday, saturday, sunday;
   private boolean innerCircle, myBloggers, allEligible;
 
@@ -14,7 +13,7 @@ public abstract class AbstractPREventScheduleBindingModel {
     // TODO Auto-generated constructor stub
   }
 
-  public AbstractPREventScheduleBindingModel(int prEventId, Date startDate, Date endDate, boolean monday,
+  public AbstractPREventScheduleBindingModel(int prEventId, String startDate, String endDate, boolean monday,
       boolean tuesday, boolean wednesday, boolean thursday, boolean friday, boolean saturday, boolean sunday,
       boolean innerCircle, boolean myBloggers, boolean allEligible) {
     super();
@@ -33,6 +32,27 @@ public abstract class AbstractPREventScheduleBindingModel {
     this.allEligible = allEligible;
   }
 
+  public AbstractPREventScheduleBindingModel(int prEventId, String startDate, String endDate, boolean monday,
+      boolean tuesday, boolean wednesday, boolean thursday, boolean friday, boolean saturday, boolean sunday,
+      boolean innerCircle, boolean myBloggers, boolean allEligible, String scheduleDate, String scheduleTime) {
+    super();
+    this.eventId = prEventId;
+    this.startDate = startDate;
+    this.endDate = endDate;
+    this.monday = monday;
+    this.tuesday = tuesday;
+    this.wednesday = wednesday;
+    this.thursday = thursday;
+    this.friday = friday;
+    this.saturday = saturday;
+    this.sunday = sunday;
+    this.innerCircle = innerCircle;
+    this.myBloggers = myBloggers;
+    this.allEligible = allEligible;
+    this.scheduleDate = scheduleDate;
+    this.scheduleTime = scheduleTime;
+  }
+
   public int getEventId() {
     return eventId;
   }
@@ -41,19 +61,19 @@ public abstract class AbstractPREventScheduleBindingModel {
     this.eventId = prEventId;
   }
 
-  public Date getStartDate() {
+  public String getStartDate() {
     return startDate;
   }
 
-  public void setStartDate(Date startDate) {
+  public void setStartDate(String startDate) {
     this.startDate = startDate;
   }
 
-  public Date getEndDate() {
+  public String getEndDate() {
     return endDate;
   }
 
-  public void setEndDate(Date endDate) {
+  public void setEndDate(String endDate) {
     this.endDate = endDate;
   }
 
@@ -73,7 +93,7 @@ public abstract class AbstractPREventScheduleBindingModel {
     this.tuesday = tuesday;
   }
 
-  public boolean isWedenesday() {
+  public boolean isWednesday() {
     return wednesday;
   }
 
@@ -193,4 +213,21 @@ public abstract class AbstractPREventScheduleBindingModel {
 
     System.out.println(a.getScheduledDaysOfTheWeekString());
   }
+
+  public String getScheduleDate() {
+    return scheduleDate;
+  }
+
+  public void setScheduleDate(String scheduleData) {
+    this.scheduleDate = scheduleData;
+  }
+
+  public String getScheduleTime() {
+    return scheduleTime;
+  }
+
+  public void setScheduleTime(String scheduleTime) {
+    this.scheduleTime = scheduleTime;
+  }
+
 }

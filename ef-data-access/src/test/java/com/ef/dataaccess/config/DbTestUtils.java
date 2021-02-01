@@ -18,10 +18,12 @@ public class DbTestUtils {
         .addScript("classpath:com/ef/dataaccess/event/createEventCriteriaDataTable.sql")
         .addScript("classpath:com/ef/dataaccess/event/createEventDeliverableMetaTable.sql")
         .addScript("classpath:com/ef/dataaccess/event/createEventDeliverableDataTable.sql")
-        .addScript("classpath:com/ef/dataaccess/event/createEventTimeSlotTable.sql")
         .addScript("classpath:com/ef/dataaccess/event/createEventTypeTable.sql")
         .addScript("classpath:com/ef/dataaccess/event/createVenueTable.sql")
-        .addScript("classpath:com/ef/dataaccess/event/createEventTable.sql");
+        .addScript("classpath:com/ef/dataaccess/event/createEventTable.sql")
+        .addScript("classpath:com/ef/dataaccess/event/createEventScheduleTable.sql")
+        .addScript("classpath:com/ef/dataaccess/event/createEventTimeSlotTable.sql");
+
     return embeddedDatabaseBuilder;
   }
 }

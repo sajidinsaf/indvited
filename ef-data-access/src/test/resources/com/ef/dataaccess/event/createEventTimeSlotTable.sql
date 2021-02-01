@@ -1,6 +1,6 @@
-CREATE TABLE event_time_slot (
- event_id INTEGER,
- scheduled_date date,
- time_from varchar(4),
- time_to varchar(4)
-);
+CREATE TABLE event_schedule_timeslot (
+ id BIGINT IDENTITY,
+ event_schedule_id BIGINT,
+ start_time char(4),
+ end_time char(4)
+ );
