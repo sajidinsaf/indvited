@@ -64,12 +64,6 @@ public class InsertPREvent implements Insert<PREventBindingModel, PREvent> {
     this.memberTypeCache = memberTypeCache;
   }
 
-//  private PREventTimeSlotBindingModel[] prEventTimeSlotBindingModel;
-
-//  private PREventCriteriaBindingModel[] eventCriteria;
-
-//  private String notes;  
-//  
   @Override
   public PREvent data(final PREventBindingModel input) {
 
@@ -113,8 +107,6 @@ public class InsertPREvent implements Insert<PREventBindingModel, PREvent> {
     Integer eventLocationId = getLocationId(input);
     String notes = input.getNotes() == null ? "" : input.getNotes();
 
-//    insertEventTimeSlots(input);
-
     jdbcTemplate.update(INSERT_STATEMENT,
         new Object[] { uuid, eventTypeId, domainId, cap, exclusions, emailId, eventLocationId, notes });
 
@@ -136,13 +128,3 @@ public class InsertPREvent implements Insert<PREventBindingModel, PREvent> {
   }
 
 }
-
-//
-//private String eventCreatorId;
-//private String eventType;
-//private PREventTimeSlotBindingModel[] prEventTimeSlotBindingModel;
-//private String cap;
-//private String exclusions;
-//private PREventCriteriaBindingModel[] eventCriteria;
-//private PREventLocationBindingModel eventLocation;
-//private String notes; 
