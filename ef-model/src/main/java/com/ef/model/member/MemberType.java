@@ -5,6 +5,10 @@ import java.io.Serializable;
 public class MemberType implements Serializable {
 
   private static final long serialVersionUID = 897249091518055980L;
+
+  public static final int KNOWN_MEMBER_TYPE_ADMIN = 1;
+  public static final int KNOWN_MEMBER_TYPE_PR = 2;
+  public static final int KNOWN_MEMBER_TYPE_BLOGGER = 3;
   private final int id;
   private final String name;
 

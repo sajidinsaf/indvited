@@ -14,7 +14,6 @@ import com.ef.common.logging.ServiceLoggingUtil;
 import com.ef.dataaccess.Insert;
 import com.ef.dataaccess.Query;
 import com.ef.dataaccess.common.UuidGenerator;
-import com.ef.dataaccess.member.MemberTypeCache;
 import com.ef.model.event.EventType;
 import com.ef.model.event.EventVenue;
 import com.ef.model.event.PREvent;
@@ -40,7 +39,6 @@ public class InsertPREvent implements Insert<PREventBindingModel, PREvent> {
   private final Query<PREventLocationBindingModel, EventVenue> queryVenueByKeyFieldOrInsert;
   private final Query<MemberLoginBindingModel, Member> queryMemberByEmailAndMemberType;
   private final UuidGenerator uuidGenerator;
-  private final MemberTypeCache memberTypeCache;
 
   @Autowired
   public InsertPREvent(@Qualifier("indvitedDbJdbcTemplate") JdbcTemplate jdbcTemplate,
@@ -50,8 +48,7 @@ public class InsertPREvent implements Insert<PREventBindingModel, PREvent> {
       @Qualifier("insertPREventDeliverables") Insert<Pair<PREventBindingModel, PREvent>, PREvent> insertEventDeliverables,
       @Qualifier("queryVenueByKeyFieldOrInsert") Query<PREventLocationBindingModel, EventVenue> queryVenueByKeyFieldOrInsert,
       @Qualifier("queryMemberByEmailAndMemberType") Query<MemberLoginBindingModel, Member> queryMemberByEmailAndMemberType,
-      @Qualifier("uuidGenerator") UuidGenerator uuidGenerator,
-      @Qualifier("memberTypeCache") MemberTypeCache memberTypeCache) {
+      @Qualifier("uuidGenerator") UuidGenerator uuidGenerator) {
     this.jdbcTemplate = jdbcTemplate;
     this.queryEventByUuid = queryEventByUuid;
     this.eventTypeCache = eventTypeCache;
@@ -61,7 +58,6 @@ public class InsertPREvent implements Insert<PREventBindingModel, PREvent> {
     this.queryVenueByKeyFieldOrInsert = queryVenueByKeyFieldOrInsert;
     this.queryMemberByEmailAndMemberType = queryMemberByEmailAndMemberType;
     this.uuidGenerator = uuidGenerator;
-    this.memberTypeCache = memberTypeCache;
   }
 
   @Override
@@ -72,7 +68,7 @@ public class InsertPREvent implements Insert<PREventBindingModel, PREvent> {
     String emailId = input.getEventCreatorEmailId();
     try {
       MemberLoginBindingModel emailAndType = new MemberLoginBindingModel(emailId, null);
-      emailAndType.setMemberType(memberTypeCache.getMemberType(2));
+      emailAndType.setMemberType(input.getMemberType());
       member = queryMemberByEmailAndMemberType.data(emailAndType);
     } catch (EmptyResultDataAccessException e) {
       logUtil.warn(logger, "No member information found for emailId: ", emailId, " Input Event Details: ", input);

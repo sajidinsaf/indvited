@@ -4,11 +4,13 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
+import com.ef.model.member.MemberType;
 import com.google.gson.Gson;
 
 public class PREventBindingModel {
 
   private String eventCreatorEmailId;
+  private MemberType memberType;
   private int eventType;
   private String domainName;
   private String cap;
@@ -31,11 +33,12 @@ public class PREventBindingModel {
     this.eventDeliverable = new ArrayList<PREventDeliverableBindingModel>();
   }
 
-  public PREventBindingModel(String eventCreatorEmailId, int eventType, String domainName, String cap,
-      String exclusions, PREventLocationBindingModel eventLocation, String notes, int minZomatoLevel,
+  public PREventBindingModel(String eventCreatorEmailId, MemberType memberType, int eventType, String domainName,
+      String cap, String exclusions, PREventLocationBindingModel eventLocation, String notes, int minZomatoLevel,
       int minZomatoReviews, int minInstagramFollowers) {
     super();
     this.eventCreatorEmailId = eventCreatorEmailId;
+    this.memberType = memberType;
     this.eventType = eventType;
     this.domainName = domainName;
     this.cap = cap;
@@ -49,11 +52,12 @@ public class PREventBindingModel {
     this.minInstagramFollowers = minInstagramFollowers;
   }
 
-  public PREventBindingModel(String eventCreatorEmailId, int eventType, String domainName, String cap,
-      String exclusions, List<PREventCriteriaBindingModel> eventCriteria,
+  public PREventBindingModel(String eventCreatorEmailId, MemberType memberType, int eventType, String domainName,
+      String cap, String exclusions, List<PREventCriteriaBindingModel> eventCriteria,
       List<PREventDeliverableBindingModel> eventDeliverable, PREventLocationBindingModel eventLocation, String notes) {
     super();
     this.eventCreatorEmailId = eventCreatorEmailId;
+    this.memberType = memberType;
     this.eventType = eventType;
     this.domainName = domainName;
     this.cap = cap;
@@ -352,6 +356,14 @@ public class PREventBindingModel {
         + deliverGoogleReview + ", deliverPlusOneReview=" + deliverPlusOneReview + ", invitedBloggersBindingModel="
         + invitedBloggersBindingModel + ", venueName=" + venueName + ", venueAddress=" + venueAddress + ", venueUrl="
         + venueUrl + "]";
+  }
+
+  public MemberType getMemberType() {
+    return memberType;
+  }
+
+  public void setMemberType(MemberType memberType) {
+    this.memberType = memberType;
   }
 
 }

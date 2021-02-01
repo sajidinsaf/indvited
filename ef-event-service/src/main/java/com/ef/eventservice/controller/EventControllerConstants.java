@@ -2,7 +2,7 @@ package com.ef.eventservice.controller;
 
 public class EventControllerConstants {
 
-  public static final String PUBLISH_EVENT = "/rest/event/publishPREvent";
+  public static final String PUBLISH_PR_EVENT = "/rest/event/publishPREvent";
 
   public static final String CREATE_ALL_DAY_SCHEDULE_NOW = "/rest/event/createSchedule/allDay/now";
 

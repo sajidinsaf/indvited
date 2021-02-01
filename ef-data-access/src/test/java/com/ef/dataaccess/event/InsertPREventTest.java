@@ -31,17 +31,21 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
 import com.ef.dataaccess.config.DbTestUtils;
+import com.ef.dataaccess.member.MemberTypeCache;
 import com.ef.model.event.PREvent;
 import com.ef.model.event.PREventBindingModel;
 import com.ef.model.event.PREventCriteriaBindingModel;
 import com.ef.model.event.PREventDeliverableBindingModel;
 import com.ef.model.event.PREventLocationBindingModel;
 import com.ef.model.event.PREventTimeSlotBindingModel;
+import com.ef.model.member.MemberType;
 
 public class InsertPREventTest {
 
   private InsertPREvent insertPREvent;
   private JdbcTemplate jdbcTemplate;
+  private MemberTypeCache memberTypeCache;
+
   @Mock
   private PREventBindingModel eventData;
 
@@ -70,26 +74,20 @@ public class InsertPREventTest {
         HsqlDbConfigInsertPREventTest.class);
     insertPREvent = appContext.getBean(InsertPREvent.class);
     jdbcTemplate = appContext.getBean(JdbcTemplate.class);
+    memberTypeCache = appContext.getBean(MemberTypeCache.class);
   }
 
   @After
   public void tearDown() {
     jdbcTemplate.execute("DROP SCHEMA PUBLIC CASCADE");
-//    jdbcTemplate.execute("drop table domain");
-//    jdbcTemplate.execute("drop table venue");
-//    jdbcTemplate.execute("drop table event_type");
-//    jdbcTemplate.execute("drop table event");
-//    jdbcTemplate.execute("drop table event_time_slot");
-//    jdbcTemplate.execute("drop table event_criteria_meta");
-//    jdbcTemplate.execute("drop table event_criteria_data");
-//    jdbcTemplate.execute("drop table member");
-//    jdbcTemplate.execute("drop table member_type");
   }
 
   @Test
   public void shouldInsertEventSuccessfully() {
-    eventData = new PREventBindingModel(eventCreatorEmailId, eventType, domainName, cap, exclusions, eventCriteria,
-        eventDeliverables, eventLocation, notes);
+    MemberType memberType = memberTypeCache.getMemberType(MemberType.KNOWN_MEMBER_TYPE_PR);
+
+    eventData = new PREventBindingModel(eventCreatorEmailId, memberType, eventType, domainName, cap, exclusions,
+        eventCriteria, eventDeliverables, eventLocation, notes);
 
     PREvent event = insertPREvent.data(eventData);
 
@@ -129,11 +127,24 @@ public class InsertPREventTest {
   }
 
   @Test
-  public void shouldNotCreateEventWhenMenerTypeNotPR() {
+  public void shouldNotCreateEventWhenMemberTypeInDbIsNotPR() {
+    MemberType memberType = memberTypeCache.getMemberType(MemberType.KNOWN_MEMBER_TYPE_PR);
     eventCreatorEmailId = "dummy2@456.com";
+    eventData = new PREventBindingModel(eventCreatorEmailId, memberType, eventType, domainName, cap, exclusions,
+        eventCriteria, eventDeliverables, eventLocation, notes);
 
-    eventData = new PREventBindingModel(eventCreatorEmailId, eventType, domainName, cap, exclusions, eventCriteria,
-        eventDeliverables, eventLocation, notes);
+    PREvent event = insertPREvent.data(eventData);
+
+    assertThat(event, nullValue());
+
+  }
+
+  @Test
+  public void shouldNotCreateEventWhenMemberTypeFromControllerIsNotPR() {
+    MemberType memberType = memberTypeCache.getMemberType(MemberType.KNOWN_MEMBER_TYPE_BLOGGER);
+
+    eventData = new PREventBindingModel(eventCreatorEmailId, memberType, eventType, domainName, cap, exclusions,
+        eventCriteria, eventDeliverables, eventLocation, notes);
 
     PREvent event = insertPREvent.data(eventData);
 
