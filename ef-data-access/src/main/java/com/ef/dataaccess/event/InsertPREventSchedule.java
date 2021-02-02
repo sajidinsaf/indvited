@@ -72,17 +72,18 @@ public class InsertPREventSchedule<T extends AbstractPREventScheduleBindingModel
 
     long scheduleId = (long) keyHolder.getKey();
 
-    insertEventTimeSlots(input, scheduleId);
+    long[] eventTimeSlotIds = insertEventTimeSlots(input, scheduleId);
 
-    EventScheduleResult scheduleResult = new EventScheduleResult(scheduleId);
+    EventScheduleResult scheduleResult = new EventScheduleResult(scheduleId, eventTimeSlotIds);
 
     return scheduleResult;
   }
 
-  private EventTimeSlot[] insertEventTimeSlots(T input, long scheduleId) {
+  private long[] insertEventTimeSlots(T input, long scheduleId) {
 
     PREventTimeSlotBindingModel[] timeSlots = input.getTimeSlots();
     EventTimeSlot[] eventTimeSlots = new EventTimeSlot[timeSlots.length];
+    long[] eventTimeSlotIds = new long[timeSlots.length];
 
     for (int i = 0; i < timeSlots.length; i++) {
       final PREventTimeSlotBindingModel timeSlotModel = timeSlots[i];
@@ -98,9 +99,10 @@ public class InsertPREventSchedule<T extends AbstractPREventScheduleBindingModel
       EventTimeSlot eventTimeSlot = new EventTimeSlot(timeSlotId, timeSlotModel.getTimeFrom(),
           timeSlotModel.getTimeTo());
       eventTimeSlots[i] = eventTimeSlot;
+      eventTimeSlotIds[i] = timeSlotId;
     }
 
-    return eventTimeSlots;
+    return eventTimeSlotIds;
 
   }
 
