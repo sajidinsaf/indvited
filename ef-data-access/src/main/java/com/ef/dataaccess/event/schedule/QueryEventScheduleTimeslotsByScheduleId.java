@@ -10,15 +10,15 @@ import org.springframework.stereotype.Component;
 import com.ef.dataaccess.Query;
 import com.ef.model.event.EventTimeslot;
 
-@Component(value = "queryEventScheduleTimeslots")
-public class QueryEventScheduleTimeslots implements Query<Long, List<EventTimeslot>> {
+@Component(value = "queryEventScheduleTimeslotsByScheduleId")
+public class QueryEventScheduleTimeslotsByScheduleId implements Query<Long, List<EventTimeslot>> {
 
   private final String SELECT_EVENT = "select * from event_schedule_timeslot where event_schedule_id=%d";
 
   private final JdbcTemplate jdbcTemplate;
 
   @Autowired
-  public QueryEventScheduleTimeslots(@Qualifier("indvitedDbJdbcTemplate") JdbcTemplate jdbcTemplate) {
+  public QueryEventScheduleTimeslotsByScheduleId(@Qualifier("indvitedDbJdbcTemplate") JdbcTemplate jdbcTemplate) {
     this.jdbcTemplate = jdbcTemplate;
   }
 

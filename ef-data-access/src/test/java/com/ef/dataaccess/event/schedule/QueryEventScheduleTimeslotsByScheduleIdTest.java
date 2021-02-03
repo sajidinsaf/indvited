@@ -38,7 +38,8 @@ public class QueryEventScheduleTimeslotsByScheduleIdTest {
     openMocks(this);
     AnnotationConfigApplicationContext appContext = new AnnotationConfigApplicationContext(
         HsqlDbConfigQueryTimeslotsTest.class);
-    queryEventScheduleTimeslotsByScheduleId = (Query) appContext.getBean("queryEventScheduleTimeslots", Query.class);
+    queryEventScheduleTimeslotsByScheduleId = (Query) appContext.getBean("queryEventScheduleTimeslotsByScheduleId",
+        Query.class);
     jdbcTemplate = appContext.getBean(JdbcTemplate.class);
   }
 

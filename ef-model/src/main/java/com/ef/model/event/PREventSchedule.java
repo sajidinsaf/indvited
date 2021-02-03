@@ -2,6 +2,7 @@ package com.ef.model.event;
 
 import java.sql.Date;
 import java.sql.Timestamp;
+import java.util.List;
 
 public class PREventSchedule {
 
@@ -12,7 +13,7 @@ public class PREventSchedule {
   private boolean monday, tuesday, wednesday, thursday, friday, saturday, sunday;
   private boolean innerCircle, myBloggers, allEligible;
 
-  private EventTimeslot[] eventTimeSlots;
+  private List<EventTimeslot> eventTimeSlots;
 
   public PREventSchedule() {
 
@@ -41,11 +42,11 @@ public class PREventSchedule {
 
   }
 
-  public EventTimeslot[] getEventTimeSlots() {
+  public List<EventTimeslot> getEventTimeSlots() {
     return eventTimeSlots;
   }
 
-  public void setEventTimeSlots(EventTimeslot[] eventTimeSlots) {
+  public void setEventTimeSlots(List<EventTimeslot> eventTimeSlots) {
     this.eventTimeSlots = eventTimeSlots;
   }
 
