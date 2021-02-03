@@ -11,7 +11,7 @@ import org.springframework.stereotype.Component;
 import com.ef.common.logging.ServiceLoggingUtil;
 import com.ef.dataaccess.Insert;
 import com.ef.dataaccess.Query;
-import com.ef.dataaccess.spring.member.rowmapper.EventVenueRowMapper;
+import com.ef.dataaccess.spring.rowmapper.event.EventVenueRowMapper;
 import com.ef.model.event.EventVenue;
 import com.ef.model.event.PREventLocationBindingModel;
 

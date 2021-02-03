@@ -9,7 +9,7 @@ import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Component;
 
-import com.ef.dataaccess.spring.member.rowmapper.EventDeliverableMetadataRowMapper;
+import com.ef.dataaccess.spring.rowmapper.event.EventDeliverableMetadataRowMapper;
 import com.ef.model.event.EventDeliverableMetadata;
 
 @Component

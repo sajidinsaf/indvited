@@ -14,7 +14,7 @@ public class PREvent implements Event {
   private EventVenue eventVenue;
   private String notes;
   private Date createdDate;
-  private EventTimeSlot[] eventTimeSlots;
+  private EventTimeslot[] eventTimeSlots;
   private EventCriteria[] eventCriteria;
   private EventDeliverable[] eventDeliverables;
   private int eventTypeId;
@@ -42,7 +42,7 @@ public class PREvent implements Event {
   }
 
   public PREvent(int id, EventType eventType, String cap, Member member, EventVenue eventVenue, String notes,
-      Date createdDate, EventTimeSlot[] eventTimeSlots) {
+      Date createdDate, EventTimeslot[] eventTimeSlots) {
     super();
     this.id = id;
     this.eventType = eventType;
@@ -150,11 +150,11 @@ public class PREvent implements Event {
     this.createdDate = createdDate;
   }
 
-  public EventTimeSlot[] getEventTimeSlots() {
+  public EventTimeslot[] getEventTimeSlots() {
     return eventTimeSlots;
   }
 
-  public void setEventTimeSlots(EventTimeSlot[] eventTimeSlots) {
+  public void setEventTimeSlots(EventTimeslot[] eventTimeSlots) {
     this.eventTimeSlots = eventTimeSlots;
   }
 

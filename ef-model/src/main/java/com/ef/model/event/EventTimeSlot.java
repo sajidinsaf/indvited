@@ -1,24 +1,30 @@
 package com.ef.model.event;
 
-public class EventTimeSlot {
+public class EventTimeslot {
 
-  private long timeSlotId;
+  private long id;
+  private long eventScheduleId;
   private String timeFrom;
   private String timeTo;
 
-  public EventTimeSlot(long timeSlotId, String timeFrom, String timeTo) {
+  public EventTimeslot() {
+
+  }
+
+  public EventTimeslot(long id, long eventScheduleId, String timeFrom, String timeTo) {
     super();
-    this.timeSlotId = timeSlotId;
+    this.id = id;
+    this.eventScheduleId = eventScheduleId;
     this.timeFrom = timeFrom;
     this.timeTo = timeTo;
   }
 
-  public long getTimeSlotId() {
-    return timeSlotId;
+  public long getId() {
+    return id;
   }
 
-  public void setTimeSlotId(long timeSlotId) {
-    this.timeSlotId = timeSlotId;
+  public void setId(long id) {
+    this.id = id;
   }
 
   public String getTimeFrom() {
@@ -37,9 +43,17 @@ public class EventTimeSlot {
     this.timeTo = timeTo;
   }
 
+  public long getEventScheduleId() {
+    return eventScheduleId;
+  }
+
+  public void setEventScheduleId(long eventScheduleId) {
+    this.eventScheduleId = eventScheduleId;
+  }
+
   @Override
   public String toString() {
-    return "EventTimeSlot [timeSlotId=" + timeSlotId + ", timeFrom=" + timeFrom + ", timeTo=" + timeTo + "]";
+    return "EventTimeslot [id=" + id + ", timeFrom=" + timeFrom + ", timeTo=" + timeTo + "]";
   }
 
 }

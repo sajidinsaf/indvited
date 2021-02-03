@@ -22,7 +22,7 @@ import com.ef.common.logging.ServiceLoggingUtil;
 import com.ef.dataaccess.Insert;
 import com.ef.model.event.AbstractPREventScheduleBindingModel;
 import com.ef.model.event.EventScheduleResult;
-import com.ef.model.event.EventTimeSlot;
+import com.ef.model.event.EventTimeslot;
 import com.ef.model.event.PREventTimeSlotBindingModel;
 
 @Component("insertPREventSchedule")
@@ -40,7 +40,7 @@ public class InsertPREventSchedule<T extends AbstractPREventScheduleBindingModel
   private static final Logger logger = LoggerFactory.getLogger(InsertPREventSchedule.class);
   private final ServiceLoggingUtil logUtil = new ServiceLoggingUtil();
 
-  private final String INSERT_SCHEDULE_STATEMENT = "INSERT INTO event_schedule(event_id, start_date, end_date, days_of_the_week, scheduled_for_timestamp) VALUES (?,?,?,?,?)";
+  private final String INSERT_SCHEDULE_STATEMENT = "INSERT INTO event_schedule(event_id, start_date, end_date, days_of_the_week, publish_to_inner_circle, publish_to_my_bloggers, publish_to_all_eligible, scheduled_for_timestamp) VALUES (?,?,?,?,?,?,?,?)";
 
   private final String INSERT_TIMESLOT_STATEMENT = "INSERT INTO event_schedule_timeslot(event_schedule_id, start_time, end_time) VALUES (?,?,?)";
 
@@ -82,7 +82,7 @@ public class InsertPREventSchedule<T extends AbstractPREventScheduleBindingModel
   private long[] insertEventTimeSlots(T input, long scheduleId) {
 
     PREventTimeSlotBindingModel[] timeSlots = input.getTimeSlots();
-    EventTimeSlot[] eventTimeSlots = new EventTimeSlot[timeSlots.length];
+    EventTimeslot[] eventTimeSlots = new EventTimeslot[timeSlots.length];
     long[] eventTimeSlotIds = new long[timeSlots.length];
 
     for (int i = 0; i < timeSlots.length; i++) {
@@ -96,7 +96,7 @@ public class InsertPREventSchedule<T extends AbstractPREventScheduleBindingModel
 
       long timeSlotId = (long) keyHolder.getKey();
 
-      EventTimeSlot eventTimeSlot = new EventTimeSlot(timeSlotId, timeSlotModel.getTimeFrom(),
+      EventTimeslot eventTimeSlot = new EventTimeslot(timeSlotId, scheduleId, timeSlotModel.getTimeFrom(),
           timeSlotModel.getTimeTo());
       eventTimeSlots[i] = eventTimeSlot;
       eventTimeSlotIds[i] = timeSlotId;
@@ -119,10 +119,12 @@ public class InsertPREventSchedule<T extends AbstractPREventScheduleBindingModel
     ps.setDate(2, startDate);
     ps.setDate(3, endDate);
     ps.setString(4, daysOfTheWeek);
-
+    ps.setBoolean(5, input.isInnerCircle());
+    ps.setBoolean(6, input.isMyBloggers());
+    ps.setBoolean(7, input.isAllEligible());
     Timestamp scheduledForTimeStamp = getScheduledForTimestamp(input);
 
-    ps.setTimestamp(5, scheduledForTimeStamp);
+    ps.setTimestamp(8, scheduledForTimeStamp);
 
     return ps;
   }

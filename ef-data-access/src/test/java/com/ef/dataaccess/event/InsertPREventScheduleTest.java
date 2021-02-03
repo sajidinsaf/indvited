@@ -5,15 +5,11 @@ import static org.hamcrest.Matchers.is;
 import static org.junit.Assert.assertThat;
 import static org.mockito.MockitoAnnotations.openMocks;
 
-//import java.util.Arrays;
-//import java.util.Random;
-//import java.util.regex.Pattern;
 import javax.sql.DataSource;
 
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
-//import org.junit.Test;
 import org.mockito.Mock;
 import org.springframework.context.annotation.AnnotationConfigApplicationContext;
 import org.springframework.context.annotation.Bean;
@@ -102,14 +98,7 @@ class HsqlDbConfigInsertPREventScheduleTest {
 
   private DataSource dataSource() {
     EmbeddedDatabaseBuilder embeddedDatabaseBuilder = new EmbeddedDatabaseBuilder().setType(EmbeddedDatabaseType.HSQL);
-    return new DbTestUtils().addCreateScripts(embeddedDatabaseBuilder)
-        .addScript("classpath:com/ef/dataaccess/member/insertMemberTypeData.sql")
-        .addScript("classpath:com/ef/dataaccess/member/insertMemberData.sql")
-        .addScript("classpath:com/ef/dataaccess/member/insertMemberLoginControlData.sql")
-        .addScript("classpath:com/ef/dataaccess/event/insertEventTypeData.sql")
-        .addScript("classpath:com/ef/dataaccess/event/insertEventCriteriaMeta.sql")
-        .addScript("classpath:com/ef/dataaccess/event/insertEventDeliverableMeta.sql")
-        .addScript("classpath:com/ef/dataaccess/event/insertDomains.sql").build();
+    return new DbTestUtils().addCreateScripts(embeddedDatabaseBuilder).build();
   }
 
   @Bean

@@ -6,7 +6,7 @@ import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Component;
 
 import com.ef.dataaccess.Query;
-import com.ef.dataaccess.spring.member.rowmapper.PREventTableRowMapper;
+import com.ef.dataaccess.spring.rowmapper.event.PREventTableRowMapper;
 import com.ef.model.event.PREvent;
 
 @Component(value = "queryEventById")
