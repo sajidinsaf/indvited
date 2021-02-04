@@ -17,6 +17,7 @@ import org.springframework.web.servlet.ModelAndView;
 
 import com.ef.common.message.Response;
 import com.ef.common.message.StatusCode;
+import com.ef.dataaccess.member.MemberTypeCache;
 import com.ef.member.registration.service.RegistrationConfirmationService;
 import com.ef.member.registration.service.RegistrationService;
 import com.ef.model.member.Member;
@@ -38,6 +39,9 @@ public class RegistrationControllerTest {
   private Response<Member> registrationStatus;
 
   @Mock
+  private MemberTypeCache memberTypeCache;
+
+  @Mock
   private Member member;
 
   private StatusCode statusCode;
@@ -45,7 +49,8 @@ public class RegistrationControllerTest {
   @Before
   public void setUp() throws Exception {
     openMocks(this);
-    registrationController = new RegistrationController(registrationService, registrationConfirmationService);
+    registrationController = new RegistrationController(registrationService, registrationConfirmationService,
+        memberTypeCache);
   }
 
   @Test

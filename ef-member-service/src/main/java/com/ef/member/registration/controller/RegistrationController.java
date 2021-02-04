@@ -1,7 +1,8 @@
 package com.ef.member.registration.controller;
 
 import static com.ef.member.registration.controller.RegistrationControllerConstants.CONFIRM_REGISTER_MEMBER;
-import static com.ef.member.registration.controller.RegistrationControllerConstants.REGISTER_MEMBER;
+import static com.ef.member.registration.controller.RegistrationControllerConstants.REGISTER_MEMBER_BLOGGER;
+import static com.ef.member.registration.controller.RegistrationControllerConstants.REGISTER_MEMBER_PR;
 
 import java.util.List;
 
@@ -21,10 +22,12 @@ import org.springframework.web.servlet.ModelAndView;
 
 import com.ef.common.logging.ServiceLoggingUtil;
 import com.ef.common.message.Response;
+import com.ef.dataaccess.member.MemberTypeCache;
 import com.ef.member.registration.service.RegistrationConfirmationService;
 import com.ef.member.registration.service.RegistrationService;
 import com.ef.model.member.Member;
 import com.ef.model.member.MemberRegistrationBindingModel;
+import com.ef.model.member.MemberType;
 
 /**
  * Handles requests for the event service.
@@ -37,25 +40,45 @@ public class RegistrationController {
 
   private final RegistrationService registrationService;
   private final RegistrationConfirmationService registrationConfirmationService;
+  private final MemberTypeCache memberTypeCache;
 
   @Autowired
   public RegistrationController(@Qualifier("registrationService") RegistrationService registrationService,
-      @Qualifier("registrationConfirmationService") RegistrationConfirmationService registrationConfirmationService) {
+      @Qualifier("registrationConfirmationService") RegistrationConfirmationService registrationConfirmationService,
+      MemberTypeCache memberTypeCache) {
     this.registrationService = registrationService;
     this.registrationConfirmationService = registrationConfirmationService;
+    this.memberTypeCache = memberTypeCache;
   }
 
 //  curl -i -H "Accept: application/json" -H "Content-Type:application/json" -X POST --data '{"id":"1232455663","type":"PREvent","scheduledDate":"2020/12/25","scheduledTime":"18:03:51","location":"Mainland China","description":"Review Food Event"}' "http://secure.codeczar.co.uk/event-service/rest/event/publish"
-  @PostMapping(REGISTER_MEMBER)
-  public @ResponseBody ResponseEntity<?> registerMember(
-      @RequestBody MemberRegistrationBindingModel memberRegistationData) {
-    logUtil.debug(logger, "Registering member: " + memberRegistationData);
+  @PostMapping(REGISTER_MEMBER_PR)
+  public @ResponseBody ResponseEntity<?> registerMemberPr(
+      @RequestBody MemberRegistrationBindingModel memberRegistrationData) {
 
-    Response<Member> registrationStatus = registrationService.registerMember(memberRegistationData);
+    memberRegistrationData.setMemberType(memberTypeCache.getMemberType(MemberType.KNOWN_MEMBER_TYPE_PR).getName());
+
+    return registerMember(memberRegistrationData);
+  }
+
+  @PostMapping(REGISTER_MEMBER_BLOGGER)
+  public @ResponseBody ResponseEntity<?> registerMemberBlogger(
+      @RequestBody MemberRegistrationBindingModel memberRegistrationData) {
+
+    memberRegistrationData.setMemberType(memberTypeCache.getMemberType(MemberType.KNOWN_MEMBER_TYPE_BLOGGER).getName());
+
+    return registerMember(memberRegistrationData);
+  }
+
+  public @ResponseBody ResponseEntity<?> registerMember(
+      @RequestBody MemberRegistrationBindingModel memberRegistrationData) {
+    logUtil.debug(logger, "Registering member: " + memberRegistrationData);
+
+    Response<Member> registrationStatus = registrationService.registerMember(memberRegistrationData);
 
     if (registrationStatus.getFailureReasons() != null && !registrationStatus.getFailureReasons().isEmpty()) {
       logUtil.info(logger,
-          "Error registering member: " + memberRegistationData + " [" + registrationStatus.getFailureReasons() + "]");
+          "Error registering member: " + memberRegistrationData + " [" + registrationStatus.getFailureReasons() + "]");
       return new ResponseEntity<List<String>>(registrationStatus.getFailureReasons(),
           HttpStatus.valueOf(registrationStatus.getStatusCode().name()));
     }
