@@ -28,7 +28,7 @@ import com.ef.model.event.PREventTimeSlotBindingModel;
 
 public class InsertPREventScheduleTest {
 
-  private InsertPREventSchedule<PREventScheduleBindingModel> insertPREventSchedule;
+  private InsertPREventSchedule insertPREventSchedule;
   private JdbcTemplate jdbcTemplate;
 
   @Mock
@@ -48,7 +48,7 @@ public class InsertPREventScheduleTest {
   private boolean myBloggers = false;
   private boolean allEligible = false;
 
-  @SuppressWarnings({ "resource", "unchecked" })
+  @SuppressWarnings({ "resource" })
   @Before
   public void setUp() {
     openMocks(this);

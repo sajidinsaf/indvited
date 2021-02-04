@@ -20,14 +20,13 @@ import org.springframework.stereotype.Component;
 
 import com.ef.common.logging.ServiceLoggingUtil;
 import com.ef.dataaccess.Insert;
-import com.ef.model.event.AbstractPREventScheduleBindingModel;
 import com.ef.model.event.EventScheduleResult;
 import com.ef.model.event.EventTimeslot;
+import com.ef.model.event.PREventScheduleBindingModel;
 import com.ef.model.event.PREventTimeSlotBindingModel;
 
 @Component("insertPrEventSchedule")
-public class InsertPREventSchedule<T extends AbstractPREventScheduleBindingModel>
-    implements Insert<T, EventScheduleResult> {
+public class InsertPREventSchedule implements Insert<PREventScheduleBindingModel, EventScheduleResult> {
 
   private static final String DATE_FORMAT = System.getProperty("event.schedule.date.format") != null
       ? System.getProperty("event.schedule.date.format")
@@ -59,7 +58,7 @@ public class InsertPREventSchedule<T extends AbstractPREventScheduleBindingModel
 //  private String notes;  
 //  
   @Override
-  public EventScheduleResult data(final T input) {
+  public EventScheduleResult data(final PREventScheduleBindingModel input) {
 
     logUtil.debug(logger, " Input Schedule Details: ", input);
 
@@ -79,7 +78,7 @@ public class InsertPREventSchedule<T extends AbstractPREventScheduleBindingModel
     return scheduleResult;
   }
 
-  private long[] insertEventTimeSlots(T input, long scheduleId) {
+  private long[] insertEventTimeSlots(PREventScheduleBindingModel input, long scheduleId) {
 
     PREventTimeSlotBindingModel[] timeSlots = input.getTimeSlots();
     EventTimeslot[] eventTimeSlots = new EventTimeslot[timeSlots.length];
@@ -106,8 +105,8 @@ public class InsertPREventSchedule<T extends AbstractPREventScheduleBindingModel
 
   }
 
-  private final PreparedStatement getInsertSchedulePreparedStatement(T input, Connection connection)
-      throws SQLException {
+  private final PreparedStatement getInsertSchedulePreparedStatement(PREventScheduleBindingModel input,
+      Connection connection) throws SQLException {
 
     int eventId = input.getEventId();
     Date startDate = getDate(input.getStartDate(), DATE_FORMAT);
@@ -143,7 +142,7 @@ public class InsertPREventSchedule<T extends AbstractPREventScheduleBindingModel
     return ps;
   }
 
-  private Timestamp getScheduledForTimestamp(T input) {
+  private Timestamp getScheduledForTimestamp(PREventScheduleBindingModel input) {
     if (input.getScheduleDate() == null) {
       return new Timestamp(System.currentTimeMillis());
     }

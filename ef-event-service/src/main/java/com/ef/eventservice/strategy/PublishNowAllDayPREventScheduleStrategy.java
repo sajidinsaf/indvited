@@ -13,7 +13,7 @@ import com.ef.common.message.Response;
 import com.ef.dataaccess.Insert;
 import com.ef.eventservice.publisher.PREventPublisherContext;
 import com.ef.model.event.PREvent;
-import com.ef.model.event.PREventScheduleAllDayBindingModel;
+import com.ef.model.event.PREventScheduleBindingModel;
 
 public class PublishNowAllDayPREventScheduleStrategy implements Strategy<PREventPublisherContext, Response<?>> {
 
@@ -24,11 +24,11 @@ public class PublishNowAllDayPREventScheduleStrategy implements Strategy<PREvent
 
   private final String channel;
 
-  private final Insert<PREventScheduleAllDayBindingModel, PREvent> insertPREventSchedule;
+  private final Insert<PREventScheduleBindingModel, PREvent> insertPREventSchedule;
 
   public PublishNowAllDayPREventScheduleStrategy(Publisher<PREvent> prEventPublisher,
       @Qualifier("prEventChannelName") String eventChannelName,
-      @Qualifier("insertPREventSchedule") Insert<PREventScheduleAllDayBindingModel, PREvent> insertPREventSchedule) {
+      @Qualifier("insertPREventSchedule") Insert<PREventScheduleBindingModel, PREvent> insertPREventSchedule) {
     this.prEventPublisher = prEventPublisher;
     this.channel = eventChannelName;
     this.insertPREventSchedule = insertPREventSchedule;
@@ -38,7 +38,7 @@ public class PublishNowAllDayPREventScheduleStrategy implements Strategy<PREvent
   public Response<?> apply(PREventPublisherContext context) {
     try {
 
-      PREventScheduleAllDayBindingModel prEventScheduleBindingModel = context.get(PR_EVENT_BINDING_MODEL);
+      PREventScheduleBindingModel prEventScheduleBindingModel = context.get(PR_EVENT_BINDING_MODEL);
       logUtil.debug(logger, "Publishing publish event: " + prEventScheduleBindingModel);
 
       PREvent prEvent = insertPREventSchedule.data(prEventScheduleBindingModel);

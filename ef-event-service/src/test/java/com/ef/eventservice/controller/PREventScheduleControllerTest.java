@@ -34,8 +34,8 @@ import com.ef.common.message.StatusCode;
 import com.ef.dataaccess.Insert;
 import com.ef.dataaccess.config.DbTestUtils;
 import com.ef.eventservice.publisher.PREventPublisherContext;
-import com.ef.model.event.PREventSchedule;
-import com.ef.model.event.PREventScheduleAllDayBindingModel;
+import com.ef.model.event.EventScheduleResult;
+import com.ef.model.event.PREventScheduleBindingModel;
 import com.ef.model.member.Member;
 
 public class PREventScheduleControllerTest {
@@ -57,7 +57,7 @@ public class PREventScheduleControllerTest {
     AnnotationConfigApplicationContext appContext = new AnnotationConfigApplicationContext(
         HsqlDbConfigPREventScheduleControllerTest.class);
     jdbcTemplate = appContext.getBean(JdbcTemplate.class);
-    Insert<PREventScheduleAllDayBindingModel, PREventSchedule> insertPrEventSchedule = appContext
+    Insert<PREventScheduleBindingModel, EventScheduleResult> insertPrEventSchedule = appContext
         .getBean("insertPrEventSchedule", Insert.class);
 
     Strategy<PREventPublisherContext, Response<?>> prEventScheduleNowStrategy = appContext.getBean(Strategy.class,
@@ -83,7 +83,7 @@ public class PREventScheduleControllerTest {
 }
 
 @Configuration
-@ComponentScan("com.ef.dataaccess.config,com.ef.eventservice")
+@ComponentScan("com.ef.dataaccess,com.ef.eventservice")
 class HsqlDbConfigPREventScheduleControllerTest {
 
   @Bean

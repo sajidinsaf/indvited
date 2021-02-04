@@ -2,11 +2,10 @@ package com.ef.model.event;
 
 public class PREventTimeSlotBindingModel {
 
-  private String timeFrom;
-  private String timeTo;
+  private String timeFrom, timeTo;
 
   public PREventTimeSlotBindingModel() {
-
+    // TODO Auto-generated constructor stub
   }
 
   public PREventTimeSlotBindingModel(String timeFrom, String timeTo) {
@@ -29,6 +28,11 @@ public class PREventTimeSlotBindingModel {
 
   public void setTimeTo(String timeTo) {
     this.timeTo = timeTo;
+  }
+
+  @Override
+  public String toString() {
+    return "PREventTimeSlotBindingModel [timeFrom=" + timeFrom + ", timeTo=" + timeTo + "]";
   }
 
 }
