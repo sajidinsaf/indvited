@@ -13,6 +13,7 @@ public class DbTestUtils {
         .addScript("classpath:com/ef/dataaccess/member/createMemberTable.sql")
         .addScript("classpath:com/ef/dataaccess/member/createMemberTypeTable.sql")
         .addScript("classpath:com/ef/dataaccess/member/createMemberRegistrationControlTable.sql")
+        .addScript("classpath:com/ef/dataaccess/member/createMemberAddressTable.sql")
         .addScript("classpath:com/ef/dataaccess/event/createDomainTable.sql")
         .addScript("classpath:com/ef/dataaccess/event/createEventCriteriaMetaTable.sql")
         .addScript("classpath:com/ef/dataaccess/event/createEventCriteriaDataTable.sql")

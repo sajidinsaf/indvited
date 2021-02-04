@@ -1,37 +1,55 @@
 package com.ef.model.member;
 
-import java.util.Date;
+import java.util.Random;
+
+import com.google.gson.Gson;
 
 public class MemberRegistrationBindingModel implements CredentialBindingModel {
 
   private String id;
   private String firstName;
   private String lastName;
-  private String username;
   private String password;
   private String email;
   private String gender;
   private String phone;
   private String memberType;
-  private Date dateRegistered;
+  private String addressLine1, addressLine2, addressLine3, city, country, pincode;
 
   public MemberRegistrationBindingModel() {
 
   }
 
-  public MemberRegistrationBindingModel(String id, String firstname, String lastname, String username, String password,
-      String email, String gender, String phone, String memberType) {
+  public MemberRegistrationBindingModel(String id, String firstname, String lastname, String password, String email,
+      String gender, String phone, String memberType) {
     super();
     this.id = id;
     this.firstName = firstname;
     this.lastName = lastname;
-    this.username = username;
     this.password = password;
     this.email = email;
     this.phone = phone;
     this.memberType = memberType;
-    this.dateRegistered = new Date();
 
+  }
+
+  public MemberRegistrationBindingModel(String firstName, String lastName, String password, String email, String gender,
+      String phone, String memberType, String addressLine1, String addressLine2, String addressLine3, String city,
+      String country, String pincode) {
+    super();
+    this.firstName = firstName;
+    this.lastName = lastName;
+    this.password = password;
+    this.email = email;
+    this.gender = gender;
+    this.phone = phone;
+    this.memberType = memberType;
+    this.addressLine1 = addressLine1;
+    this.addressLine2 = addressLine2;
+    this.addressLine3 = addressLine3;
+    this.city = city;
+    this.country = country;
+    this.pincode = pincode;
   }
 
   public String getId() {
@@ -56,14 +74,6 @@ public class MemberRegistrationBindingModel implements CredentialBindingModel {
 
   public void setLastName(String lastname) {
     this.lastName = lastname;
-  }
-
-  public String getUsername() {
-    return username;
-  }
-
-  public void setUsername(String username) {
-    this.username = username;
   }
 
   public String getPassword() {
@@ -106,8 +116,52 @@ public class MemberRegistrationBindingModel implements CredentialBindingModel {
     this.memberType = memberType;
   }
 
-  public Date getDateRegistered() {
-    return dateRegistered;
+  public String getAddressLine1() {
+    return addressLine1;
+  }
+
+  public void setAddressLine1(String addressLine1) {
+    this.addressLine1 = addressLine1;
+  }
+
+  public String getAddressLine2() {
+    return addressLine2;
+  }
+
+  public void setAddressLine2(String addressLine2) {
+    this.addressLine2 = addressLine2;
+  }
+
+  public String getAddressLine3() {
+    return addressLine3;
+  }
+
+  public void setAddressLine3(String addressLine3) {
+    this.addressLine3 = addressLine3;
+  }
+
+  public String getCity() {
+    return city;
+  }
+
+  public void setCity(String city) {
+    this.city = city;
+  }
+
+  public String getCountry() {
+    return country;
+  }
+
+  public void setCountry(String country) {
+    this.country = country;
+  }
+
+  public String getPincode() {
+    return pincode;
+  }
+
+  public void setPincode(String pincode) {
+    this.pincode = pincode;
   }
 
   @Override
@@ -118,8 +172,16 @@ public class MemberRegistrationBindingModel implements CredentialBindingModel {
   @Override
   public String toString() {
     return "MemberRegistrationBindingModel [id=" + id + ", firstName=" + firstName + ", lastName=" + lastName
-        + ", username=" + username + ", password=" + password + ", email=" + email + ", gender=" + gender + ", phone="
-        + phone + ", memberType=" + memberType + ", dateRegistered=" + dateRegistered + "]";
+        + ", password=" + password + ", email=" + email + ", gender=" + gender + ", phone=" + phone + ", memberType="
+        + memberType + ", addressLine1=" + addressLine1 + ", addressLine2=" + addressLine2 + ", addressLine3="
+        + addressLine3 + ", city=" + city + ", country=" + country + ", pincode=" + pincode + "]";
   }
 
+  public static void main(String[] args) {
+    MemberRegistrationBindingModel event = new MemberRegistrationBindingModel("James", "Stewart", "Ch@@z@P1zza",
+        "js" + new Random(999999).nextInt() + "@mail.co", "M", "" + new Random(999999999).nextInt(), "pr", "2 Pike Rd",
+        "Belgrade Avenue", "Near Jhumri Talao", "Mumbai", "India", "400080");
+
+    System.out.println(new Gson().toJson(event));
+  }
 }

@@ -21,6 +21,7 @@ public class Member implements Serializable {
   private Timestamp timestamp_of_last_login;
   private MemberLoginControl memberLoginControl;
   private boolean enabled;
+  private MemberAddress memberAddress;
 
   public Member() {
 
@@ -164,6 +165,26 @@ public class Member implements Serializable {
     this.timestamp_of_last_login = timestamp_of_last_login;
   }
 
+  public MemberAddress getMemberAddress() {
+    return memberAddress;
+  }
+
+  public void setMemberAddress(MemberAddress memberAddress) {
+    this.memberAddress = memberAddress;
+  }
+
+  public MemberLoginControl getMemberLoginControl() {
+    return memberLoginControl;
+  }
+
+  public void setMemberLoginControl(MemberLoginControl memberLoginControl) {
+    this.memberLoginControl = memberLoginControl;
+  }
+
+  public boolean isEnabled() {
+    return enabled;
+  }
+
   private void checkForMutation(Object o, String fieldName) {
     if (o != null) {
       throw new FieldCannotBeMutatedException(fieldName);
@@ -231,24 +252,12 @@ public class Member implements Serializable {
     return true;
   }
 
-  public MemberLoginControl getMemberLoginControl() {
-    return memberLoginControl;
-  }
-
-  public void setMemberLoginControl(MemberLoginControl memberLoginControl) {
-    this.memberLoginControl = memberLoginControl;
-  }
-
-  public boolean isEnabled() {
-    return enabled;
-  }
-
   @Override
   public String toString() {
-    return "Member [id=" + id + ", firstname=" + firstname + ", lastname=" + lastname + ", email=" + email + ", phone="
-        + phone + ", password=" + password + ", memberType=" + memberType + ", date_registered=" + date_registered
-        + ", timestamp_of_last_login=" + timestamp_of_last_login + ", memberLoginControl=" + memberLoginControl
-        + ", enabled=" + enabled + "]";
+    return "Member [id=" + id + ", firstname=" + firstname + ", lastname=" + lastname + ", email=" + email + ", gender="
+        + gender + ", phone=" + phone + ", password=" + password + ", memberType=" + memberType + ", date_registered="
+        + date_registered + ", timestamp_of_last_login=" + timestamp_of_last_login + ", memberLoginControl="
+        + memberLoginControl + ", enabled=" + enabled + ", memberAddress=" + memberAddress + "]";
   }
 
 }

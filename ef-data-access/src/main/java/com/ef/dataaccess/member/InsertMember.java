@@ -20,6 +20,8 @@ import com.ef.common.logging.ServiceLoggingUtil;
 import com.ef.dataaccess.Insert;
 import com.ef.dataaccess.Query;
 import com.ef.model.member.Member;
+import com.ef.model.member.MemberAddress;
+import com.ef.model.member.MemberAddressRegistrationBindingModel;
 import com.ef.model.member.MemberRegistrationBindingModel;
 import com.ef.model.member.MemberRegistrationControlModel;
 import com.ef.model.member.PreconfirmationMemberRegistrationModel;
@@ -38,6 +40,8 @@ public class InsertMember implements Insert<MemberRegistrationBindingModel, Prec
   private final PasswordEncoder encoder;
   private final Query<String, String> emailFormatterForDb;
   private final Insert<Member, MemberRegistrationControlModel> insertRegistrationConfirmationCode;
+  private final Insert<MemberAddressRegistrationBindingModel, MemberAddress> insertMemberAddress;
+
   private final static long login_session_expiry_period_in_milliseconds = System
       .getProperty("ef.login.session.expiry.period.in.seconds") == null ? 2419200000L
           : 1000L * Long.parseLong(System.getProperty("ef.login.session.expiry.period.in.seconds"));
@@ -47,13 +51,15 @@ public class InsertMember implements Insert<MemberRegistrationBindingModel, Prec
       @Qualifier("queryMemberById") Query<Integer, Member> queryMemberById,
       @Qualifier("emailFormatterForDb") Query<String, String> emailFormatterForDb, MemberTypeCache memberTypeCache,
       PasswordEncoder encoder,
-      @Qualifier("insertRegistrationConfirmationCode") Insert<Member, MemberRegistrationControlModel> insertRegistrationConfirmationCode) {
+      @Qualifier("insertRegistrationConfirmationCode") Insert<Member, MemberRegistrationControlModel> insertRegistrationConfirmationCode,
+      @Qualifier("insertMemberAddress") Insert<MemberAddressRegistrationBindingModel, MemberAddress> insertMemberAddress) {
     this.jdbcTemplate = jdbcTemplate;
     this.queryMemberById = queryMemberById;
     this.memberTypeCache = memberTypeCache;
     this.encoder = encoder;
     this.emailFormatterForDb = emailFormatterForDb;
     this.insertRegistrationConfirmationCode = insertRegistrationConfirmationCode;
+    this.insertMemberAddress = insertMemberAddress;
   }
 
   @Override
@@ -76,12 +82,24 @@ public class InsertMember implements Insert<MemberRegistrationBindingModel, Prec
     jdbcTemplate.update(INSERT_STATEMENT_MEMBER_CONTROL,
         new Object[] { memberId, member_login_control_token, new Timestamp(loginExpiryTime) });
 
+    MemberAddress memberAddress = insertMemberAddress(memberId, input);
+    member.setMemberAddress(memberAddress);
+
     MemberRegistrationControlModel registrationConfirmationCode = insertRegistrationConfirmationCode.data(member);
 
     PreconfirmationMemberRegistrationModel pmrModel = new PreconfirmationMemberRegistrationModel(member,
         registrationConfirmationCode);
     logUtil.debug(logger, "Returning pre-confirmation registration information ", pmrModel);
     return pmrModel;
+  }
+
+  private MemberAddress insertMemberAddress(int memberId, MemberRegistrationBindingModel input) {
+
+    MemberAddressRegistrationBindingModel marbm = new MemberAddressRegistrationBindingModel(memberId,
+        input.getAddressLine1(), input.getAddressLine2(), input.getAddressLine3(), input.getCity(), input.getCountry(),
+        input.getPincode());
+    return insertMemberAddress.data(marbm);
+
   }
 
   private String encryptPassword(String password) {

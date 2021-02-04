@@ -51,7 +51,6 @@ public class RegistrationServiceTest {
   private String firstName = "fname" + new Random().nextInt(1000);
   private String lastName = "lname" + new Random().nextInt(1000);
   private String email = "em" + new Random().nextInt(1000) + "@abcd.com";
-  private String username = "uname" + new Random().nextInt(1000) + "@absdcd.com";
   private String password = "passwd" + new Random().nextInt(1000) + "@asds.com";
   private String phone = new Random().nextInt(10) + "";
   private String memberTypeName = new String[] { "admin", "pr", "blogger" }[new Random().nextInt(2)];
@@ -76,7 +75,6 @@ public class RegistrationServiceTest {
   public void testScuccessfulInsert() {
     when(memberData.getFirstName()).thenReturn(firstName);
     when(memberData.getLastName()).thenReturn(lastName);
-    when(memberData.getUsername()).thenReturn(username);
     when(memberData.getPassword()).thenReturn(password);
     when(memberData.getEmail()).thenReturn(email);
     when(memberData.getGender()).thenReturn(gender);

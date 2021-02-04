@@ -1,5 +1,6 @@
 package com.ef.dataaccess.member;
 
+import static org.hamcrest.Matchers.is;
 //import static org.hamcrest.core.Is.is;
 import static org.junit.Assert.assertThat;
 //import static org.mockito.Mockito.never;
@@ -15,7 +16,6 @@ import java.util.Random;
 import javax.sql.DataSource;
 
 import org.aspectj.lang.annotation.AfterThrowing;
-import org.hamcrest.Matchers;
 import org.junit.After;
 import org.junit.Before;
 
@@ -50,11 +50,15 @@ public class InsertMemberTest {
   private String firstName = "fname" + new Random().nextInt(1000);
   private String lastName = "lname" + new Random().nextInt(1000);
   private String email = "em" + new Random().nextInt(1000) + "@abcd.com";
-  private String username = "uname" + new Random().nextInt(1000) + "@absdcd.com";
   private String password = "passwd" + new Random().nextInt(1000) + "@asds.com";
   private String phone = new Random().nextInt(10) + "";
   private String memberTypeName = new String[] { "admin", "pr", "blogger" }[new Random().nextInt(2)];
   private String gender = "F";
+  private String addressLine1 = "8493 Golf Drive";
+  private String addressLine2 = "Marbella St 9";
+  private String city = "Springfield";
+  private String country = "United States of America";
+  private String pincode = "876543";
 
   @SuppressWarnings("resource")
   @Before
@@ -78,23 +82,32 @@ public class InsertMemberTest {
   public void test() {
     when(memberData.getFirstName()).thenReturn(firstName);
     when(memberData.getLastName()).thenReturn(lastName);
-    when(memberData.getUsername()).thenReturn(username);
     when(memberData.getPassword()).thenReturn(password);
     when(memberData.getEmail()).thenReturn(email);
     when(memberData.getGender()).thenReturn(gender);
     when(memberData.getPhone()).thenReturn(phone);
     when(memberData.getMemberType()).thenReturn(memberTypeName);
+    when(memberData.getAddressLine1()).thenReturn(addressLine1);
+    when(memberData.getAddressLine2()).thenReturn(addressLine2);
+    when(memberData.getCity()).thenReturn(country);
+    when(memberData.getCountry()).thenReturn(country);
+    when(memberData.getPincode()).thenReturn(pincode);
 
     PreconfirmationMemberRegistrationModel pmrMember = insertMember.data(memberData);
 
     Member member = pmrMember.getMember();
 
-    assertThat(member.getFirstName(), Matchers.is(firstName));
-    assertThat(member.getLastName(), Matchers.is(lastName));
-    assertThat(member.getPhone(), Matchers.is(phone));
-    assertThat(member.getGender(), Matchers.is(gender));
-    assertThat(member.getMemberType().getName(), Matchers.is(memberTypeName));
-
+    assertThat(member.getFirstName(), is(firstName));
+    assertThat(member.getLastName(), is(lastName));
+    assertThat(member.getPhone(), is(phone));
+    assertThat(member.getGender(), is(gender));
+    assertThat(member.getMemberType().getName(), is(memberTypeName));
+    assertThat(member.getMemberAddress().getMemberId(), is(member.getId()));
+    assertThat(member.getMemberAddress().getAddressLine1(), is(addressLine1));
+    assertThat(member.getMemberAddress().getAddressLine2(), is(addressLine2));
+    assertThat(member.getMemberAddress().getCity(), is(country));
+    assertThat(member.getMemberAddress().getCountry(), is(country));
+    assertThat(member.getMemberAddress().getPincode(), is(pincode));
   }
 
 }
