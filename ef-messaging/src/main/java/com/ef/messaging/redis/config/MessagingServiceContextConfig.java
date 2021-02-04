@@ -1,4 +1,4 @@
-package com.ef.eventservice.context.config;
+package com.ef.messaging.redis.config;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -7,7 +7,6 @@ import java.util.Properties;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
@@ -25,30 +24,23 @@ import org.springframework.web.servlet.view.InternalResourceViewResolver;
 import com.ef.common.MapBasedContext;
 import com.ef.common.message.Channel;
 import com.ef.common.message.MessagePacket;
-import com.ef.common.message.Publisher;
 import com.ef.common.message.Response;
-import com.ef.common.validation.Validator;
 import com.ef.common.work.Worker;
-import com.ef.dataaccess.Insert;
-import com.ef.dataaccess.Query;
-import com.ef.eventservice.scheduler.PREventPublisher;
-import com.ef.eventservice.scheduler.worker.MailSenderWorker;
-import com.ef.eventservice.scheduler.worker.SimpleEmailAddressProvider;
-import com.ef.eventservice.subscriber.Subscriber;
-import com.ef.model.event.PREvent;
-import com.ef.model.event.PREventBindingModel;
-import com.ef.model.member.Member;
-import com.ef.model.member.MemberLoginBindingModel;
+import com.ef.messaging.email.MailSenderWorker;
+import com.ef.messaging.email.SimpleEmailAddressProvider;
+import com.ef.messaging.redis.JedisChannel;
+import com.ef.messaging.redis.Subscriber;
 
 import redis.clients.jedis.Jedis;
+import redis.clients.jedis.JedisPool;
 
 @Configuration
 //@EnableWebMvc
 //@PropertySource("classpath:controller.properties")
 @ComponentScan(basePackages = { "com.ef.eventservice.controller", "com.ef.dataaccess" })
-public class ServiceContextConfig implements WebMvcConfigurer {
+public class MessagingServiceContextConfig implements WebMvcConfigurer {
 
-  private static final Logger logger = LoggerFactory.getLogger(ServiceContextConfig.class);
+  private static final Logger logger = LoggerFactory.getLogger(MessagingServiceContextConfig.class);
 
   public static final String AUTH_STRING = "6w1KiI5TVRHQcPTlvctgs2zgw1y2Lwro";
 
@@ -77,21 +69,22 @@ public class ServiceContextConfig implements WebMvcConfigurer {
   }
 
   @Bean
-  public Publisher<PREventBindingModel> prEventPublisher(
-      @Autowired @Qualifier("insertPREvent") Insert<PREventBindingModel, PREvent> eventPersistor,
-      @Autowired @Qualifier("queryMemberByEmailAndMemberType") Query<MemberLoginBindingModel, Member> queryMemberByEmailAndMemberType,
-      @Autowired @Qualifier("eventSubscriptionChannel") Channel channel) {
-
-    logger.info("creating PREventPublisher instance");
-    List<Validator<PREventBindingModel, String>> validators = validators(queryMemberByEmailAndMemberType);
-    return new PREventPublisher(channel, eventPersistor, validators);
-
+  public Channel eventSubscriptionChannel(@Autowired JedisPool jedisPool) {
+    logger.info("starting subscribers");
+    startSubscribers(getNewJedisInstance(jedisPool));
+    logger.info("started subscribers successfully");
+    return new JedisChannel(PR_EVENT_CHANNEL_NAME, getNewJedisInstance(jedisPool));
   }
 
-  private List<Validator<PREventBindingModel, String>> validators(
-      Query<MemberLoginBindingModel, Member> queryMemberByEmailAndMemberType) {
-    List<Validator<PREventBindingModel, String>> validators = new ArrayList<Validator<PREventBindingModel, String>>();
-    return validators;
+  private Jedis getNewJedisInstance(JedisPool jedisPool) {
+    Jedis jedis = jedisPool.getResource();
+    jedis.auth(AUTH_STRING);
+    return jedis;
+  }
+
+  @Bean
+  public JedisPool jedisPool() {
+    return new JedisPool("127.0.0.1", 41029);
   }
 
   @Bean
@@ -127,7 +120,7 @@ public class ServiceContextConfig implements WebMvcConfigurer {
   private List<Worker<MessagePacket<String>, Response<String>, MapBasedContext>> workers() {
     List<Worker<MessagePacket<String>, Response<String>, MapBasedContext>> workers = new ArrayList<Worker<MessagePacket<String>, Response<String>, MapBasedContext>>();
 
-    MailSenderWorker mailsenderWorker = new MailSenderWorker(mailSender(), SENDER_EMAIL_ADDRESS,
+    com.ef.messaging.email.MailSenderWorker mailsenderWorker = new MailSenderWorker(mailSender(), SENDER_EMAIL_ADDRESS,
         new SimpleEmailAddressProvider());
 
     workers.add(mailsenderWorker);

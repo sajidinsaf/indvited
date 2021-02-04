@@ -25,7 +25,7 @@ import com.ef.model.event.EventScheduleResult;
 import com.ef.model.event.EventTimeslot;
 import com.ef.model.event.PREventTimeSlotBindingModel;
 
-@Component("insertPREventSchedule")
+@Component("insertPrEventSchedule")
 public class InsertPREventSchedule<T extends AbstractPREventScheduleBindingModel>
     implements Insert<T, EventScheduleResult> {
 

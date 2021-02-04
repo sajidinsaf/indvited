@@ -9,7 +9,7 @@ import com.google.gson.Gson;
 
 public class PREventBindingModel {
 
-  private String eventCreatorEmailId;
+  private int memberId;
   private MemberType memberType;
   private int eventType;
   private String domainName;
@@ -33,11 +33,11 @@ public class PREventBindingModel {
     this.eventDeliverable = new ArrayList<PREventDeliverableBindingModel>();
   }
 
-  public PREventBindingModel(String eventCreatorEmailId, MemberType memberType, int eventType, String domainName,
-      String cap, String exclusions, PREventLocationBindingModel eventLocation, String notes, int minZomatoLevel,
+  public PREventBindingModel(int memberId, MemberType memberType, int eventType, String domainName, String cap,
+      String exclusions, PREventLocationBindingModel eventLocation, String notes, int minZomatoLevel,
       int minZomatoReviews, int minInstagramFollowers) {
     super();
-    this.eventCreatorEmailId = eventCreatorEmailId;
+    this.memberId = memberId;
     this.memberType = memberType;
     this.eventType = eventType;
     this.domainName = domainName;
@@ -52,11 +52,11 @@ public class PREventBindingModel {
     this.minInstagramFollowers = minInstagramFollowers;
   }
 
-  public PREventBindingModel(String eventCreatorEmailId, MemberType memberType, int eventType, String domainName,
-      String cap, String exclusions, List<PREventCriteriaBindingModel> eventCriteria,
+  public PREventBindingModel(int memberId, MemberType memberType, int eventType, String domainName, String cap,
+      String exclusions, List<PREventCriteriaBindingModel> eventCriteria,
       List<PREventDeliverableBindingModel> eventDeliverable, PREventLocationBindingModel eventLocation, String notes) {
     super();
-    this.eventCreatorEmailId = eventCreatorEmailId;
+    this.memberId = memberId;
     this.memberType = memberType;
     this.eventType = eventType;
     this.domainName = domainName;
@@ -68,12 +68,12 @@ public class PREventBindingModel {
     this.notes = notes;
   }
 
-  public String getEventCreatorEmailId() {
-    return eventCreatorEmailId;
+  public int getMemberId() {
+    return memberId;
   }
 
-  public void setEventCreatorEmailId(String eventCreatorEmailId) {
-    this.eventCreatorEmailId = eventCreatorEmailId;
+  public void setMemberId(int memberId) {
+    this.memberId = memberId;
   }
 
   public int getEventType() {
@@ -168,7 +168,7 @@ public class PREventBindingModel {
   public static void main(String[] args) {
     PREventBindingModel event = new PREventBindingModel();
     event.setCap("1 cocktail each / 2 starters / 2 mains");
-    event.setEventCreatorEmailId("myemail@email.com");
+    event.setMemberId(100010004);
 
     event.setDomainName("Restaurant");
     PREventCriteriaBindingModel prEventCriteriaBindingModel1 = new PREventCriteriaBindingModel("Mininum Zomato reviews",
@@ -346,16 +346,15 @@ public class PREventBindingModel {
 
   @Override
   public String toString() {
-    return "PREventBindingModel [eventCreatorEmailId=" + eventCreatorEmailId + ", eventType=" + eventType
-        + ", domainName=" + domainName + ", cap=" + cap + ", exclusions=" + exclusions + ", eventCriteria="
-        + eventCriteria + ", eventDeliverable=" + eventDeliverable + ", eventLocation=" + eventLocation + ", notes="
-        + notes + ", minZomatoLevel=" + minZomatoLevel + ", minZomatoReviews=" + minZomatoReviews
-        + ", minInstagramFollowers=" + minInstagramFollowers + ", deliverZomatoReview=" + deliverZomatoReview
-        + ", deliverInstagramPost=" + deliverInstagramPost + ", deliverInstagramStories=" + deliverInstagramStories
-        + ", deliverLiveInstagramStories=" + deliverLiveInstagramStories + ", deliverGoogleReview="
-        + deliverGoogleReview + ", deliverPlusOneReview=" + deliverPlusOneReview + ", invitedBloggersBindingModel="
-        + invitedBloggersBindingModel + ", venueName=" + venueName + ", venueAddress=" + venueAddress + ", venueUrl="
-        + venueUrl + "]";
+    return "PREventBindingModel [memberId=" + memberId + ", eventType=" + eventType + ", domainName=" + domainName
+        + ", cap=" + cap + ", exclusions=" + exclusions + ", eventCriteria=" + eventCriteria + ", eventDeliverable="
+        + eventDeliverable + ", eventLocation=" + eventLocation + ", notes=" + notes + ", minZomatoLevel="
+        + minZomatoLevel + ", minZomatoReviews=" + minZomatoReviews + ", minInstagramFollowers=" + minInstagramFollowers
+        + ", deliverZomatoReview=" + deliverZomatoReview + ", deliverInstagramPost=" + deliverInstagramPost
+        + ", deliverInstagramStories=" + deliverInstagramStories + ", deliverLiveInstagramStories="
+        + deliverLiveInstagramStories + ", deliverGoogleReview=" + deliverGoogleReview + ", deliverPlusOneReview="
+        + deliverPlusOneReview + ", invitedBloggersBindingModel=" + invitedBloggersBindingModel + ", venueName="
+        + venueName + ", venueAddress=" + venueAddress + ", venueUrl=" + venueUrl + "]";
   }
 
   public MemberType getMemberType() {

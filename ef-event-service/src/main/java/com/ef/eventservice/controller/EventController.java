@@ -15,6 +15,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import com.ef.common.logging.ServiceLoggingUtil;
 import com.ef.common.message.Publisher;
 import com.ef.common.message.Response;
+import com.ef.eventservice.publisher.PREventPublisherContext;
 import com.ef.model.event.PREventBindingModel;
 
 /**
@@ -56,7 +57,7 @@ public class EventController {
 
       logUtil.debug(logger, "Publishing publish event: " + event);
 
-      Response<?> publishResponse = prEventPublisher.publishEvent(event, channel);
+      Response<?> publishResponse = prEventPublisher.publishEvent(event, new PREventPublisherContext());
 
       if (publishResponse.getFailureReasons() != null && publishResponse.getFailureReasons().size() > 0) {
         return new ResponseEntity<List<String>>(publishResponse.getFailureReasons(), HttpStatus.PRECONDITION_FAILED);

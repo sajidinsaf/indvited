@@ -28,7 +28,7 @@ public class PREvent implements Event {
   }
 
   public PREvent(int id, String cap, String notes, Date createdDate, int eventTypeId, int domainId, int eventVenueId,
-      String exclusions, String memberEmailId) {
+      String exclusions, int memberId) {
     super();
     this.id = id;
     this.cap = cap;

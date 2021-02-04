@@ -5,7 +5,7 @@ CREATE TABLE event (
  cap varchar(250),
  exclusions varchar(250),
  created_date TIMESTAMP DEFAULT NOW(),
- member_email_id varchar(100),
+ member_id INTEGER,
  event_venue_id INTEGER,
  notes varchar(500) 
  );

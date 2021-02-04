@@ -43,7 +43,7 @@ public class PublishNowAllDayPREventScheduleStrategy implements Strategy<PREvent
 
       PREvent prEvent = insertPREventSchedule.data(prEventScheduleBindingModel);
 
-      Response<?> publishResponse = prEventPublisher.publishEvent(prEvent, channel);
+      Response<?> publishResponse = prEventPublisher.publishEvent(prEvent, context);
 
       return publishResponse;
 

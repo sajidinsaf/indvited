@@ -11,6 +11,6 @@
 		
 			<!-- Enables the Spring MVC @Controller programming model -->
 	<annotation-driven />
-	<context:component-scan base-package="com.ef.eventservice" />
+	<context:component-scan base-package="com.ef.eventservice,com.ef.messaging" />
 
 </beans:beans>

@@ -33,9 +33,9 @@ import com.ef.model.event.PREventScheduleAllDayBindingModel;
 public class PREventScheduleController {
 
   private static final Logger logger = LoggerFactory.getLogger(PREventScheduleController.class);
+  private final ServiceLoggingUtil logUtil = new ServiceLoggingUtil();
 
   private final Insert<PREventScheduleAllDayBindingModel, PREventSchedule> insertPrEventSchedule;
-  private final ServiceLoggingUtil logUtil = new ServiceLoggingUtil();
 
   private final Strategy<PREventPublisherContext, Response<?>> prEventScheduleNowStrategy;
 

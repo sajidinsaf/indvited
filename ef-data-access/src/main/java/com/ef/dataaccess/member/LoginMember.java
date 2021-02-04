@@ -1,11 +1,14 @@
 package com.ef.dataaccess.member;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Component;
 
+import com.ef.common.logging.ServiceLoggingUtil;
 import com.ef.dataaccess.Query;
 import com.ef.dataaccess.spring.member.rowmapper.MemberRowMapperWithPassword;
 import com.ef.model.member.Member;
@@ -15,6 +18,8 @@ import com.ef.model.member.MemberType;
 
 @Component(value = "loginMember")
 public class LoginMember implements Query<MemberLoginBindingModel, Member> {
+  private static final Logger logger = LoggerFactory.getLogger(LoginMember.class);
+  private final ServiceLoggingUtil logUtil = new ServiceLoggingUtil();
 
   private final String SELECT_MEMBER = "select id, firstname, password, lastname, email, gender, phone, date_registered, timestamp_of_last_login, is_enabled from member where email=? and member_type_id=?";
 
@@ -48,7 +53,11 @@ public class LoginMember implements Query<MemberLoginBindingModel, Member> {
 
     member.setMemberLoginControl(memberLoginControl);
 
-    if (!member.isEnabled() || !encoder.matches(data.getPassword(), member.getPassword())) {
+    if (!member.isEnabled()) {
+      logUtil.debug(logger, "member is not enabled", data);
+      return null;
+    } else if (!encoder.matches(data.getPassword(), member.getPassword())) {
+      logUtil.debug(logger, "password did not match", data);
       return null;
     }
 

@@ -7,7 +7,9 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Qualifier;
 
+import com.ef.common.Context;
 import com.ef.common.logging.ServiceLoggingUtil;
+import com.ef.common.message.Channel;
 import com.ef.common.message.Publisher;
 import com.ef.common.message.Response;
 import com.ef.common.message.StatusCode;
@@ -17,26 +19,25 @@ import com.ef.model.event.PREvent;
 import com.ef.model.event.PREventBindingModel;
 import com.google.gson.Gson;
 
-import redis.clients.jedis.Jedis;
-
 public class PREventPublisher implements Publisher<PREventBindingModel> {
 
   private static final Logger logger = LoggerFactory.getLogger(PREventPublisher.class);
   private final ServiceLoggingUtil logUtil = new ServiceLoggingUtil();
 
-  private final Jedis jedis;
+  private final Channel channel;
   private final Insert<PREventBindingModel, PREvent> eventPersistor;
   private final List<Validator<PREventBindingModel, String>> validators;
 
-  public PREventPublisher(Jedis jedis, @Qualifier("insertPREvent") Insert<PREventBindingModel, PREvent> eventPersistor,
+  public PREventPublisher(Channel channel,
+      @Qualifier("insertPREvent") Insert<PREventBindingModel, PREvent> eventPersistor,
       List<Validator<PREventBindingModel, String>> validators) {
-    this.jedis = jedis;
+    this.channel = channel;
     this.eventPersistor = eventPersistor;
     this.validators = validators;
   }
 
   @SuppressWarnings({ "unchecked", "rawtypes" })
-  public Response<?> publishEvent(PREventBindingModel event, String channel) {
+  public Response<?> publishEvent(PREventBindingModel event, Context context) {
 
     List<String> validationResults = validate(event);
 
@@ -54,7 +55,7 @@ public class PREventPublisher implements Publisher<PREventBindingModel> {
       return new Response(validationResults, StatusCode.PRECONDITION_FAILED);
     }
 
-    jedis.publish(channel, new Gson().toJson(event));
+    channel.publish(new Gson().toJson(event), context);
 
     return new Response(prEvent, StatusCode.OK);
   }

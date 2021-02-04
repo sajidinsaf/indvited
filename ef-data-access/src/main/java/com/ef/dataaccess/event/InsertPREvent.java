@@ -20,13 +20,14 @@ import com.ef.common.LRPair;
 import com.ef.common.logging.ServiceLoggingUtil;
 import com.ef.dataaccess.Insert;
 import com.ef.dataaccess.Query;
+import com.ef.dataaccess.member.MemberTypeCache;
 import com.ef.model.event.EventType;
 import com.ef.model.event.EventVenue;
 import com.ef.model.event.PREvent;
 import com.ef.model.event.PREventBindingModel;
 import com.ef.model.event.PREventLocationBindingModel;
 import com.ef.model.member.Member;
-import com.ef.model.member.MemberLoginBindingModel;
+import com.ef.model.member.MemberType;
 
 @Component("insertPREvent")
 public class InsertPREvent implements Insert<PREventBindingModel, PREvent> {
@@ -34,7 +35,7 @@ public class InsertPREvent implements Insert<PREventBindingModel, PREvent> {
   private static final Logger logger = LoggerFactory.getLogger(InsertPREvent.class);
   private final ServiceLoggingUtil logUtil = new ServiceLoggingUtil();
 
-  private final String INSERT_EVENT_STATEMENT = "INSERT INTO event(domain_id, cap, exclusions, member_email_id, event_venue_id, notes) VALUES (?,?,?,?,?,?)";
+  private final String INSERT_EVENT_STATEMENT = "INSERT INTO event(event_type_id, domain_id, cap, exclusions, member_id, event_venue_id, notes) VALUES (?,?,?,?,?,?,?)";
 
   private final JdbcTemplate jdbcTemplate;
   private final Query<Integer, PREvent> queryEventById;
@@ -43,7 +44,8 @@ public class InsertPREvent implements Insert<PREventBindingModel, PREvent> {
   private final Insert<Pair<PREventBindingModel, PREvent>, PREvent> insertEventCriteria;
   private final Insert<Pair<PREventBindingModel, PREvent>, PREvent> insertEventDeliverables;
   private final Query<PREventLocationBindingModel, EventVenue> queryVenueByKeyFieldOrInsert;
-  private final Query<MemberLoginBindingModel, Member> queryMemberByEmailAndMemberType;
+  private final Query<Integer, Member> queryMemberById;
+  private final MemberTypeCache memberTypeCache;
 
   @Autowired
   public InsertPREvent(@Qualifier("indvitedDbJdbcTemplate") JdbcTemplate jdbcTemplate,
@@ -52,7 +54,7 @@ public class InsertPREvent implements Insert<PREventBindingModel, PREvent> {
       @Qualifier("insertPREventCriteria") Insert<Pair<PREventBindingModel, PREvent>, PREvent> insertEventCriteria,
       @Qualifier("insertPREventDeliverables") Insert<Pair<PREventBindingModel, PREvent>, PREvent> insertEventDeliverables,
       @Qualifier("queryVenueByKeyFieldOrInsert") Query<PREventLocationBindingModel, EventVenue> queryVenueByKeyFieldOrInsert,
-      @Qualifier("queryMemberByEmailAndMemberType") Query<MemberLoginBindingModel, Member> queryMemberByEmailAndMemberType) {
+      @Qualifier("queryMemberById") Query<Integer, Member> queryMemberById, MemberTypeCache memberTypeCache) {
     this.jdbcTemplate = jdbcTemplate;
     this.queryEventById = queryEventById;
     this.eventTypeCache = eventTypeCache;
@@ -60,7 +62,8 @@ public class InsertPREvent implements Insert<PREventBindingModel, PREvent> {
     this.insertEventCriteria = insertEventCriteria;
     this.insertEventDeliverables = insertEventDeliverables;
     this.queryVenueByKeyFieldOrInsert = queryVenueByKeyFieldOrInsert;
-    this.queryMemberByEmailAndMemberType = queryMemberByEmailAndMemberType;
+    this.queryMemberById = queryMemberById;
+    this.memberTypeCache = memberTypeCache;
   }
 
   @Override
@@ -68,16 +71,18 @@ public class InsertPREvent implements Insert<PREventBindingModel, PREvent> {
 
     logUtil.debug(logger, " Input Event Details: ", input);
     Member member = null;
-    String emailId = input.getEventCreatorEmailId();
+    int memberId = input.getMemberId();
     try {
-      MemberLoginBindingModel emailAndType = new MemberLoginBindingModel(emailId, null);
-      emailAndType.setMemberType(input.getMemberType());
-      member = queryMemberByEmailAndMemberType.data(emailAndType);
+      member = queryMemberById.data(memberId);
     } catch (EmptyResultDataAccessException e) {
-      logUtil.warn(logger, "No member information found for emailId: ", emailId, " Input Event Details: ", input);
-      return null;
+      logUtil.warn(logger, "No member information found for memberId: ", memberId, " Input Event Details: ", input);
+      throw new RuntimeException(
+          "No member information found for memberId: " + memberId + " Input Event Details: " + input, e);
     }
 
+    if (!memberTypeCache.getMemberType(MemberType.KNOWN_MEMBER_TYPE_PR).equals(member.getMemberType())) {
+      throw new RuntimeException("Invalid member type attempting to create event: " + input);
+    }
     final EventVenue eventVenue = queryVenueByKeyFieldOrInsert.data(input.getEventLocation());
 
     KeyHolder keyHolder = new GeneratedKeyHolder();
@@ -86,7 +91,7 @@ public class InsertPREvent implements Insert<PREventBindingModel, PREvent> {
       return getInsertEventPreparedStatement(input, eventVenue, connection);
     }, keyHolder);
 
-    int eventId = (int) keyHolder.getKey();
+    int eventId = keyHolder.getKey().intValue();
 
     final PREvent event = queryEventById.data(eventId);
 
@@ -103,7 +108,7 @@ public class InsertPREvent implements Insert<PREventBindingModel, PREvent> {
 
   private final PreparedStatement getInsertEventPreparedStatement(PREventBindingModel input, EventVenue eventVenue,
       Connection connection) throws SQLException {
-    String emailId = input.getEventCreatorEmailId();
+    int memberId = input.getMemberId();
     input.getEventLocation().setId(eventVenue.getId());
 
     Integer eventTypeId = getEventTypeId(input);
@@ -131,12 +136,13 @@ public class InsertPREvent implements Insert<PREventBindingModel, PREvent> {
     String notes = input.getNotes() == null ? "" : input.getNotes();
 
     PreparedStatement ps = connection.prepareStatement(INSERT_EVENT_STATEMENT, Statement.RETURN_GENERATED_KEYS);
-    ps.setInt(1, domainId);
-    ps.setString(2, cap);
-    ps.setString(3, exclusions);
-    ps.setString(4, emailId);
-    ps.setInt(5, eventVenueId);
-    ps.setString(6, notes);
+    ps.setInt(1, eventTypeId);
+    ps.setInt(2, domainId);
+    ps.setString(3, cap);
+    ps.setString(4, exclusions);
+    ps.setInt(5, memberId);
+    ps.setInt(6, eventVenueId);
+    ps.setString(7, notes);
     return ps;
   }
 

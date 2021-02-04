@@ -1,4 +1,4 @@
-package com.ef.eventservice.subscriber.worker;
+package com.ef.messaging.email;
 
 import java.util.Date;
 import java.util.List;

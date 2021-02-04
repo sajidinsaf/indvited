@@ -1,7 +1,6 @@
 package com.ef.dataaccess.event;
 
 import static org.hamcrest.Matchers.is;
-import static org.hamcrest.Matchers.nullValue;
 import static org.junit.Assert.assertThat;
 import static org.mockito.MockitoAnnotations.openMocks;
 
@@ -49,7 +48,7 @@ public class InsertPREventTest {
   @Mock
   private PREventBindingModel eventData;
 
-  private String eventCreatorEmailId = "dummy@123.com";
+  private int memberId = 0;
   private int eventType = 0;
   private String domainName = "Restaurant";
   private PREventTimeSlotBindingModel[] prEventTimeSlotBindingModel = new PREventTimeSlotBindingModel[] {
@@ -86,8 +85,8 @@ public class InsertPREventTest {
   public void shouldInsertEventSuccessfully() {
     MemberType memberType = memberTypeCache.getMemberType(MemberType.KNOWN_MEMBER_TYPE_PR);
 
-    eventData = new PREventBindingModel(eventCreatorEmailId, memberType, eventType, domainName, cap, exclusions,
-        eventCriteria, eventDeliverables, eventLocation, notes);
+    eventData = new PREventBindingModel(memberId, memberType, eventType, domainName, cap, exclusions, eventCriteria,
+        eventDeliverables, eventLocation, notes);
 
     PREvent event = insertPREvent.data(eventData);
 
@@ -126,29 +125,14 @@ public class InsertPREventTest {
 
   }
 
-  @Test
+  @Test(expected = RuntimeException.class)
   public void shouldNotCreateEventWhenMemberTypeInDbIsNotPR() {
     MemberType memberType = memberTypeCache.getMemberType(MemberType.KNOWN_MEMBER_TYPE_PR);
-    eventCreatorEmailId = "dummy2@456.com";
-    eventData = new PREventBindingModel(eventCreatorEmailId, memberType, eventType, domainName, cap, exclusions,
-        eventCriteria, eventDeliverables, eventLocation, notes);
+    memberId = 1;
+    eventData = new PREventBindingModel(memberId, memberType, eventType, domainName, cap, exclusions, eventCriteria,
+        eventDeliverables, eventLocation, notes);
 
-    PREvent event = insertPREvent.data(eventData);
-
-    assertThat(event, nullValue());
-
-  }
-
-  @Test
-  public void shouldNotCreateEventWhenMemberTypeFromControllerIsNotPR() {
-    MemberType memberType = memberTypeCache.getMemberType(MemberType.KNOWN_MEMBER_TYPE_BLOGGER);
-
-    eventData = new PREventBindingModel(eventCreatorEmailId, memberType, eventType, domainName, cap, exclusions,
-        eventCriteria, eventDeliverables, eventLocation, notes);
-
-    PREvent event = insertPREvent.data(eventData);
-
-    assertThat(event, nullValue());
+    insertPREvent.data(eventData);
 
   }
 
