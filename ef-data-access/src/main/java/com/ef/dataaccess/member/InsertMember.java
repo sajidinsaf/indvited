@@ -65,7 +65,7 @@ public class InsertMember implements Insert<MemberRegistrationBindingModel, Prec
       return getInsertEventPreparedStatement(input, connection);
     }, keyHolder);
 
-    int memberId = (int) keyHolder.getKey();
+    int memberId = keyHolder.getKey().intValue();
 
     Member member = queryMemberById.data(memberId);
 
