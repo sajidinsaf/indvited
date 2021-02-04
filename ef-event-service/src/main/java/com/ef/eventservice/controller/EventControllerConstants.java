@@ -10,6 +10,8 @@ public class EventControllerConstants {
 
   public static final String TEST_EVENT = "/rest/event/test";
 
+  public static final String GET_PR_EVENT_LIST = "/rest/event/pr/list";
+
   public static final String PR_EVENT = "prEvent";
 
   public static final String PR_EVENT_BINDING_MODEL = "PR_EVENT_BINDING_MODEL";
