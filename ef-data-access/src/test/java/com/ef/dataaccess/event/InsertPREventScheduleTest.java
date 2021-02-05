@@ -35,8 +35,8 @@ public class InsertPREventScheduleTest {
   private PREventScheduleBindingModel scheduleData;
 
   private int prEventId = 12345;
-  private String startDate = "01.02.2021";
-  private String endDate = "08.02.2021";
+  private String startDate = "01/02/2021";
+  private String endDate = "08/02/2021";
   private boolean monday = true;
   private boolean tuesday = true;
   private boolean wedenesday = false;
@@ -64,10 +64,32 @@ public class InsertPREventScheduleTest {
   }
 
   @Test
-  public void shouldInsertScheduleSuccessfully() {
+  public void shouldInsertScheduleSuccessfullyWithOneTimeSlotWhenIsAllDayTrue() {
 
     scheduleData = new PREventScheduleBindingModel(prEventId, startDate, endDate, monday, tuesday, wedenesday, thursday,
         friday, saturday, sunday, innerCircle, myBloggers, allEligible);
+
+    PREventTimeSlotBindingModel[] timeSlots = new PREventTimeSlotBindingModel[2];
+
+    timeSlots[0] = new PREventTimeSlotBindingModel("1500", "1700");
+    timeSlots[1] = new PREventTimeSlotBindingModel("1700", "2100");
+
+    scheduleData.setTimeSlots(timeSlots);
+
+    EventScheduleResult result = insertPREventSchedule.data(scheduleData);
+
+    assertThat(result.getScheduleId(), is(0L));
+    assertThat(result.getTimeSlotIds().length, is(1));
+    assertThat(result.getTimeSlotIds()[0], is(0L));
+  }
+
+  @Test
+  public void shouldInsertScheduleSuccessfullyWithTwoTimeSotsWhenIsAllDayFalse() {
+
+    scheduleData = new PREventScheduleBindingModel(prEventId, startDate, endDate, monday, tuesday, wedenesday, thursday,
+        friday, saturday, sunday, innerCircle, myBloggers, allEligible);
+
+    scheduleData.setAllDay(false);
 
     PREventTimeSlotBindingModel[] timeSlots = new PREventTimeSlotBindingModel[2];
 

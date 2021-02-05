@@ -30,7 +30,7 @@ public class InsertPREventSchedule implements Insert<PREventScheduleBindingModel
 
   private static final String DATE_FORMAT = System.getProperty("event.schedule.date.format") != null
       ? System.getProperty("event.schedule.date.format")
-      : "dd.MM.yyyy";
+      : "dd/MM/yyyy";
 
   private static final String TIME_FORMAT = System.getProperty("event.schedule.time.format") != null
       ? System.getProperty("event.schedule.time.format")
@@ -69,7 +69,9 @@ public class InsertPREventSchedule implements Insert<PREventScheduleBindingModel
       return getInsertSchedulePreparedStatement(input, connection);
     }, keyHolder);
 
-    long scheduleId = (long) keyHolder.getKey();
+    long scheduleId = keyHolder.getKey().longValue();
+
+    logUtil.debug(logger, "created event schedule with id", scheduleId);
 
     long[] eventTimeSlotIds = insertEventTimeSlots(input, scheduleId);
 
@@ -93,7 +95,7 @@ public class InsertPREventSchedule implements Insert<PREventScheduleBindingModel
         return getInsertTimeslotPreparedStatement(timeSlotModel, scheduleId, connection);
       }, keyHolder);
 
-      long timeSlotId = (long) keyHolder.getKey();
+      long timeSlotId = keyHolder.getKey().longValue();
 
       EventTimeslot eventTimeSlot = new EventTimeslot(timeSlotId, scheduleId, timeSlotModel.getTimeFrom(),
           timeSlotModel.getTimeTo());
@@ -160,8 +162,8 @@ public class InsertPREventSchedule implements Insert<PREventScheduleBindingModel
     try {
       parsed = format.parse(date);
     } catch (ParseException e) {
-      throw new RuntimeException("Exception while parsing event time slot date: " + date
-          + " with format dd.MM.yyyy. The date format can be specified with the system property 'event.schedule.date.format'");
+      throw new RuntimeException("Exception while parsing event time slot date: " + date + " with format" + DATE_FORMAT
+          + "The date format can be specified with the system property 'event.schedule.date.format'");
     }
     return new Date(parsed.getTime());
 

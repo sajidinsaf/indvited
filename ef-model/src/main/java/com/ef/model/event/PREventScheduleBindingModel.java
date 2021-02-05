@@ -2,13 +2,15 @@ package com.ef.model.event;
 
 import java.util.Calendar;
 
+import com.google.gson.Gson;
+
 public class PREventScheduleBindingModel {
 
   private int eventId;
   private String startDate, endDate, scheduleDate, scheduleTime;
   private boolean monday, tuesday, wednesday, thursday, friday, saturday, sunday;
   private boolean innerCircle, myBloggers, allEligible;
-  private boolean isAllDay;
+  private boolean allDay = true;
   private PREventTimeSlotBindingModel[] timeSlots;
 
   public PREventScheduleBindingModel() {
@@ -194,31 +196,54 @@ public class PREventScheduleBindingModel {
   }
 
   public PREventTimeSlotBindingModel[] getTimeSlots() {
-    if (isAllDay) {
+    if (allDay) {
       return new PREventTimeSlotBindingModel[] { new PREventTimeSlotBindingModel("0000", "2359") };
     }
     return timeSlots;
   }
 
   public static void main(String args[]) {
-    PREventScheduleBindingModel a = new PREventScheduleBindingModel() {
-
-      @Override
-      public PREventTimeSlotBindingModel[] getTimeSlots() {
-        return null;
-      }
-
-    };
-
+    PREventScheduleBindingModel a = new PREventScheduleBindingModel();
     a.setMonday(true);
     a.setTuesday(true);
     a.setWednesday(true);
     a.setThursday(true);
     a.setFriday(true);
-    a.setSaturday(true);
-    a.setSunday(true);
+    a.setSaturday(false);
+    a.setSunday(false);
+
+    a.setAllEligible(true);
+    a.setInnerCircle(true);
+
+    a.setAllDay(false);
+    PREventTimeSlotBindingModel prEventTimeSlot1 = new PREventTimeSlotBindingModel();
+    prEventTimeSlot1.setTimeFrom("1200");
+    prEventTimeSlot1.setTimeTo("1600");
+
+    PREventTimeSlotBindingModel prEventTimeSlot2 = new PREventTimeSlotBindingModel();
+    prEventTimeSlot2.setTimeFrom("1800");
+    prEventTimeSlot2.setTimeTo("2000");
+
+    a.setTimeSlots(new PREventTimeSlotBindingModel[] { prEventTimeSlot1, prEventTimeSlot2 });
+    a.setEventId(37);
+
+    a.setStartDate("15/01/2020");
+    a.setEndDate("22/01/2020");
 
     System.out.println(a.getScheduledDaysOfTheWeekString());
+//      PREventTimeSlotBindingModel prEventTimeSlot1 = new PREventTimeSlotBindingModel();
+//      prEventTimeSlot1.setEventDate("15/01/2021");
+//      prEventTimeSlot1.setTimeFrom("1200");
+//      prEventTimeSlot1.setTimeTo("1600");
+    //
+//      PREventTimeSlotBindingModel prEventTimeSlot2 = new PREventTimeSlotBindingModel();
+//      prEventTimeSlot2.setEventDate("15/01/2021");
+//      prEventTimeSlot2.setTimeFrom("1800");
+//      prEventTimeSlot2.setTimeTo("2000");
+    //
+
+    System.out.println(new Gson().toJson(a));
+
   }
 
   public String getScheduleDate() {
@@ -239,6 +264,14 @@ public class PREventScheduleBindingModel {
 
   public void setTimeSlots(PREventTimeSlotBindingModel[] timeSlots) {
     this.timeSlots = timeSlots;
+  }
+
+  public boolean isAllDay() {
+    return allDay;
+  }
+
+  public void setAllDay(boolean allDay) {
+    this.allDay = allDay;
   }
 
 }

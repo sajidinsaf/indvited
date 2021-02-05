@@ -69,13 +69,17 @@ public class PREventScheduleController {
       PREventPublisherContext context = new PREventPublisherContext();
       context.put(PR_EVENT_BINDING_MODEL, prEventScheduleResult.getScheduleId());
 
-      Response<?> publishResponse = prEventScheduleNowStrategy.apply(context);
+      if (eventSchedule.getScheduleDate() == null) {
+        Response<?> publishResponse = prEventScheduleNowStrategy.apply(context);
 
-      if (publishResponse.getFailureReasons() != null && publishResponse.getFailureReasons().size() > 0) {
-        return new ResponseEntity<List<String>>(publishResponse.getFailureReasons(), HttpStatus.PRECONDITION_FAILED);
+        if (publishResponse.getFailureReasons() != null && publishResponse.getFailureReasons().size() > 0) {
+          return new ResponseEntity<List<String>>(publishResponse.getFailureReasons(), HttpStatus.PRECONDITION_FAILED);
+        }
+
+        return new ResponseEntity(publishResponse.getResponseResult(), HttpStatus.OK);
+      } else {
+        return new ResponseEntity("Even scheduled with id: " + prEventScheduleResult.getScheduleId(), HttpStatus.OK);
       }
-
-      return new ResponseEntity(publishResponse.getResponseResult(), HttpStatus.OK);
     } catch (RuntimeException e) {
       logUtil.exception(logger, e, "Input Data: ", eventSchedule);
       throw e;
