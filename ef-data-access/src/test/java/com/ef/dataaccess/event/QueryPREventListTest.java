@@ -49,6 +49,7 @@ public class QueryPREventListTest {
     int prId = 1000010034;
     List<PREvent> events = queryPREventList.data(prId);
     assertThat(events.size(), is(2));
+    assertThat(events.get(0).getEventVenue().getName(), is("Esora"));
   }
 
 }
@@ -66,7 +67,8 @@ class HsqlDbConfigQueryPREventListTest {
   private DataSource dataSource() {
     EmbeddedDatabaseBuilder embeddedDatabaseBuilder = new EmbeddedDatabaseBuilder().setType(EmbeddedDatabaseType.HSQL);
     return new DbTestUtils().addCreateScripts(embeddedDatabaseBuilder)
-        .addScript("classpath:com/ef/dataaccess/event/insertEventData.sql").build();
+        .addScript("classpath:com/ef/dataaccess/event/insertEventData.sql")
+        .addScript("classpath:com/ef/dataaccess/event/insertVenueData.sql").build();
   }
 
   @Bean

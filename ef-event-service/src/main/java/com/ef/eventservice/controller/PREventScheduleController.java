@@ -1,7 +1,6 @@
 package com.ef.eventservice.controller;
 
-import static com.ef.eventservice.controller.EventControllerConstants.CREATE_SCHEDULE_LATER;
-import static com.ef.eventservice.controller.EventControllerConstants.CREATE_SCHEDULE_NOW;
+import static com.ef.eventservice.controller.EventControllerConstants.CREATE_SCHEDULE;
 import static com.ef.eventservice.controller.EventControllerConstants.PR_EVENT_BINDING_MODEL;
 
 import java.util.List;
@@ -48,7 +47,7 @@ public class PREventScheduleController {
   }
 
   @SuppressWarnings({ "rawtypes", "unchecked" })
-  @PostMapping(CREATE_SCHEDULE_NOW)
+  @PostMapping(CREATE_SCHEDULE)
   public ResponseEntity<?> createAllDayEventNow(@RequestBody PREventScheduleBindingModel eventSchedule,
       HttpServletRequest request) {
     try {
@@ -77,22 +76,6 @@ public class PREventScheduleController {
       }
 
       return new ResponseEntity(publishResponse.getResponseResult(), HttpStatus.OK);
-    } catch (RuntimeException e) {
-      logUtil.exception(logger, e, "Input Data: ", eventSchedule);
-      throw e;
-    }
-
-  }
-
-  @SuppressWarnings({ "rawtypes", "unchecked" })
-  @PostMapping(CREATE_SCHEDULE_LATER)
-  public ResponseEntity<?> createAllDayEventLater(@RequestBody PREventScheduleBindingModel eventSchedule,
-      HttpServletRequest request) {
-    logUtil.debug(logger, "Creating event schedule: " + eventSchedule);
-
-    try {
-      EventScheduleResult prEventScheduleResult = insertPrEventSchedule.data(eventSchedule);
-      return new ResponseEntity(prEventScheduleResult.getScheduleId(), HttpStatus.OK);
     } catch (RuntimeException e) {
       logUtil.exception(logger, e, "Input Data: ", eventSchedule);
       throw e;
