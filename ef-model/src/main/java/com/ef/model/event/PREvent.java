@@ -21,7 +21,7 @@ public class PREvent implements Event {
   private int domainId;
   private int eventVenueId;
   private String exclusions;
-  private String memberEmailId;
+  private int memberId;
 
   public PREvent() {
 
@@ -38,7 +38,7 @@ public class PREvent implements Event {
     this.domainId = domainId;
     this.eventVenueId = eventVenueId;
     this.exclusions = exclusions;
-    this.memberEmailId = memberEmailId;
+    this.memberId = memberId;
   }
 
   public PREvent(int id, EventType eventType, String cap, Member member, EventVenue eventVenue, String notes,
@@ -94,12 +94,12 @@ public class PREvent implements Event {
     this.exclusions = exclusions;
   }
 
-  public String getMemberEmailId() {
-    return memberEmailId;
+  public int getMemberId() {
+    return memberId;
   }
 
-  public void setMemberEmailId(String memberEmailId) {
-    this.memberEmailId = memberEmailId;
+  public void setMemberId(int memberId) {
+    this.memberId = memberId;
   }
 
   public EventType getEventType() {
@@ -180,7 +180,7 @@ public class PREvent implements Event {
         + eventVenue + ", notes=" + notes + ", createdDate=" + createdDate + ", eventTimeSlots="
         + Arrays.toString(eventTimeSlots) + ", eventCriteria=" + Arrays.toString(eventCriteria) + ", eventTypeId="
         + eventTypeId + ", domainId=" + domainId + ", eventVenueId=" + eventVenueId + ", exclusions=" + exclusions
-        + ", memberEmailId=" + memberEmailId + "]";
+        + ", memberEmailId=" + memberId + "]";
   }
 
   @Override
