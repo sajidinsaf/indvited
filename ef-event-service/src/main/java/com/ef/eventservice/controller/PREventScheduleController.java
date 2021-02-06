@@ -1,6 +1,7 @@
 package com.ef.eventservice.controller;
 
 import static com.ef.eventservice.controller.EventControllerConstants.CREATE_SCHEDULE;
+import static com.ef.eventservice.controller.EventControllerConstants.GET_PR_EVENT_SCHEDULE_LIST;
 import static com.ef.eventservice.controller.EventControllerConstants.PR_EVENT_BINDING_MODEL;
 
 import java.util.List;
@@ -14,15 +15,20 @@ import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.ef.common.Strategy;
 import com.ef.common.logging.ServiceLoggingUtil;
 import com.ef.common.message.Response;
 import com.ef.dataaccess.Insert;
+import com.ef.dataaccess.Query;
 import com.ef.eventservice.publisher.PREventPublisherContext;
 import com.ef.model.event.EventScheduleResult;
+import com.ef.model.event.PREventSchedule;
 import com.ef.model.event.PREventScheduleBindingModel;
 
 /**
@@ -38,12 +44,16 @@ public class PREventScheduleController {
 
   private final Strategy<PREventPublisherContext, Response<?>> prEventScheduleNowStrategy;
 
+  private final Query<Integer, List<PREventSchedule>> queryPREventScheduleListByEventId;
+
   @Autowired
   public PREventScheduleController(
       @Qualifier("insertPrEventSchedule") Insert<PREventScheduleBindingModel, EventScheduleResult> insertPrEventSchedule,
-      @Qualifier("prEventScheduleNowStrategy") Strategy<PREventPublisherContext, Response<?>> prEventScheduleNowStrategy) {
+      @Qualifier("prEventScheduleNowStrategy") Strategy<PREventPublisherContext, Response<?>> prEventScheduleNowStrategy,
+      @Qualifier("queryPREventScheduleListByEventId") Query<Integer, List<PREventSchedule>> queryPREventScheduleListByEventId) {
     this.insertPrEventSchedule = insertPrEventSchedule;
     this.prEventScheduleNowStrategy = prEventScheduleNowStrategy;
+    this.queryPREventScheduleListByEventId = queryPREventScheduleListByEventId;
   }
 
   @SuppressWarnings({ "rawtypes", "unchecked" })
@@ -87,4 +97,13 @@ public class PREventScheduleController {
 
   }
 
+  @GetMapping(GET_PR_EVENT_SCHEDULE_LIST)
+  @ResponseBody
+  public ResponseEntity<?> getPrEvenntScheduleList(@RequestParam Integer eventId) {
+
+    List<PREventSchedule> events = queryPREventScheduleListByEventId.data(eventId);
+    logUtil.debug(logger, "Returning ", events.size(), " events for member id ", eventId);
+
+    return new ResponseEntity<List<PREventSchedule>>(events, HttpStatus.OK);
+  }
 }
