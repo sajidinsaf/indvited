@@ -60,6 +60,7 @@ public class PREventScheduleControllerTest {
 
   private StatusCode statusCode;
 
+  @SuppressWarnings("unchecked")
   @Before
   public void setUp() throws Exception {
     openMocks(this);

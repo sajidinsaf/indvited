@@ -140,25 +140,25 @@ public class PREventScheduleBindingModel {
   public String getScheduledDaysOfTheWeekString() {
     StringBuilder sb = new StringBuilder();
     if (sunday) {
-      sb.append(Calendar.SUNDAY).append(",");
+      sb.append(Calendar.SUNDAY);
     }
     if (monday) {
-      sb.append(Calendar.MONDAY).append(",");
+      sb.append(sb.toString().equals("") ? "" : ",").append(Calendar.MONDAY);
     }
     if (tuesday) {
-      sb.append(Calendar.TUESDAY).append(",");
+      sb.append(sb.toString().equals("") ? "" : ",").append(Calendar.TUESDAY);
     }
     if (wednesday) {
-      sb.append(Calendar.WEDNESDAY).append(",");
+      sb.append(sb.toString().equals("") ? "" : ",").append(Calendar.WEDNESDAY);
     }
     if (thursday) {
-      sb.append(Calendar.THURSDAY).append(",");
+      sb.append(sb.toString().equals("") ? "" : ",").append(Calendar.THURSDAY);
     }
     if (friday) {
-      sb.append(Calendar.FRIDAY).append(",");
+      sb.append(sb.toString().equals("") ? "" : ",").append(Calendar.FRIDAY);
     }
     if (saturday) {
-      sb.append(Calendar.SATURDAY);
+      sb.append(sb.toString().equals("") ? "" : ",").append(Calendar.SATURDAY);
     }
     return sb.toString();
   }
