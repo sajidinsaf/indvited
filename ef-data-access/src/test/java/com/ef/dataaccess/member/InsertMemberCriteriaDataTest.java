@@ -45,7 +45,7 @@ public class InsertMemberCriteriaDataTest {
 
   private int memberCriteriaValue = new Random().nextInt(10000);
   private int memberId = new Random().nextInt(10000000);
-  private String criteriaMetadataName = "Mininum Zomato reviews";
+  private String criteriaMetadataName = "Minimum Zomato reviews";
 
   @SuppressWarnings("resource")
   @Before
@@ -93,7 +93,7 @@ class HsqlDbConfigInsertMemberCriteriaDataTest {
     EmbeddedDatabaseBuilder embeddedDatabaseBuilder = new EmbeddedDatabaseBuilder().setType(EmbeddedDatabaseType.HSQL);
     return new DbTestUtils().addCreateScripts(embeddedDatabaseBuilder)
         .addScript("classpath:com/ef/dataaccess/member/insertMemberTypeData.sql")
-        .addScript("classpath:com/ef/dataaccess/member/insertEventCriteriaMeta.sql").build();
+        .addScript("classpath:com/ef/dataaccess/event/insertEventCriteriaMeta.sql").build();
 
   }
 

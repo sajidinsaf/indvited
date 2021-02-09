@@ -15,7 +15,7 @@ import com.ef.model.event.EventCriteriaMetadata;
 @Component
 public class EventCriteriaMetadataCache {
 
-  private final String SELECT_EVENT_CRITERIA_MAP = "select id, name, description from event_criteria_meta";
+  private final String SELECT_EVENT_CRITERIA_MAP = "select * from event_criteria_meta";
 
   private final JdbcTemplate jdbcTemplate;
 
