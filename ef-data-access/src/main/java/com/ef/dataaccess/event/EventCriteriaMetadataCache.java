@@ -19,19 +19,19 @@ public class EventCriteriaMetadataCache {
 
   private final JdbcTemplate jdbcTemplate;
 
-  private final Map<String, EventCriteriaMetadata> nameToEventCriteriaMap;
+  private final Map<String, EventCriteriaMetadata> eventCriterionNameToEventCriteriaMap;
   private final Map<Integer, EventCriteriaMetadata> idToEventCriteriaMap;
 
   @Autowired
   public EventCriteriaMetadataCache(@Qualifier("indvitedDbJdbcTemplate") JdbcTemplate jdbcTemplate) {
     this.jdbcTemplate = jdbcTemplate;
-    nameToEventCriteriaMap = new HashMap<String, EventCriteriaMetadata>();
     idToEventCriteriaMap = new HashMap<Integer, EventCriteriaMetadata>();
+    eventCriterionNameToEventCriteriaMap = new HashMap<String, EventCriteriaMetadata>();
     refreshCache();
   }
 
   public EventCriteriaMetadata getEventCriteria(String eventCriteriaName) {
-    return nameToEventCriteriaMap.get(eventCriteriaName);
+    return eventCriterionNameToEventCriteriaMap.get(eventCriteriaName);
   }
 
   public EventCriteriaMetadata getEventCriteria(int eventCriteriaId) {
@@ -42,8 +42,8 @@ public class EventCriteriaMetadataCache {
     List<EventCriteriaMetadata> eventCriteriaMetadataList = jdbcTemplate.query(SELECT_EVENT_CRITERIA_MAP,
         new EventCriteriaMetadataRowMapper());
     for (EventCriteriaMetadata eventCriteriaMetadata : eventCriteriaMetadataList) {
-      nameToEventCriteriaMap.put(eventCriteriaMetadata.getName(), eventCriteriaMetadata);
       idToEventCriteriaMap.put(eventCriteriaMetadata.getId(), eventCriteriaMetadata);
+      eventCriterionNameToEventCriteriaMap.put(eventCriteriaMetadata.getEventCriterionName(), eventCriteriaMetadata);
     }
   }
 }

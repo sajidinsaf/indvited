@@ -12,8 +12,8 @@ public class EventCriteriaMetadataRowMapper implements RowMapper<EventCriteriaMe
   @Override
   public EventCriteriaMetadata mapRow(ResultSet rs, int rowNum) throws SQLException {
 
-    EventCriteriaMetadata domain = new EventCriteriaMetadata(rs.getInt("ID"), rs.getString("CRITERION_NAME"),
-        rs.getString("DESCRIPTION"));
+    EventCriteriaMetadata domain = new EventCriteriaMetadata(rs.getInt("ID"), rs.getString("NAME"),
+        rs.getString("EVENT_CRITERION_NAME"), rs.getString("DESCRIPTION"), rs.getInt("FORUM_ID"));
     return domain;
   }
 

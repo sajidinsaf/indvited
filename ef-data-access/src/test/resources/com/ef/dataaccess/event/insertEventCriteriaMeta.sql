@@ -1,2 +1,2 @@
-INSERT INTO event_criteria_meta(criterion_name, description) VALUES ('Minimum Zomato reviews','Mininum Zomato reviews required to qualify');
-INSERT INTO event_criteria_meta(criterion_name, description) VALUES ('Minimum Instagram followers','Minimum Instagram followers required to qualify');
+INSERT INTO event_criteria_meta(name, event_criterion_name, description, forum_id) VALUES ('Reviews','Minimum Zomato reviews','Mininum Zomato reviews required to qualify',2);
+INSERT INTO event_criteria_meta(name, event_criterion_name, description, forum_id) VALUES ('Follower Count', 'Minimum Instagram followers','Minimum Instagram followers required to qualify',1);
