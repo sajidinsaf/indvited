@@ -99,7 +99,7 @@ public class PREventScheduleController {
 
   @GetMapping(GET_PR_EVENT_SCHEDULE_LIST)
   @ResponseBody
-  public ResponseEntity<?> getPrEvenntScheduleList(@RequestParam Integer eventId) {
+  public ResponseEntity<?> getPrEventScheduleList(@RequestParam Integer eventId) {
 
     List<PREventSchedule> events = queryPREventScheduleListByEventId.data(eventId);
     logUtil.debug(logger, "Returning ", events.size(), " events for member id ", eventId);

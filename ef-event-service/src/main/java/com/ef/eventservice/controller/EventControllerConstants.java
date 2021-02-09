@@ -6,6 +6,8 @@ public class EventControllerConstants {
 
   public static final String CREATE_SCHEDULE = "/rest/event/createSchedule";
 
+  public static final String SUBSCRIBE_SCHEDULE = "/rest/event/subscribeSchedule";
+
   public static final String TEST_EVENT = "/rest/event/test";
 
   public static final String GET_PR_EVENT_LIST = "/rest/event/pr/list";

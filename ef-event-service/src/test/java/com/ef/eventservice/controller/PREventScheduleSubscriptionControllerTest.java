@@ -7,9 +7,9 @@ import static org.junit.Assert.assertThat;
 //import static org.mockito.Mockito.when;
 import static org.mockito.MockitoAnnotations.openMocks;
 
-import java.text.SimpleDateFormat;
 import java.util.List;
 import java.util.Properties;
+import java.util.Random;
 
 import javax.mail.PasswordAuthentication;
 import javax.mail.Session;
@@ -33,22 +33,19 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 
 import com.ef.common.Context;
 import com.ef.common.EmailSender;
-import com.ef.common.Strategy;
 import com.ef.common.message.Channel;
 import com.ef.common.message.Response;
 import com.ef.common.message.StatusCode;
 import com.ef.dataaccess.Insert;
-import com.ef.dataaccess.Query;
 import com.ef.dataaccess.config.DbTestUtils;
-import com.ef.eventservice.publisher.PREventPublisherContext;
-import com.ef.model.event.EventScheduleResult;
-import com.ef.model.event.PREventSchedule;
-import com.ef.model.event.PREventScheduleBindingModel;
+import com.ef.model.event.EventScheduleSubscription;
+import com.ef.model.event.EventStatusMeta;
+import com.ef.model.event.PREventScheduleSubscriptionBindingModel;
 import com.ef.model.member.Member;
 
-public class PREventScheduleControllerTest {
+public class PREventScheduleSubscriptionControllerTest {
 
-  private PREventScheduleController controller;
+  private PREventScheduleSubscriptionController controller;
 
   private JdbcTemplate jdbcTemplate;
 
@@ -65,19 +62,12 @@ public class PREventScheduleControllerTest {
   public void setUp() throws Exception {
     openMocks(this);
     AnnotationConfigApplicationContext appContext = new AnnotationConfigApplicationContext(
-        HsqlDbConfigPREventScheduleControllerTest.class);
+        HsqlDbConfigPREventScheduleSubscriptionControllerTest.class);
     jdbcTemplate = appContext.getBean(JdbcTemplate.class);
-    Insert<PREventScheduleBindingModel, EventScheduleResult> insertPrEventSchedule = appContext
-        .getBean("insertPrEventSchedule", Insert.class);
+    Insert<PREventScheduleSubscriptionBindingModel, EventScheduleSubscription> insertPrEventScheduleSubscription = appContext
+        .getBean("insertPrEventScheduleSubscription", Insert.class);
 
-    Strategy<PREventPublisherContext, Response<?>> prEventScheduleNowStrategy = appContext
-        .getBean("prEventScheduleNowStrategy", Strategy.class);
-
-    Query<Integer, List<PREventSchedule>> queryPREventScheduleListByEventId = appContext
-        .getBean("queryPREventScheduleListByEventId", Query.class);
-
-    controller = new PREventScheduleController(insertPrEventSchedule, prEventScheduleNowStrategy,
-        queryPREventScheduleListByEventId);
+    controller = new PREventScheduleSubscriptionController(insertPrEventScheduleSubscription);
   }
 
   @After
@@ -86,52 +76,48 @@ public class PREventScheduleControllerTest {
   }
 
   @Test
-  public void shouldPersistSchedule() {
+  public void shouldPersistAndGetScheduleSubscriptionList() throws Exception {
 
-//    when(registrationService.registerMember(memberRegistationData)).thenReturn(registrationStatus);
-//    when(registrationStatus.getResponseResult()).thenReturn(member);
-//    statusCode = StatusCode.OK;
-//    when(registrationStatus.getStatusCode()).thenReturn(statusCode);
-//
-//    ResponseEntity<?> registrationResult = registrationController.registerMember(memberRegistationData);
-//    assertThat((Member) registrationResult.getBody(), Matchers.is(member));
-//    assertThat(registrationResult.getStatusCode(), Matchers.is(HttpStatus.OK));
-//    verify(registrationService).registerMember(memberRegistationData);
-  }
+    long eventScheduleTimeslotId = new Random().nextInt(10000000);
+    int subscriberId = new Random().nextInt(100000);
+    int priority = new Random().nextInt(5);
 
-  @Test
-  public void shouldGetScheduleList() throws Exception {
-    ResponseEntity<?> response = controller.getPrEventScheduleList(200);
+    PREventScheduleSubscriptionBindingModel a = new PREventScheduleSubscriptionBindingModel(eventScheduleTimeslotId,
+        subscriberId, priority);
 
-    List<PREventSchedule> schedules = (List<PREventSchedule>) response.getBody();
-    assertThat(schedules.size(), is(2));
-    PREventSchedule schedule = schedules.get(0);
-    assertThat(schedule.getId(), is(100L));
-    assertThat(schedule.getEventId(), is(200));
-    assertThat(schedule.getStartDate().getTime(),
-        is(new SimpleDateFormat("yyyy-mm-dd HH:mm:ss").parse("2080-01-15 00:00:00").getTime()));
-    assertThat(schedule.getEndDate().getTime(),
-        is(new SimpleDateFormat("yyyy-mm-dd HH:mm:ss").parse("2080-01-30 00:00:00").getTime()));
-    assertThat(schedule.isSunday(), is(false));
-    assertThat(schedule.isMonday(), is(true));
-    assertThat(schedule.isTuesday(), is(true));
-    assertThat(schedule.isWednesday(), is(false));
-    assertThat(schedule.isThursday(), is(true));
-    assertThat(schedule.isFriday(), is(true));
-    assertThat(schedule.isSaturday(), is(false));
-    assertThat(schedule.isInnerCircle(), is(true));
-    assertThat(schedule.isMyBloggers(), is(true));
-    assertThat(schedule.isAllEligible(), is(false));
+    eventScheduleTimeslotId = new Random().nextInt(10000000);
+    subscriberId = new Random().nextInt(100000);
+    priority = new Random().nextInt(5);
 
-    schedule = schedules.get(1);
-    assertThat(schedule.getId(), is(101L));
-    assertThat(schedule.getEventId(), is(200));
+    PREventScheduleSubscriptionBindingModel b = new PREventScheduleSubscriptionBindingModel(eventScheduleTimeslotId,
+        subscriberId, priority);
+
+    eventScheduleTimeslotId = new Random().nextInt(10000000);
+    subscriberId = new Random().nextInt(100000);
+    priority = new Random().nextInt(5);
+
+    PREventScheduleSubscriptionBindingModel c = new PREventScheduleSubscriptionBindingModel(eventScheduleTimeslotId,
+        subscriberId, priority);
+
+    ResponseEntity<?> response = controller
+        .addEventScheduleSubscriptions(new PREventScheduleSubscriptionBindingModel[] { a, b, c });
+
+    List<EventScheduleSubscription> subscriptions = (List<EventScheduleSubscription>) response.getBody();
+    assertThat(subscriptions.size(), is(3));
+    assertThat(subscriptions.get(0).getEventSubscriptionTimeslotId(), is(a.getEventSubscriptionTimeslotId()));
+    assertThat(subscriptions.get(1).getSubscriberId(), is(b.getSubscriberId()));
+    assertThat(subscriptions.get(2).getPriority(), is(c.getPriority()));
+
+    assertThat(subscriptions.get(0).getEventStatus().getId(), is(EventStatusMeta.KNOWN_STATUS_ID_APPLIED));
+    assertThat(subscriptions.get(1).getEventStatus().getId(), is(EventStatusMeta.KNOWN_STATUS_ID_APPLIED));
+    assertThat(subscriptions.get(2).getEventStatus().getId(), is(EventStatusMeta.KNOWN_STATUS_ID_APPLIED));
+
   }
 }
 
 @Configuration
 @ComponentScan("com.ef.dataaccess,com.ef.eventservice")
-class HsqlDbConfigPREventScheduleControllerTest {
+class HsqlDbConfigPREventScheduleSubscriptionControllerTest {
 
   @Bean
   public JdbcTemplate indvitedDbJdbcTemplate() {
@@ -142,8 +128,7 @@ class HsqlDbConfigPREventScheduleControllerTest {
   private DataSource dataSource() {
     EmbeddedDatabaseBuilder embeddedDatabaseBuilder = new EmbeddedDatabaseBuilder().setType(EmbeddedDatabaseType.HSQL);
     return new DbTestUtils().addCreateScripts(embeddedDatabaseBuilder)
-        .addScript("classpath:com/ef/dataaccess/event/schedule/insertEventScheduleData.sql")
-        .addScript("classpath:com/ef/dataaccess/event/schedule/insertEventScheduleTimeslotData.sql").build();
+        .addScript("classpath:com/ef/dataaccess/event/insertEventStatusMeta.sql").build();
   }
 
   @Bean
