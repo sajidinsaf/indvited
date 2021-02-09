@@ -1,5 +1,6 @@
 package com.ef.dataaccess.event;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -44,5 +45,9 @@ public class DomainCache {
       nameToDomainMap.put(domain.getName(), domain);
       idToDomainMap.put(domain.getId(), domain);
     }
+  }
+
+  public List<Domain> getDomains() {
+    return new ArrayList<Domain>(idToDomainMap.values());
   }
 }

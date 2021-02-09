@@ -1,5 +1,6 @@
 package com.ef.dataaccess.event;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -45,5 +46,9 @@ public class EventCriteriaMetadataCache {
       idToEventCriteriaMap.put(eventCriteriaMetadata.getId(), eventCriteriaMetadata);
       eventCriterionNameToEventCriteriaMap.put(eventCriteriaMetadata.getEventCriterionName(), eventCriteriaMetadata);
     }
+  }
+
+  public List<EventCriteriaMetadata> getEventCriteriaMetadataList() {
+    return new ArrayList<EventCriteriaMetadata>(idToEventCriteriaMap.values());
   }
 }
