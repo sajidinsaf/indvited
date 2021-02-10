@@ -9,7 +9,7 @@ import org.springframework.stereotype.Component;
 import com.ef.dataaccess.Query;
 import com.ef.dataaccess.spring.member.rowmapper.MemberCriteriaDataRowMapper;
 import com.ef.model.event.EventCriteriaMetadata;
-import com.ef.model.event.MemberCriteriaData;
+import com.ef.model.member.MemberCriteriaData;
 
 @Component(value = "queryMemberCriteriaDataById")
 public class QueryMemberCriteriaDataById implements Query<Pair<String, EventCriteriaMetadata>, MemberCriteriaData> {

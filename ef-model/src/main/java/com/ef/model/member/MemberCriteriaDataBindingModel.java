@@ -1,4 +1,4 @@
-package com.ef.model.event;
+package com.ef.model.member;
 
 public class MemberCriteriaDataBindingModel {
 

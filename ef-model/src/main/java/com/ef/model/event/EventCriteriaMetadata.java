@@ -1,12 +1,16 @@
 package com.ef.model.event;
 
-public class EventCriteriaMetadata {
+import com.ef.model.core.Forum;
+
+public class EventCriteriaMetadata implements Comparable<Integer> {
 
   private final int id;
   private final String name;
   private final String eventCriterionName;
   private final String description;
   private final int forumId;
+
+  private Forum forum;
 
   public EventCriteriaMetadata(int id, String name, String eventCriterionName, String description, int forumId) {
     super();
@@ -37,14 +41,23 @@ public class EventCriteriaMetadata {
     return forumId;
   }
 
+  public Forum getForum() {
+    return forum;
+  }
+
+  public void setForum(Forum forum) {
+    this.forum = forum;
+  }
+
   @Override
-  public int hashCode() {
-    final int prime = 31;
-    int result = 1;
-    result = prime * result + ((description == null) ? 0 : description.hashCode());
-    result = prime * result + id;
-    result = prime * result + ((name == null) ? 0 : name.hashCode());
-    return result;
+  public String toString() {
+    return "EventCriteriaMetadata [id=" + id + ", name=" + name + ", eventCriterionName=" + eventCriterionName
+        + ", description=" + description + ", forumId=" + forumId + ", forum=" + forum + "]";
+  }
+
+  @Override
+  public int compareTo(Integer o) {
+    return forumId;
   }
 
 }

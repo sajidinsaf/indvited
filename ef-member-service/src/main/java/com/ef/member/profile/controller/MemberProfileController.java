@@ -8,14 +8,13 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.ef.common.logging.ServiceLoggingUtil;
 import com.ef.dataaccess.event.DomainCache;
 import com.ef.dataaccess.event.EventCriteriaMetadataCache;
-import com.ef.model.member.MemberRegistrationBindingModel;
+import com.ef.dataaccess.event.ForumCache;
 
 /**
  * Handles requests for the event service.
@@ -28,20 +27,22 @@ public class MemberProfileController {
 
   private final DomainCache domainCache;
   private final EventCriteriaMetadataCache eventCriteriaMetadataCache;
+  private final ForumCache forumCache;
 
   @Autowired
-  public MemberProfileController(DomainCache domainCache, EventCriteriaMetadataCache eventCriteriaMetadataCache) {
+  public MemberProfileController(DomainCache domainCache, EventCriteriaMetadataCache eventCriteriaMetadataCache,
+      ForumCache forumCache) {
     this.domainCache = domainCache;
     this.eventCriteriaMetadataCache = eventCriteriaMetadataCache;
+    this.forumCache = forumCache;
   }
 
 //  curl -i -H "Accept: application/json" -H "Content-Type:application/json" -X POST --data '{"id":"1232455663","type":"PREvent","scheduledDate":"2020/12/25","scheduledTime":"18:03:51","location":"Mainland China","description":"Review Food Event"}' "http://secure.codeczar.co.uk/event-service/rest/event/publish"
-  @PostMapping(GET_PROFILE_FORM_DATA)
-  public @ResponseBody ResponseEntity<?> getProfileFormInfo(
-      @RequestBody MemberRegistrationBindingModel memberRegistrationData) {
+  @GetMapping(GET_PROFILE_FORM_DATA)
+  public @ResponseBody ResponseEntity<?> getProfileFormInfo() {
 
     MemberProfileFormInfo mpfi = new MemberProfileFormInfo(domainCache.getDomains(),
-        eventCriteriaMetadataCache.getEventCriteriaMetadataList());
+        eventCriteriaMetadataCache.getEventCriteriaMetadataList(), forumCache);
     return new ResponseEntity<MemberProfileFormInfo>(mpfi, HttpStatus.OK);
 
   }

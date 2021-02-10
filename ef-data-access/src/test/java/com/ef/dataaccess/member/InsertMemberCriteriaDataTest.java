@@ -33,8 +33,8 @@ import org.springframework.jdbc.datasource.embedded.EmbeddedDatabaseBuilder;
 import org.springframework.jdbc.datasource.embedded.EmbeddedDatabaseType;
 
 import com.ef.dataaccess.config.DbTestUtils;
-import com.ef.model.event.MemberCriteriaData;
-import com.ef.model.event.MemberCriteriaDataBindingModel;
+import com.ef.model.member.MemberCriteriaData;
+import com.ef.model.member.MemberCriteriaDataBindingModel;
 
 public class InsertMemberCriteriaDataTest {
 

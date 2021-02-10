@@ -6,7 +6,7 @@ import java.sql.SQLException;
 import org.springframework.jdbc.core.RowMapper;
 
 import com.ef.model.event.EventCriteriaMetadata;
-import com.ef.model.event.MemberCriteriaData;
+import com.ef.model.member.MemberCriteriaData;
 
 public class MemberCriteriaDataRowMapper implements RowMapper<MemberCriteriaData> {
 

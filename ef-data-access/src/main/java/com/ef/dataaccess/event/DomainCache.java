@@ -10,7 +10,7 @@ import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Component;
 
-import com.ef.dataaccess.spring.member.rowmapper.DomainRowMapper;
+import com.ef.dataaccess.spring.rowmapper.event.DomainRowMapper;
 import com.ef.model.core.Domain;
 
 @Component

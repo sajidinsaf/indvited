@@ -15,8 +15,8 @@ import com.ef.dataaccess.Insert;
 import com.ef.dataaccess.Query;
 import com.ef.dataaccess.event.EventCriteriaMetadataCache;
 import com.ef.model.event.EventCriteriaMetadata;
-import com.ef.model.event.MemberCriteriaData;
-import com.ef.model.event.MemberCriteriaDataBindingModel;
+import com.ef.model.member.MemberCriteriaData;
+import com.ef.model.member.MemberCriteriaDataBindingModel;
 
 @Component("insertMemberCriteriaData")
 public class InsertMemberCriteriaData implements Insert<MemberCriteriaDataBindingModel, MemberCriteriaData> {

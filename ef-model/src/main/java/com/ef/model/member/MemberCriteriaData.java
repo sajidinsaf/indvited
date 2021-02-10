@@ -1,4 +1,6 @@
-package com.ef.model.event;
+package com.ef.model.member;
+
+import com.ef.model.event.EventCriteriaMetadata;
 
 public class MemberCriteriaData {
 
