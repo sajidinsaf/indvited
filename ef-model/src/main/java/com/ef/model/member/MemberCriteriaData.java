@@ -3,6 +3,11 @@ package com.ef.model.member;
 import com.ef.model.event.EventCriteriaMetadata;
 
 public class MemberCriteriaData {
+  public static final int KNOWN_CRITERIA_ID_ZOMATO_REVIEWS = 1;
+  public static final int KNOWN_CRITERIA_ID_INSTAGRAM_FOLLOWER_COUNT = 2;
+  public static final int KNOWN_CRITERIA_ID_ZOMATO_LEVEL = 3;
+  public static final int KNOWN_CRITERIA_ID_YOUTUBE_FOLLOWER_COUNT = 4;
+  public static final int KNOWN_CRITERIA_ID_ZOMATO_FOLLOWER_COUNT = 5;
 
   private String id;
   private int memberId;

@@ -5,6 +5,8 @@ import static com.ef.eventservice.controller.EventControllerConstants.SUBSCRIBE_
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.servlet.http.HttpServletRequest;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -41,7 +43,8 @@ public class PREventScheduleSubscriptionController {
   @GetMapping(SUBSCRIBE_SCHEDULE)
   @ResponseBody
   public ResponseEntity<?> addEventScheduleSubscriptions(
-      @RequestBody PREventScheduleSubscriptionBindingModel[] scheduleSubscriptionChoices) {
+      @RequestBody PREventScheduleSubscriptionBindingModel[] scheduleSubscriptionChoices, HttpServletRequest request) {
+
     List<EventScheduleSubscription> persistedSubscriptions = new ArrayList<EventScheduleSubscription>();
 
     for (PREventScheduleSubscriptionBindingModel subscription : scheduleSubscriptionChoices) {

@@ -1,6 +1,7 @@
 package com.ef.member.profile.controller;
 
 import static com.ef.member.profile.controller.MemberProfileConstants.GET_PROFILE_FORM_DATA;
+import static com.ef.member.profile.controller.MemberProfileConstants.UPDATE_PROFILE;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -9,12 +10,15 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.ef.common.logging.ServiceLoggingUtil;
 import com.ef.dataaccess.event.DomainCache;
 import com.ef.dataaccess.event.EventCriteriaMetadataCache;
 import com.ef.dataaccess.event.ForumCache;
+import com.ef.model.member.MemberForumCriterionBindingModel;
 
 /**
  * Handles requests for the event service.
@@ -45,6 +49,13 @@ public class MemberProfileController {
         eventCriteriaMetadataCache.getEventCriteriaMetadataList(), forumCache);
     return new ResponseEntity<MemberProfileFormInfo>(mpfi, HttpStatus.OK);
 
+  }
+
+  @PostMapping(UPDATE_PROFILE)
+  public @ResponseBody ResponseEntity<?> updateProfile(@RequestBody MemberForumCriterionBindingModel profileUpdate) {
+
+    logUtil.debug(logger, "Got member profile data for update: " + profileUpdate);
+    return new ResponseEntity<String>("Logged", HttpStatus.OK);
   }
 
 //  @PostMapping(REGISTER_MEMBER_BLOGGER)

@@ -4,6 +4,10 @@ public class Forum implements Identifiable {
 
   private static final long serialVersionUID = -3401800981091512218L;
 
+  public static final int KNOWN_FORUM_ID_INSTAGRAM = 1;
+  public static final int KNOWN_FORUM_ID_ZOMATO = 2;
+  public static final int KNOWN_FORUM_ID_YOUTUBE = 3;
+
   private final int id;
   private final String name;
   private final String baseUrl;

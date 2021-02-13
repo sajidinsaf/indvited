@@ -88,6 +88,11 @@ public class InsertPREventSchedule implements Insert<PREventScheduleBindingModel
 
     for (int i = 0; i < timeSlots.length; i++) {
       final PREventTimeSlotBindingModel timeSlotModel = timeSlots[i];
+      // This null check has been introduced due to changes on front end form
+      // whereby we may get empty cells in the array
+      if (timeSlotModel == null) {
+        continue;
+      }
       KeyHolder keyHolder = new GeneratedKeyHolder();
 
       // Insert the PR Event schedule and get the schedule id.

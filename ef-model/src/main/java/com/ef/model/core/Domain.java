@@ -4,6 +4,16 @@ public class Domain implements Identifiable {
 
   private static final long serialVersionUID = 8226190935821525428L;
 
+  public static final int KNOWN_DOMAIN_ID_RESTAURANT = 1;
+  public static final int KNOWN_DOMAIN_ID_HOTEL = 2;
+  public static final int KNOWN_DOMAIN_ID_LIFESTYLE = 3;
+  public static final int KNOWN_DOMAIN_ID_FASHION = 4;
+  public static final int KNOWN_DOMAIN_ID_DIET_AND_NUTRITION = 5;
+  public static final int KNOWN_DOMAIN_ID_BABY_PRODUCTS = 6;
+  public static final int KNOWN_DOMAIN_ID_HEALTH_AND_BEAUTY = 7;
+  public static final int KNOWN_DOMAIN_ID_TRAVEL = 8;
+  public static final int KNOWN_DOMAIN_ID_TECHNOLOGY = 9;
+
   private final int id;
   private final String name;
 

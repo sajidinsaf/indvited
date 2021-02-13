@@ -14,6 +14,7 @@ import java.util.Random;
 import javax.mail.PasswordAuthentication;
 import javax.mail.Session;
 import javax.mail.internet.MimeMessage;
+import javax.servlet.http.HttpServletRequest;
 import javax.sql.DataSource;
 
 import org.junit.After;
@@ -51,6 +52,9 @@ public class PREventScheduleSubscriptionControllerTest {
 
   @Mock
   private Response<Member> status;
+
+  @Mock
+  private HttpServletRequest httpServletRequest;
 
   @Mock
   private Member member;
@@ -100,7 +104,7 @@ public class PREventScheduleSubscriptionControllerTest {
         subscriberId, priority);
 
     ResponseEntity<?> response = controller
-        .addEventScheduleSubscriptions(new PREventScheduleSubscriptionBindingModel[] { a, b, c });
+        .addEventScheduleSubscriptions(new PREventScheduleSubscriptionBindingModel[] { a, b, c }, httpServletRequest);
 
     List<EventScheduleSubscription> subscriptions = (List<EventScheduleSubscription>) response.getBody();
     assertThat(subscriptions.size(), is(3));
