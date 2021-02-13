@@ -50,4 +50,10 @@ public class DomainCache {
   public List<Domain> getDomains() {
     return new ArrayList<Domain>(idToDomainMap.values());
   }
+
+  @Override
+  public String toString() {
+    return "DomainCache [nameToDomainMap=" + nameToDomainMap + ", idToDomainMap=" + idToDomainMap + "]";
+  }
+
 }

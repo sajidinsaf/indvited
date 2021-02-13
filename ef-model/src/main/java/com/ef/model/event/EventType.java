@@ -22,7 +22,7 @@ public class EventType {
   }
 
   public int getDomainId() {
-    return id;
+    return domainId;
   }
 
   @Override

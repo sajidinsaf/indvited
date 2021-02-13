@@ -157,7 +157,7 @@ class HsqlDbConfigInsertPREventTest {
         .addScript("classpath:com/ef/dataaccess/event/insertEventTypeData.sql")
         .addScript("classpath:com/ef/dataaccess/event/insertEventCriteriaMeta.sql")
         .addScript("classpath:com/ef/dataaccess/event/insertEventDeliverableMeta.sql")
-        .addScript("classpath:com/ef/dataaccess/event/insertDomains.sql").build();
+        .addScript("classpath:com/ef/dataaccess/core/insertDomains.sql").build();
   }
 
   @Bean

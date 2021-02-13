@@ -312,80 +312,90 @@ public class PREventScheduleBindingModel {
     return startTime1;
   }
 
-  public void setStartTime1(String startDate1) {
-    this.startTime1 = startDate1;
+  public void setStartTime1(String startTime) {
+    setStartTime(0, startTime);
+    this.startTime1 = startTime;
   }
 
   public String getStartTime2() {
     return startTime2;
   }
 
-  public void setStartTime2(String startDate2) {
-    this.startTime2 = startDate2;
+  public void setStartTime2(String startTime) {
+    setStartTime(1, startTime);
+    this.startTime2 = startTime;
   }
 
   public String getStartTime3() {
     return startTime3;
   }
 
-  public void setStartTime3(String startDate3) {
-    this.startTime3 = startDate3;
+  public void setStartTime3(String startTime) {
+    setStartTime(2, startTime);
+    this.startTime3 = startTime;
   }
 
   public String getStartTime4() {
     return startTime4;
   }
 
-  public void setStartTime4(String startDate4) {
-    this.startTime4 = startDate4;
+  public void setStartTime4(String startTime) {
+    setStartTime(3, startTime);
+    this.startTime4 = startTime;
   }
 
   public String getStartTime5() {
     return startTime5;
   }
 
-  public void setStartTime5(String startDate5) {
-    this.startTime5 = startDate5;
+  public void setStartTime5(String startTime) {
+    setStartTime(4, startTime);
+    this.startTime5 = startTime;
   }
 
   public String getEndTime1() {
     return endTime1;
   }
 
-  public void setEndTime1(String endDate1) {
-    this.endTime1 = endDate1;
+  public void setEndTime1(String endTime) {
+    setEndTime(0, endTime);
+    this.endTime1 = endTime;
   }
 
   public String getEndTime2() {
     return endTime2;
   }
 
-  public void setEndTime2(String endDate2) {
-    this.endTime2 = endDate2;
+  public void setEndTime2(String endTime) {
+    setEndTime(1, endTime);
+    this.endTime2 = endTime;
   }
 
   public String getEndTime3() {
     return endTime3;
   }
 
-  public void setEndTime3(String endDate3) {
-    this.endTime3 = endDate3;
+  public void setEndTime3(String endTime) {
+    setEndTime(2, endTime);
+    this.endTime3 = endTime;
   }
 
   public String getEndTime4() {
     return endTime4;
   }
 
-  public void setEndTime4(String endDate4) {
-    this.endTime4 = endDate4;
+  public void setEndTime4(String endTime) {
+    setEndTime(3, endTime);
+    this.endTime4 = endTime;
   }
 
   public String getEndTime5() {
     return endTime5;
   }
 
-  public void setEndTime5(String endDate5) {
-    this.endTime5 = endDate5;
+  public void setEndTime5(String endTime) {
+    setEndTime(4, endTime);
+    this.endTime5 = endTime;
   }
 
   public void setStartTime(int index, String startTime) {

@@ -55,17 +55,10 @@ public class MemberProfileController {
   public @ResponseBody ResponseEntity<?> updateProfile(@RequestBody MemberForumCriterionBindingModel profileUpdate) {
 
     logUtil.debug(logger, "Got member profile data for update: " + profileUpdate);
+
     return new ResponseEntity<String>("Logged", HttpStatus.OK);
   }
 
-//  @PostMapping(REGISTER_MEMBER_BLOGGER)
-//  public @ResponseBody ResponseEntity<?> registerMemberBlogger(
-//      @RequestBody MemberRegistrationBindingModel memberRegistrationData) {
-//
-//    memberRegistrationData.setMemberType(memberTypeCache.getMemberType(MemberType.KNOWN_MEMBER_TYPE_BLOGGER).getName());
-//
-//    return registerMember(memberRegistrationData);
-//  }
 //
 //  public @ResponseBody ResponseEntity<?> registerMember(
 //      @RequestBody MemberRegistrationBindingModel memberRegistrationData) {

@@ -34,17 +34,18 @@ import org.springframework.jdbc.datasource.embedded.EmbeddedDatabaseType;
 
 import com.ef.dataaccess.config.DbTestUtils;
 import com.ef.model.member.MemberDomain;
-import com.ef.model.member.MemberDomainBindingModel;
+import com.ef.model.member.MemberDomainForumBindingModel;
 
-public class InsertMemberDomainTest {
+public class InsertMemberDomainForumTest {
 
-  private InsertMemberDomain insertMemberDomain;
+  private InsertMemberDomainForum insertMemberDomain;
   private JdbcTemplate jdbcTemplate;
   @Mock
-  private MemberDomainBindingModel memberDomainBindingModel;
+  private MemberDomainForumBindingModel memberDomainBindingModel;
 
-  private int domainId = new Random().nextInt(10000);
+  private int domainForumId = new Random().nextInt(10000);
   private int memberId = new Random().nextInt(10000000);
+  private String memberForumUrl = "https://memberforumurl.com/" + new Random().nextInt(10000000);
 
   @SuppressWarnings("resource")
   @Before
@@ -52,7 +53,7 @@ public class InsertMemberDomainTest {
     openMocks(this);
     AnnotationConfigApplicationContext appContext = new AnnotationConfigApplicationContext(
         HsqlDbConfigInsertMemberDomainTest.class);
-    insertMemberDomain = appContext.getBean(InsertMemberDomain.class, "insertMemberDomain");
+    insertMemberDomain = appContext.getBean(InsertMemberDomainForum.class, "insertMemberDomainForum");
     jdbcTemplate = appContext.getBean(JdbcTemplate.class);
   }
 
@@ -63,13 +64,15 @@ public class InsertMemberDomainTest {
 
   @Test
   public void test() {
-    when(memberDomainBindingModel.getDomainId()).thenReturn(domainId);
+    when(memberDomainBindingModel.getDomainForumId()).thenReturn(domainForumId);
     when(memberDomainBindingModel.getMemberId()).thenReturn(memberId);
+    when(memberDomainBindingModel.getMemberForumUrl()).thenReturn(memberForumUrl);
 
     MemberDomain memberDomain = insertMemberDomain.data(memberDomainBindingModel);
 
     assertThat(memberDomain.getMemberId(), Matchers.is(memberId));
-    assertThat(memberDomain.getDomainId(), Matchers.is(domainId));
+    assertThat(memberDomain.getDomainForumId(), Matchers.is(domainForumId));
+    assertThat(memberDomain.getMemberForumUrl(), Matchers.is(memberForumUrl));
 
   }
 

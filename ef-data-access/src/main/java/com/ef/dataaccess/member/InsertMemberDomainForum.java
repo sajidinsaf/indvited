@@ -17,25 +17,25 @@ import org.springframework.stereotype.Component;
 import com.ef.common.logging.ServiceLoggingUtil;
 import com.ef.dataaccess.Insert;
 import com.ef.model.member.MemberDomain;
-import com.ef.model.member.MemberDomainBindingModel;
+import com.ef.model.member.MemberDomainForumBindingModel;
 
-@Component("insertMemberDomain")
-public class InsertMemberDomain implements Insert<MemberDomainBindingModel, MemberDomain> {
+@Component("insertMemberDomainForum")
+public class InsertMemberDomainForum implements Insert<MemberDomainForumBindingModel, MemberDomain> {
 
-  private static final Logger logger = LoggerFactory.getLogger(InsertMemberDomain.class);
+  private static final Logger logger = LoggerFactory.getLogger(InsertMemberDomainForum.class);
 
   private final ServiceLoggingUtil loggingUtil = new ServiceLoggingUtil();
-  private final String INSERT_STATEMENT = "INSERT INTO member_domain(member_id, domain_id) VALUES (?,?) ";
+  private final String INSERT_STATEMENT = "INSERT INTO member_domain(member_id, domain_forum_id, forum_url) VALUES (?,?,?) ";
 
   private final JdbcTemplate jdbcTemplate;
 
   @Autowired
-  public InsertMemberDomain(@Qualifier("indvitedDbJdbcTemplate") JdbcTemplate jdbcTemplate) {
+  public InsertMemberDomainForum(@Qualifier("indvitedDbJdbcTemplate") JdbcTemplate jdbcTemplate) {
     this.jdbcTemplate = jdbcTemplate;
   }
 
   @Override
-  public MemberDomain data(MemberDomainBindingModel input) {
+  public MemberDomain data(MemberDomainForumBindingModel input) {
 
     KeyHolder keyHolder = new GeneratedKeyHolder();
 
@@ -45,19 +45,20 @@ public class InsertMemberDomain implements Insert<MemberDomainBindingModel, Memb
     }, keyHolder);
 
     int memberDomainId = keyHolder.getKey().intValue();
-    MemberDomain memberDomain = new MemberDomain(memberDomainId, input.getMemberId(), input.getDomainId());
-    loggingUtil.debug(logger, "Created member domain entry: ", memberDomain);
+    MemberDomain memberDomain = new MemberDomain(memberDomainId, input.getMemberId(), input.getDomainForumId(),
+        input.getMemberForumUrl());
+    loggingUtil.debug(logger, "Created member domain forum entry: ", memberDomain);
 
     return memberDomain;
   }
 
-  private final PreparedStatement getPreparedStatement(MemberDomainBindingModel input, Connection connection)
+  private final PreparedStatement getPreparedStatement(MemberDomainForumBindingModel input, Connection connection)
       throws SQLException {
 
     PreparedStatement ps = connection.prepareStatement(INSERT_STATEMENT, Statement.RETURN_GENERATED_KEYS);
     ps.setInt(1, input.getMemberId());
-    ps.setInt(2, input.getDomainId());
-
+    ps.setInt(2, input.getDomainForumId());
+    ps.setString(3, input.getMemberForumUrl());
     return ps;
   }
 }

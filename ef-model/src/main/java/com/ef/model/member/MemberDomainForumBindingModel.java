@@ -1,30 +1,20 @@
 package com.ef.model.member;
 
-public class MemberDomain {
+public class MemberDomainForumBindingModel {
 
-  private int id;
   private int memberId;
   private int domainForumId;
   private String memberForumUrl;
 
-  public MemberDomain() {
+  public MemberDomainForumBindingModel() {
 
   }
 
-  public MemberDomain(int id, int memberId, int domainForumId, String memberForumUrl) {
+  public MemberDomainForumBindingModel(int memberId, int domainId, String memberForumUrl) {
     super();
-    this.id = id;
     this.memberId = memberId;
-    this.domainForumId = domainForumId;
+    this.domainForumId = domainId;
     this.memberForumUrl = memberForumUrl;
-  }
-
-  public int getId() {
-    return id;
-  }
-
-  public void setId(int id) {
-    this.id = id;
   }
 
   public int getMemberId() {
@@ -39,8 +29,8 @@ public class MemberDomain {
     return domainForumId;
   }
 
-  public void setDomainForumId(int domainForumId) {
-    this.domainForumId = domainForumId;
+  public void setDomainForumId(int domainId) {
+    this.domainForumId = domainId;
   }
 
   public String getMemberForumUrl() {
@@ -53,7 +43,7 @@ public class MemberDomain {
 
   @Override
   public String toString() {
-    return "MemberDomain [id=" + id + ", memberId=" + memberId + ", domainForumId=" + domainForumId
+    return "MemberDomainForumBindingModel [memberId=" + memberId + ", domainForumId=" + domainForumId
         + ", memberForumUrl=" + memberForumUrl + "]";
   }
 

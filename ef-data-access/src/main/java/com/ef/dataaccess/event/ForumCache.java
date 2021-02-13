@@ -50,4 +50,10 @@ public class ForumCache {
   public List<Forum> getForums() {
     return new ArrayList<Forum>(idToForumMap.values());
   }
+
+  @Override
+  public String toString() {
+    return "ForumCache [nameToForumMap=" + nameToForumMap + ", idToForumMap=" + idToForumMap + "]";
+  }
+
 }
