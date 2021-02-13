@@ -5,7 +5,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import com.ef.dataaccess.event.ForumCache;
+import com.ef.dataaccess.core.ForumCache;
 import com.ef.model.core.Domain;
 import com.ef.model.event.EventCriteriaMetadata;
 

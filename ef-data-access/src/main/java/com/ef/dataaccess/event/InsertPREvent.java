@@ -20,6 +20,7 @@ import com.ef.common.LRPair;
 import com.ef.common.logging.ServiceLoggingUtil;
 import com.ef.dataaccess.Insert;
 import com.ef.dataaccess.Query;
+import com.ef.dataaccess.core.DomainCache;
 import com.ef.dataaccess.member.MemberTypeCache;
 import com.ef.model.event.EventType;
 import com.ef.model.event.EventVenue;

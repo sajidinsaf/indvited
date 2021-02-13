@@ -1,4 +1,4 @@
-package com.ef.dataaccess.event;
+package com.ef.dataaccess.core;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -10,7 +10,7 @@ import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Component;
 
-import com.ef.dataaccess.spring.rowmapper.event.ForumRowMapper;
+import com.ef.dataaccess.core.rowmapper.ForumRowMapper;
 import com.ef.model.core.Forum;
 
 @Component

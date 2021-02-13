@@ -1,4 +1,4 @@
-package com.ef.dataaccess.spring.rowmapper.event;
+package com.ef.dataaccess.core.rowmapper;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;

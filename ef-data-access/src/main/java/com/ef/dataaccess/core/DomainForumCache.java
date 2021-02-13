@@ -11,9 +11,7 @@ import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Component;
 
-import com.ef.dataaccess.event.DomainCache;
-import com.ef.dataaccess.event.ForumCache;
-import com.ef.dataaccess.spring.rowmapper.event.DomainForumRowMapper;
+import com.ef.dataaccess.core.rowmapper.DomainForumRowMapper;
 import com.ef.model.core.Domain;
 import com.ef.model.core.DomainForum;
 import com.ef.model.core.Forum;

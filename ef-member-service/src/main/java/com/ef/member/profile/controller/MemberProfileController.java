@@ -15,9 +15,9 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.ef.common.logging.ServiceLoggingUtil;
-import com.ef.dataaccess.event.DomainCache;
+import com.ef.dataaccess.core.DomainCache;
+import com.ef.dataaccess.core.ForumCache;
 import com.ef.dataaccess.event.EventCriteriaMetadataCache;
-import com.ef.dataaccess.event.ForumCache;
 import com.ef.model.member.MemberForumCriterionBindingModel;
 
 /**

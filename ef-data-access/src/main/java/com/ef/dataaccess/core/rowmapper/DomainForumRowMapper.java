@@ -1,12 +1,12 @@
-package com.ef.dataaccess.spring.rowmapper.event;
+package com.ef.dataaccess.core.rowmapper;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
 import org.springframework.jdbc.core.RowMapper;
 
-import com.ef.dataaccess.event.DomainCache;
-import com.ef.dataaccess.event.ForumCache;
+import com.ef.dataaccess.core.DomainCache;
+import com.ef.dataaccess.core.ForumCache;
 import com.ef.model.core.DomainForum;
 
 public class DomainForumRowMapper implements RowMapper<DomainForum> {
