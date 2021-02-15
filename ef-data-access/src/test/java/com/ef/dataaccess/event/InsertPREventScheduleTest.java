@@ -47,6 +47,8 @@ public class InsertPREventScheduleTest {
   private boolean innerCircle = true;
   private boolean myBloggers = false;
   private boolean allEligible = false;
+  private String scheduleTime = "1200-1400 lunch only";
+  private int bloggersPerDay = 5;
 
   @SuppressWarnings({ "resource" })
   @Before
@@ -67,7 +69,7 @@ public class InsertPREventScheduleTest {
   public void shouldInsertScheduleSuccessfullyWithOneTimeSlotWhenIsAllDayTrue() {
 
     scheduleData = new PREventScheduleBindingModel(prEventId, startDate, endDate, monday, tuesday, wedenesday, thursday,
-        friday, saturday, sunday, innerCircle, myBloggers, allEligible);
+        friday, saturday, sunday, innerCircle, myBloggers, allEligible, scheduleTime, bloggersPerDay);
 
     PREventTimeSlotBindingModel[] timeSlots = new PREventTimeSlotBindingModel[2];
 
@@ -79,15 +81,14 @@ public class InsertPREventScheduleTest {
     EventScheduleResult result = insertPREventSchedule.data(scheduleData);
 
     assertThat(result.getScheduleId(), is(0L));
-    assertThat(result.getTimeSlotIds().length, is(1));
-    assertThat(result.getTimeSlotIds()[0], is(0L));
+    assertThat(result.getTimeSlotIds().length, is(0));
   }
 
   @Test
   public void shouldInsertScheduleSuccessfullyWithTwoTimeSotsWhenIsAllDayFalse() {
 
     scheduleData = new PREventScheduleBindingModel(prEventId, startDate, endDate, monday, tuesday, wedenesday, thursday,
-        friday, saturday, sunday, innerCircle, myBloggers, allEligible);
+        friday, saturday, sunday, innerCircle, myBloggers, allEligible, scheduleTime, bloggersPerDay);
 
     scheduleData.setAllDay(false);
 
@@ -101,9 +102,8 @@ public class InsertPREventScheduleTest {
     EventScheduleResult result = insertPREventSchedule.data(scheduleData);
 
     assertThat(result.getScheduleId(), is(0L));
-    assertThat(result.getTimeSlotIds().length, is(2));
-    assertThat(result.getTimeSlotIds()[0], is(0L));
-    assertThat(result.getTimeSlotIds()[1], is(1L));
+    assertThat(result.getTimeSlotIds().length, is(0));
+
   }
 
 }

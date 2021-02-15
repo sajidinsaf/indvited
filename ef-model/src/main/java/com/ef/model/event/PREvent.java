@@ -2,6 +2,7 @@ package com.ef.model.event;
 
 import java.sql.Date;
 import java.util.Arrays;
+import java.util.List;
 
 import com.ef.model.member.Member;
 
@@ -22,6 +23,7 @@ public class PREvent implements Event {
   private int eventVenueId;
   private String exclusions;
   private int memberId;
+  private List<PREventSchedule> schedules;
 
   public PREvent() {
 
@@ -174,40 +176,27 @@ public class PREvent implements Event {
     this.eventDeliverables = eventDeliverables;
   }
 
+  public List<PREventSchedule> getSchedules() {
+    return schedules;
+  }
+
+  public void setSchedules(List<PREventSchedule> schedules) {
+    this.schedules = schedules;
+  }
+
   @Override
   public String toString() {
     return "PREvent [id=" + id + ", eventType=" + eventType + ", cap=" + cap + ", member=" + member + ", eventVenue="
         + eventVenue + ", notes=" + notes + ", createdDate=" + createdDate + ", eventTimeSlots="
-        + Arrays.toString(eventTimeSlots) + ", eventCriteria=" + Arrays.toString(eventCriteria) + ", eventTypeId="
-        + eventTypeId + ", domainId=" + domainId + ", eventVenueId=" + eventVenueId + ", exclusions=" + exclusions
-        + ", memberEmailId=" + memberId + "]";
-  }
-
-  @Override
-  public int hashCode() {
-    final int prime = 31;
-    int result = 1;
-    result = prime * result + id;
-    return result;
-  }
-
-  @Override
-  public boolean equals(Object obj) {
-    if (this == obj)
-      return true;
-    if (obj == null)
-      return false;
-    if (getClass() != obj.getClass())
-      return false;
-    PREvent other = (PREvent) obj;
-    if (id != other.id)
-      return false;
-    return true;
+        + Arrays.toString(eventTimeSlots) + ", eventCriteria=" + Arrays.toString(eventCriteria) + ", eventDeliverables="
+        + Arrays.toString(eventDeliverables) + ", eventTypeId=" + eventTypeId + ", domainId=" + domainId
+        + ", eventVenueId=" + eventVenueId + ", exclusions=" + exclusions + ", memberId=" + memberId + ", schedules="
+        + schedules + "]";
   }
 
   @Override
   public String getDescription() {
-    return toString();
+    return eventType.getName();
   }
 
 }

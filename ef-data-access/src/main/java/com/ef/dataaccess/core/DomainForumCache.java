@@ -26,6 +26,7 @@ public class DomainForumCache {
   private Map<Integer, Set<Forum>> domainIdToForumsMap;
   private Map<Integer, Set<Domain>> forumIdToDomainsMap;
   private List<DomainForum> domainForums;
+  private Map<String, DomainForum> domainForumIdToDomainForumMap;
 
   @Autowired
   public DomainForumCache(@Qualifier("indvitedDbJdbcTemplate") JdbcTemplate jdbcTemplate, DomainCache domainCache,
@@ -42,10 +43,16 @@ public class DomainForumCache {
     return forumIdToDomainsMap.get(forumId);
   }
 
+  public DomainForum getDomainForum(int domainId, int forumId) {
+    String domainForumId = getDomainForumId(domainId, forumId);
+    return domainForumIdToDomainForumMap.get(domainForumId);
+  }
+
   private void refreshCache(DomainCache domainCache, ForumCache forumCache) {
 
     domainIdToForumsMap = new HashMap<Integer, Set<Forum>>();
     forumIdToDomainsMap = new HashMap<Integer, Set<Domain>>();
+    domainForumIdToDomainForumMap = new HashMap<String, DomainForum>();
 
     domainForums = jdbcTemplate.query(SELECT_DOMAIN, new DomainForumRowMapper(domainCache, forumCache));
 
@@ -56,6 +63,10 @@ public class DomainForumCache {
       forumSet.add(df.getForum());
       domainIdToForumsMap.put(df.getDomain().getId(), forumSet);
       forumIdToDomainsMap.put(df.getForum().getId(), domainSet);
+
+      String domainForumId = getDomainForumId(df.getDomain().getId(), df.getForum().getId());
+      domainForumIdToDomainForumMap.put(domainForumId, df);
+
     }
   }
 
@@ -65,6 +76,10 @@ public class DomainForumCache {
       list = new HashSet<T>();
     }
     return list;
+  }
+
+  private String getDomainForumId(int domainId, int forumId) {
+    return domainId + "_" + forumId;
   }
 
 }

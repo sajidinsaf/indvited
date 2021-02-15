@@ -1,18 +1,22 @@
 package com.ef.model.event;
 
+import java.util.Arrays;
 import java.util.Calendar;
 
 import com.google.gson.Gson;
 
 public class PREventScheduleBindingModel {
 
+  private static final int DEFAULT_BLOGGERS_PER_DAY = 1;
   private int eventId;
-  private String startDate, endDate, scheduleDate, scheduleTime;
+  private String startDate, endDate, scheduleOnDate, scheduleOnTime;
   private boolean monday, tuesday, wednesday, thursday, friday, saturday, sunday;
   private boolean innerCircle, myBloggers, allEligible;
   private boolean allDay = true;
   private String startTime1, startTime2, startTime3, startTime4, startTime5;
   private String endTime1, endTime2, endTime3, endTime4, endTime5;
+  private int bloggersPerDay;
+  private String scheduleTime;
 
   private PREventTimeSlotBindingModel[] timeSlots;
 
@@ -22,7 +26,7 @@ public class PREventScheduleBindingModel {
 
   public PREventScheduleBindingModel(int prEventId, String startDate, String endDate, boolean monday, boolean tuesday,
       boolean wednesday, boolean thursday, boolean friday, boolean saturday, boolean sunday, boolean innerCircle,
-      boolean myBloggers, boolean allEligible) {
+      boolean myBloggers, boolean allEligible, String scheduleTime, int bloggersPerDay) {
     super();
     this.eventId = prEventId;
     this.startDate = startDate;
@@ -37,12 +41,14 @@ public class PREventScheduleBindingModel {
     this.innerCircle = innerCircle;
     this.myBloggers = myBloggers;
     this.allEligible = allEligible;
+    this.scheduleTime = scheduleTime;
+    this.bloggersPerDay = bloggersPerDay;
     timeSlots = new PREventTimeSlotBindingModel[5];
   }
 
   public PREventScheduleBindingModel(int prEventId, String startDate, String endDate, boolean monday, boolean tuesday,
       boolean wednesday, boolean thursday, boolean friday, boolean saturday, boolean sunday, boolean innerCircle,
-      boolean myBloggers, boolean allEligible, String scheduleDate, String scheduleTime) {
+      boolean myBloggers, boolean allEligible, String scheduleOnTime, String scheduleTime, int bloggersPerDay) {
     super();
     this.eventId = prEventId;
     this.startDate = startDate;
@@ -57,8 +63,32 @@ public class PREventScheduleBindingModel {
     this.innerCircle = innerCircle;
     this.myBloggers = myBloggers;
     this.allEligible = allEligible;
-    this.scheduleDate = scheduleDate;
+    this.scheduleOnTime = scheduleOnTime;
     this.scheduleTime = scheduleTime;
+    this.bloggersPerDay = bloggersPerDay;
+    timeSlots = new PREventTimeSlotBindingModel[5];
+
+  }
+
+  public PREventScheduleBindingModel(int prEventId, String startDate, String endDate, boolean monday, boolean tuesday,
+      boolean wednesday, boolean thursday, boolean friday, boolean saturday, boolean sunday, boolean innerCircle,
+      boolean myBloggers, boolean allEligible, String scheduleOnDate, String scheduleOnTime) {
+    super();
+    this.eventId = prEventId;
+    this.startDate = startDate;
+    this.endDate = endDate;
+    this.monday = monday;
+    this.tuesday = tuesday;
+    this.wednesday = wednesday;
+    this.thursday = thursday;
+    this.friday = friday;
+    this.saturday = saturday;
+    this.sunday = sunday;
+    this.innerCircle = innerCircle;
+    this.myBloggers = myBloggers;
+    this.allEligible = allEligible;
+    this.scheduleOnDate = scheduleOnDate;
+    this.scheduleOnTime = scheduleOnTime;
     timeSlots = new PREventTimeSlotBindingModel[5];
   }
 
@@ -71,8 +101,8 @@ public class PREventScheduleBindingModel {
     this.eventId = eventId;
     this.startDate = startDate;
     this.endDate = endDate;
-    this.scheduleDate = scheduleDate;
-    this.scheduleTime = scheduleTime;
+    this.scheduleOnDate = scheduleDate;
+    this.scheduleOnTime = scheduleTime;
     this.monday = monday;
     this.tuesday = tuesday;
     this.wednesday = wednesday;
@@ -280,20 +310,20 @@ public class PREventScheduleBindingModel {
 
   }
 
-  public String getScheduleDate() {
-    return scheduleDate;
+  public String getScheduleOnDate() {
+    return scheduleOnDate;
   }
 
-  public void setScheduleDate(String scheduleData) {
-    this.scheduleDate = scheduleData;
+  public void setScheduleOnDate(String scheduleOnDate) {
+    this.scheduleOnDate = scheduleOnDate;
   }
 
-  public String getScheduleTime() {
-    return scheduleTime;
+  public String getScheduleOnTime() {
+    return scheduleOnTime;
   }
 
-  public void setScheduleTime(String scheduleTime) {
-    this.scheduleTime = scheduleTime;
+  public void setScheduleOnTime(String scheduleOnTime) {
+    this.scheduleOnTime = scheduleOnTime;
   }
 
   public void setTimeSlots(PREventTimeSlotBindingModel[] timeSlots) {
@@ -415,16 +445,33 @@ public class PREventScheduleBindingModel {
 
   }
 
+  public int getBloggersPerDay() {
+    return bloggersPerDay < 1 ? DEFAULT_BLOGGERS_PER_DAY : bloggersPerDay;
+  }
+
+  public void setBloggersPerDay(int bloggersPerDay) {
+    this.bloggersPerDay = bloggersPerDay;
+  }
+
+  public String getScheduleTime() {
+    return scheduleTime;
+  }
+
+  public void setScheduleTime(String scheduleTime) {
+    this.scheduleTime = scheduleTime;
+  }
+
   @Override
   public String toString() {
     return "PREventScheduleBindingModel [eventId=" + eventId + ", startDate=" + startDate + ", endDate=" + endDate
-        + ", scheduleDate=" + scheduleDate + ", scheduleTime=" + scheduleTime + ", monday=" + monday + ", tuesday="
-        + tuesday + ", wednesday=" + wednesday + ", thursday=" + thursday + ", friday=" + friday + ", saturday="
-        + saturday + ", sunday=" + sunday + ", innerCircle=" + innerCircle + ", myBloggers=" + myBloggers
-        + ", allEligible=" + allEligible + ", allDay=" + allDay + ", startTime1=" + startTime1 + ", startTime2="
-        + startTime2 + ", startTime3=" + startTime3 + ", startTime4=" + startTime4 + ", startTime5=" + startTime5
-        + ", endTime1=" + endTime1 + ", endTime2=" + endTime2 + ", endTime3=" + endTime3 + ", endTime4=" + endTime4
-        + ", endTime5=" + endTime5;
+        + ", scheduleOnDate=" + scheduleOnDate + ", scheduleOnTime=" + scheduleOnTime + ", monday=" + monday
+        + ", tuesday=" + tuesday + ", wednesday=" + wednesday + ", thursday=" + thursday + ", friday=" + friday
+        + ", saturday=" + saturday + ", sunday=" + sunday + ", innerCircle=" + innerCircle + ", myBloggers="
+        + myBloggers + ", allEligible=" + allEligible + ", allDay=" + allDay + ", startTime1=" + startTime1
+        + ", startTime2=" + startTime2 + ", startTime3=" + startTime3 + ", startTime4=" + startTime4 + ", startTime5="
+        + startTime5 + ", endTime1=" + endTime1 + ", endTime2=" + endTime2 + ", endTime3=" + endTime3 + ", endTime4="
+        + endTime4 + ", endTime5=" + endTime5 + ", bloggersPerDay=" + bloggersPerDay + ", scheduleTime=" + scheduleTime
+        + ", timeSlots=" + Arrays.toString(timeSlots) + "]";
   }
 
 }

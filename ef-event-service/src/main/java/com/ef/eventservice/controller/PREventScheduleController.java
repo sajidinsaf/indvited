@@ -2,7 +2,8 @@ package com.ef.eventservice.controller;
 
 import static com.ef.eventservice.controller.EventControllerConstants.CREATE_SCHEDULE;
 import static com.ef.eventservice.controller.EventControllerConstants.GET_PR_EVENT_SCHEDULE_LIST;
-import static com.ef.eventservice.controller.EventControllerConstants.PR_EVENT_BINDING_MODEL;
+import static com.ef.eventservice.controller.EventControllerConstants.PR_EVENT_SCHEDULE_BINDING_MODEL;
+import static com.ef.eventservice.controller.EventControllerConstants.PR_EVENT_SCHEDULE_PERSIST_RESULT;
 
 import java.util.List;
 
@@ -77,9 +78,10 @@ public class PREventScheduleController {
       EventScheduleResult prEventScheduleResult = insertPrEventSchedule.data(eventSchedule);
 
       PREventPublisherContext context = new PREventPublisherContext();
-      context.put(PR_EVENT_BINDING_MODEL, prEventScheduleResult.getScheduleId());
+      context.put(PR_EVENT_SCHEDULE_BINDING_MODEL, eventSchedule);
+      context.put(PR_EVENT_SCHEDULE_PERSIST_RESULT, prEventScheduleResult);
 
-      if (eventSchedule.getScheduleDate() == null) {
+      if (eventSchedule.getScheduleOnDate() == null) {
         Response<?> publishResponse = prEventScheduleNowStrategy.apply(context);
 
         if (publishResponse.getFailureReasons() != null && publishResponse.getFailureReasons().size() > 0) {

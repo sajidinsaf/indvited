@@ -9,9 +9,11 @@ public class PREventSchedule {
   private int eventId;
   private long id;
   private Date startDate, endDate;
-  private Timestamp scheduleTime, creationTimestamp, publishedOnTimestamp;
+  private Timestamp scheduleOnTime, creationTimestamp, publishedOnTimestamp;
   private boolean monday, tuesday, wednesday, thursday, friday, saturday, sunday;
   private boolean innerCircle, myBloggers, allEligible;
+  private int bloggersPerDay;
+  private String scheduleTimeInfo;
 
   private List<EventTimeslot> eventTimeSlots;
 
@@ -21,7 +23,7 @@ public class PREventSchedule {
 
   public PREventSchedule(long id, int eventId, Date startDate, Date endDate, String daysOfTheWeek, boolean innerCircle,
       boolean myBloggers, boolean allEligible, Timestamp creationTimestamp, Timestamp scheduledForTimestamp,
-      Timestamp publishedOnTimestamp) {
+      Timestamp publishedOnTimestamp, int bloggersPerDay, String scheduleTimeInfo) {
     this.id = id;
     this.eventId = eventId;
     this.startDate = startDate;
@@ -37,8 +39,10 @@ public class PREventSchedule {
     this.myBloggers = myBloggers;
     this.allEligible = allEligible;
     this.creationTimestamp = creationTimestamp;
-    this.scheduleTime = scheduledForTimestamp;
+    this.scheduleOnTime = scheduledForTimestamp;
     this.publishedOnTimestamp = publishedOnTimestamp;
+    this.bloggersPerDay = bloggersPerDay;
+    this.scheduleTimeInfo = scheduleTimeInfo;
 
   }
 
@@ -82,12 +86,12 @@ public class PREventSchedule {
     this.endDate = endDate;
   }
 
-  public Timestamp getScheduleTime() {
-    return scheduleTime;
+  public Timestamp getScheduleOnTime() {
+    return scheduleOnTime;
   }
 
-  public void setScheduleTime(Timestamp scheduleTime) {
-    this.scheduleTime = scheduleTime;
+  public void setScheduleOnTime(Timestamp scheduleTime) {
+    this.scheduleOnTime = scheduleTime;
   }
 
   public Timestamp getCreationTimestamp() {
@@ -184,6 +188,33 @@ public class PREventSchedule {
 
   public void setAllEligible(boolean allEligible) {
     this.allEligible = allEligible;
+  }
+
+  public int getBloggersPerDay() {
+    return bloggersPerDay;
+  }
+
+  public void setBloggersPerDay(int bloggersPerDay) {
+    this.bloggersPerDay = bloggersPerDay;
+  }
+
+  public String getScheduleTimeInfo() {
+    return scheduleTimeInfo;
+  }
+
+  public void setScheduleTimeInfo(String scheduleTimeInfo) {
+    this.scheduleTimeInfo = scheduleTimeInfo;
+  }
+
+  @Override
+  public String toString() {
+    return "PREventSchedule [eventId=" + eventId + ", id=" + id + ", startDate=" + startDate + ", endDate=" + endDate
+        + ", scheduleOnTime=" + scheduleOnTime + ", creationTimestamp=" + creationTimestamp + ", publishedOnTimestamp="
+        + publishedOnTimestamp + ", monday=" + monday + ", tuesday=" + tuesday + ", wednesday=" + wednesday
+        + ", thursday=" + thursday + ", friday=" + friday + ", saturday=" + saturday + ", sunday=" + sunday
+        + ", innerCircle=" + innerCircle + ", myBloggers=" + myBloggers + ", allEligible=" + allEligible
+        + ", bloggersPerDay=" + bloggersPerDay + ", scheduleTimeInfo=" + scheduleTimeInfo + ", eventTimeSlots="
+        + eventTimeSlots + "]";
   }
 
 }

@@ -39,7 +39,7 @@ public class InsertPREventSchedule implements Insert<PREventScheduleBindingModel
   private static final Logger logger = LoggerFactory.getLogger(InsertPREventSchedule.class);
   private final ServiceLoggingUtil logUtil = new ServiceLoggingUtil();
 
-  private final String INSERT_SCHEDULE_STATEMENT = "INSERT INTO event_schedule(event_id, start_date, end_date, days_of_the_week, publish_to_inner_circle, publish_to_my_bloggers, publish_to_all_eligible, scheduled_for_timestamp) VALUES (?,?,?,?,?,?,?,?)";
+  private final String INSERT_SCHEDULE_STATEMENT = "INSERT INTO event_schedule(event_id, start_date, end_date, schedule_time, bloggers_per_day, days_of_the_week, publish_to_inner_circle, publish_to_my_bloggers, publish_to_all_eligible, scheduled_for_timestamp) VALUES (?,?,?,?,?,?,?,?,?,?)";
 
   private final String INSERT_TIMESLOT_STATEMENT = "INSERT INTO event_schedule_timeslot(event_schedule_id, start_time, end_time) VALUES (?,?,?)";
 
@@ -73,9 +73,9 @@ public class InsertPREventSchedule implements Insert<PREventScheduleBindingModel
 
     logUtil.debug(logger, "created event schedule with id", scheduleId);
 
-    long[] eventTimeSlotIds = insertEventTimeSlots(input, scheduleId);
+    // long[] eventTimeSlotIds = insertEventTimeSlots(input, scheduleId);
 
-    EventScheduleResult scheduleResult = new EventScheduleResult(scheduleId, eventTimeSlotIds);
+    EventScheduleResult scheduleResult = new EventScheduleResult(scheduleId, new long[] {});
 
     return scheduleResult;
   }
@@ -124,13 +124,15 @@ public class InsertPREventSchedule implements Insert<PREventScheduleBindingModel
     ps.setInt(1, eventId);
     ps.setDate(2, startDate);
     ps.setDate(3, endDate);
-    ps.setString(4, daysOfTheWeek);
-    ps.setBoolean(5, input.isInnerCircle());
-    ps.setBoolean(6, input.isMyBloggers());
-    ps.setBoolean(7, input.isAllEligible());
+    ps.setString(4, input.getScheduleTime());
+    ps.setInt(5, input.getBloggersPerDay());
+    ps.setString(6, daysOfTheWeek);
+    ps.setBoolean(7, input.isInnerCircle());
+    ps.setBoolean(8, input.isMyBloggers());
+    ps.setBoolean(9, input.isAllEligible());
     Timestamp scheduledForTimeStamp = getScheduledForTimestamp(input);
 
-    ps.setTimestamp(8, scheduledForTimeStamp);
+    ps.setTimestamp(10, scheduledForTimeStamp);
 
     return ps;
   }
@@ -150,11 +152,11 @@ public class InsertPREventSchedule implements Insert<PREventScheduleBindingModel
   }
 
   private Timestamp getScheduledForTimestamp(PREventScheduleBindingModel input) {
-    if (input.getScheduleDate() == null) {
+    if (input.getScheduleOnDate() == null) {
       return new Timestamp(System.currentTimeMillis());
     }
 
-    String dateTimeString = input.getScheduleDate() + " " + input.getScheduleTime();
+    String dateTimeString = input.getScheduleOnDate() + " " + input.getScheduleOnTime();
     Date date = getDate(dateTimeString, DATE_FORMAT + " " + TIME_FORMAT);
 
     return new Timestamp(date.getTime());

@@ -1,6 +1,6 @@
 package com.ef.eventservice.strategy;
 
-import static com.ef.eventservice.controller.EventControllerConstants.PR_EVENT_BINDING_MODEL;
+import static com.ef.eventservice.controller.EventControllerConstants.PR_EVENT_SCHEDULE_BINDING_MODEL;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -38,7 +38,7 @@ public class PublishNowAllDayPREventScheduleStrategy implements Strategy<PREvent
   public Response<?> apply(PREventPublisherContext context) {
     try {
 
-      PREventScheduleBindingModel prEventScheduleBindingModel = context.get(PR_EVENT_BINDING_MODEL);
+      PREventScheduleBindingModel prEventScheduleBindingModel = context.get(PR_EVENT_SCHEDULE_BINDING_MODEL);
       logUtil.debug(logger, "Publishing publish event: " + prEventScheduleBindingModel);
 
       PREvent prEvent = insertPREventSchedule.data(prEventScheduleBindingModel);

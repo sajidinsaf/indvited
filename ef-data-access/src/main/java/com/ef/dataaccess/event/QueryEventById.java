@@ -12,22 +12,21 @@ import com.ef.model.event.PREvent;
 @Component(value = "queryEventById")
 public class QueryEventById implements Query<Integer, PREvent> {
 
-  private final String SELECT_EVENT = "select id, event_type_id, domain_id, event_venue_id, cap, created_date, exclusions, member_id, notes from event where id=?";
+  private final String SELECT_EVENT = "select * from event where id=?";
 
   private final JdbcTemplate jdbcTemplate;
-//  private final Query<String, MemberType> queryMemberTypeByEmail;
+  private final EventTypeCache eventTypeCache;
 
   @Autowired
-  public QueryEventById(@Qualifier("indvitedDbJdbcTemplate") JdbcTemplate jdbcTemplate) {
-//      @Qualifier("queryMemberTypeByEmail") Query<String, MemberType> queryMemberTypeByEmail) {
+  public QueryEventById(@Qualifier("indvitedDbJdbcTemplate") JdbcTemplate jdbcTemplate, EventTypeCache eventTypeCache) {
     this.jdbcTemplate = jdbcTemplate;
-//    this.queryMemberTypeByEmail = queryMemberTypeByEmail;
+    this.eventTypeCache = eventTypeCache;
   }
 
   @Override
   public PREvent data(Integer id) {
-
     PREvent prEvent = jdbcTemplate.queryForObject(SELECT_EVENT, new Object[] { id }, new PREventTableRowMapper());
+    prEvent.setEventType(eventTypeCache.getEventType(prEvent.getEventTypeId()));
     return prEvent;
   }
 

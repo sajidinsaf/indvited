@@ -243,6 +243,14 @@ public class MemberForumCriterionBindingModel {
     this.enabledDomainIds = enabledDomainIds;
   }
 
+  public Map<Integer, Integer> getCriteriaValueMap() {
+    return criteriaValueMap;
+  }
+
+  public Map<Integer, String> getMemberForumUrls() {
+    return memberForumUrls;
+  }
+
   private void addDomainIfSet(boolean isSet, int domainId) {
     if (isSet) {
       enabledDomainIds.add(domainId);

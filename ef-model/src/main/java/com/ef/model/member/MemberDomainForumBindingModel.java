@@ -10,10 +10,10 @@ public class MemberDomainForumBindingModel {
 
   }
 
-  public MemberDomainForumBindingModel(int memberId, int domainId, String memberForumUrl) {
+  public MemberDomainForumBindingModel(int memberId, int domainForumId, String memberForumUrl) {
     super();
     this.memberId = memberId;
-    this.domainForumId = domainId;
+    this.domainForumId = domainForumId;
     this.memberForumUrl = memberForumUrl;
   }
 

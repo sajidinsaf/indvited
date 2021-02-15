@@ -34,7 +34,7 @@ public class QueryPREventScheduleListByEventId implements Query<Integer, List<PR
             rs.getDate("END_DATE"), rs.getString("DAYS_OF_THE_WEEK"), rs.getBoolean("PUBLISH_TO_INNER_CIRCLE"),
             rs.getBoolean("PUBLISH_TO_MY_BLOGGERS"), rs.getBoolean("PUBLISH_TO_ALL_ELIGIBLE"),
             rs.getTimestamp("CREATION_TIMESTAMP"), rs.getTimestamp("SCHEDULED_FOR_TIMESTAMP"),
-            rs.getTimestamp("PUBLISHED_ON_TIMESTAMP")));
+            rs.getTimestamp("PUBLISHED_ON_TIMESTAMP"), rs.getInt("bloggers_per_day"), rs.getString("schedule_time")));
 
     for (PREventSchedule schedule : schedules) {
 

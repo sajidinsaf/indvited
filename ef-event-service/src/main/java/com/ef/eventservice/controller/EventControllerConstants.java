@@ -16,5 +16,7 @@ public class EventControllerConstants {
 
   public static final String PR_EVENT = "prEvent";
 
-  public static final String PR_EVENT_BINDING_MODEL = "PR_EVENT_BINDING_MODEL";
+  public static final String PR_EVENT_SCHEDULE_BINDING_MODEL = "PR_EVENT_BINDING_MODEL";
+
+  public static final String PR_EVENT_SCHEDULE_PERSIST_RESULT = "PR_EVENT_PERSIST_RESULT";
 }
