@@ -1,12 +1,12 @@
 package com.ef.dataaccess.member;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
-import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Component;
 
 import com.ef.common.logging.ServiceLoggingUtil;
@@ -27,19 +27,17 @@ public class InsertBloggerProfileData implements Insert<MemberForumCriterionBind
 
   private final ServiceLoggingUtil loggingUtil = new ServiceLoggingUtil();
 
-  private final JdbcTemplate jdbcTemplate;
   private final Insert<MemberCriteriaDataBindingModel, MemberCriteriaData> insertMemberCriteriaData;
   private final Insert<MemberDomainForumBindingModel, MemberDomain> insertMemberDomainForum;
   private final MemberProfileDataAdaptor memberProfileDataAdaptor;
   private final Query<Integer, Member> queryMemberById;
 
   @Autowired
-  public InsertBloggerProfileData(@Qualifier("indvitedDbJdbcTemplate") JdbcTemplate jdbcTemplate,
+  public InsertBloggerProfileData(
       @Qualifier("insertMemberCriteriaData") Insert<MemberCriteriaDataBindingModel, MemberCriteriaData> insertMemberCriteriaData,
       @Qualifier("insertMemberDomainForum") Insert<MemberDomainForumBindingModel, MemberDomain> insertMemberDomainForum,
       @Qualifier("queryMemberById") Query<Integer, Member> queryMemberById,
       @Qualifier("memberProfileDataAdaptor") MemberProfileDataAdaptor memberProfileDataAdaptor) {
-    this.jdbcTemplate = jdbcTemplate;
     this.insertMemberCriteriaData = insertMemberCriteriaData;
     this.insertMemberDomainForum = insertMemberDomainForum;
     this.memberProfileDataAdaptor = memberProfileDataAdaptor;
@@ -52,18 +50,24 @@ public class InsertBloggerProfileData implements Insert<MemberForumCriterionBind
     List<MemberCriteriaDataBindingModel> criteriaDataList = memberProfileDataAdaptor
         .buildMemberCriteriaDataBindingModel(input);
 
+    List<MemberCriteriaData> memberCriteriaDataList = new ArrayList<MemberCriteriaData>();
     for (MemberCriteriaDataBindingModel mcdbm : criteriaDataList) {
-      insertMemberCriteriaData.data(mcdbm);
+      memberCriteriaDataList.add(insertMemberCriteriaData.data(mcdbm));
     }
 
     List<MemberDomainForumBindingModel> memberDomainForumList = memberProfileDataAdaptor
         .buildMemberDomainForumBindingModel(input);
 
+    List<MemberDomain> memberDomainMappings = new ArrayList<MemberDomain>();
     for (MemberDomainForumBindingModel mdfbm : memberDomainForumList) {
-      insertMemberDomainForum.data(mdfbm);
+      memberDomainMappings.add(insertMemberDomainForum.data(mdfbm));
     }
 
-    return queryMemberById.data(input.getMemberId());
+    Member member = queryMemberById.data(input.getMemberId());
+    member.setMemberCriteriaDataList(memberCriteriaDataList);
+    member.setMemberDomainMappings(memberDomainMappings);
+
+    return member;
 
   }
 

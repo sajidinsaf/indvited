@@ -2,6 +2,7 @@ package com.ef.model.member;
 
 import java.io.Serializable;
 import java.sql.Timestamp;
+import java.util.List;
 
 import com.ef.common.FieldCannotBeMutatedException;
 
@@ -22,6 +23,8 @@ public class Member implements Serializable {
   private MemberLoginControl memberLoginControl;
   private boolean enabled;
   private MemberAddress memberAddress;
+  private List<MemberCriteriaData> memberCriteriaDataList;
+  private List<MemberDomain> memberDomainMappings;
 
   public Member() {
 
@@ -191,65 +194,20 @@ public class Member implements Serializable {
     }
   }
 
-  @Override
-  public int hashCode() {
-    final int prime = 31;
-    int result = 1;
-    result = prime * result + ((date_registered == null) ? 0 : date_registered.hashCode());
-    result = prime * result + ((email == null) ? 0 : email.hashCode());
-    result = prime * result + ((firstname == null) ? 0 : firstname.hashCode());
-    result = prime * result + id;
-    result = prime * result + ((lastname == null) ? 0 : lastname.hashCode());
-    result = prime * result + ((memberType == null) ? 0 : memberType.hashCode());
-    result = prime * result + ((phone == null) ? 0 : phone.hashCode());
-    result = prime * result + ((timestamp_of_last_login == null) ? 0 : timestamp_of_last_login.hashCode());
-    return result;
+  public List<MemberCriteriaData> getMemberCriteriaDataList() {
+    return memberCriteriaDataList;
   }
 
-  @Override
-  public boolean equals(Object obj) {
-    if (this == obj)
-      return true;
-    if (obj == null)
-      return false;
-    if (getClass() != obj.getClass())
-      return false;
-    Member other = (Member) obj;
-    if (date_registered == null) {
-      if (other.date_registered != null)
-        return false;
-    } else if (!date_registered.equals(other.date_registered))
-      return false;
-    if (email == null) {
-      if (other.email != null)
-        return false;
-    } else if (!email.equals(other.email))
-      return false;
-    if (firstname == null) {
-      if (other.firstname != null)
-        return false;
-    } else if (!firstname.equals(other.firstname))
-      return false;
-    if (id != other.id)
-      return false;
-    if (lastname == null) {
-      if (other.lastname != null)
-        return false;
-    } else if (!lastname.equals(other.lastname))
-      return false;
-    if (memberType == null) {
-      if (other.memberType != null)
-        return false;
-    } else if (!memberType.equals(other.memberType))
-      return false;
-    if (phone != other.phone)
-      return false;
-    if (timestamp_of_last_login == null) {
-      if (other.timestamp_of_last_login != null)
-        return false;
-    } else if (!timestamp_of_last_login.equals(other.timestamp_of_last_login))
-      return false;
-    return true;
+  public void setMemberCriteriaDataList(List<MemberCriteriaData> memberCriteriaDataList) {
+    this.memberCriteriaDataList = memberCriteriaDataList;
+  }
+
+  public List<MemberDomain> getMemberDomainMappings() {
+    return memberDomainMappings;
+  }
+
+  public void setMemberDomainMappings(List<MemberDomain> memberDomainMappings) {
+    this.memberDomainMappings = memberDomainMappings;
   }
 
   @Override
@@ -257,7 +215,8 @@ public class Member implements Serializable {
     return "Member [id=" + id + ", firstname=" + firstname + ", lastname=" + lastname + ", email=" + email + ", gender="
         + gender + ", phone=" + phone + ", password=" + password + ", memberType=" + memberType + ", date_registered="
         + date_registered + ", timestamp_of_last_login=" + timestamp_of_last_login + ", memberLoginControl="
-        + memberLoginControl + ", enabled=" + enabled + ", memberAddress=" + memberAddress + "]";
+        + memberLoginControl + ", enabled=" + enabled + ", memberAddress=" + memberAddress + ", memberCriteriaDataList="
+        + memberCriteriaDataList + ", memberDomainMappings=" + memberDomainMappings + "]";
   }
 
 }
