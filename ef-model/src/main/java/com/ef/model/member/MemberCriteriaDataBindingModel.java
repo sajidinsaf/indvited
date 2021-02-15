@@ -3,13 +3,13 @@ package com.ef.model.member;
 public class MemberCriteriaDataBindingModel {
 
   private int memberId;
-  private String criteriaMetadataName;
+  private int criteriaMetadataId;
   private int memberCriteriaValue;
 
-  public MemberCriteriaDataBindingModel(int memberId, String criteriaMetadataName, int memberCriteriaValue) {
+  public MemberCriteriaDataBindingModel(int memberId, int criteriaMetadataId, int memberCriteriaValue) {
     super();
     this.memberId = memberId;
-    this.criteriaMetadataName = criteriaMetadataName;
+    this.criteriaMetadataId = criteriaMetadataId;
     this.memberCriteriaValue = memberCriteriaValue;
   }
 
@@ -21,14 +21,6 @@ public class MemberCriteriaDataBindingModel {
     this.memberId = memberId;
   }
 
-  public String getCriteriaMetadataName() {
-    return criteriaMetadataName;
-  }
-
-  public void setCriteriaMetadataName(String criteriaMetadataName) {
-    this.criteriaMetadataName = criteriaMetadataName;
-  }
-
   public int getMemberCriteriaValue() {
     return memberCriteriaValue;
   }
@@ -37,9 +29,17 @@ public class MemberCriteriaDataBindingModel {
     this.memberCriteriaValue = memberCriteriaValue;
   }
 
+  public int getCriteriaMetadataId() {
+    return criteriaMetadataId;
+  }
+
+  public void setCriteriaMetadataId(int criteriaMetadataId) {
+    this.criteriaMetadataId = criteriaMetadataId;
+  }
+
   @Override
   public String toString() {
-    return "MemberCriteriaDataBindingModel [memberId=" + memberId + ", criteriaMetadataName=" + criteriaMetadataName
+    return "MemberCriteriaDataBindingModel [memberId=" + memberId + ", criteriaMetadataId=" + criteriaMetadataId
         + ", memberCriteriaValue=" + memberCriteriaValue + "]";
   }
 

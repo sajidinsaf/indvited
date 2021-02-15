@@ -45,7 +45,7 @@ public class InsertMemberCriteriaDataTest {
 
   private int memberCriteriaValue = new Random().nextInt(10000);
   private int memberId = new Random().nextInt(10000000);
-  private String criteriaMetadataName = "Minimum Zomato reviews";
+  private int criteriaMetadataId = 0;
 
   @SuppressWarnings("resource")
   @Before
@@ -64,13 +64,13 @@ public class InsertMemberCriteriaDataTest {
 
   @Test
   public void test() {
-    when(memberCriteriaDataBindingModel.getCriteriaMetadataName()).thenReturn(criteriaMetadataName);
+    when(memberCriteriaDataBindingModel.getCriteriaMetadataId()).thenReturn(criteriaMetadataId);
     when(memberCriteriaDataBindingModel.getMemberCriteriaValue()).thenReturn(memberCriteriaValue);
     when(memberCriteriaDataBindingModel.getMemberId()).thenReturn(memberId);
 
     MemberCriteriaData memberCriteriaData = insertMemberCriteriaData.data(memberCriteriaDataBindingModel);
 
-    String expectedId = memberId + "_" + 0;
+    String expectedId = memberId + "_" + criteriaMetadataId;
     assertThat(memberCriteriaData.getId(), Matchers.is(expectedId));
     assertThat(memberCriteriaData.getCriteriaMetadata().getId(), Matchers.is(0));
     assertThat(memberCriteriaData.getMemberCriteriaValue(), Matchers.is(memberCriteriaValue));

@@ -43,18 +43,11 @@ public class InsertMemberCriteriaData implements Insert<MemberCriteriaDataBindin
   @Override
   public MemberCriteriaData data(MemberCriteriaDataBindingModel input) {
 
-    EventCriteriaMetadata eventCriteriaMetadata = eventCriteriaMetadataCache
-        .getEventCriteria(input.getCriteriaMetadataName());
-
-    if (eventCriteriaMetadata == null) {
-      loggingUtil.debug(logger, "No criteria metadata found for criteria metadata name: ",
-          input.getCriteriaMetadataName());
-      return null;
-    }
-
     int memberId = input.getMemberId();
-    int criteriaMetaId = eventCriteriaMetadata.getId();
+    int criteriaMetaId = input.getCriteriaMetadataId();
+    EventCriteriaMetadata eventCriteriaMetadata = eventCriteriaMetadataCache.getEventCriteria(criteriaMetaId);
     int memberCriteriaValue = input.getMemberCriteriaValue();
+
     // The id is created as memberId_criteriaMetaId
     String id = new StringBuilder().append(memberId).append("_").append(criteriaMetaId).toString();
 
