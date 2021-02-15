@@ -9,7 +9,11 @@ import static org.mockito.MockitoAnnotations.openMocks;
 
 import java.text.SimpleDateFormat;
 import java.util.List;
+import java.util.Properties;
 
+import javax.mail.PasswordAuthentication;
+import javax.mail.Session;
+import javax.mail.internet.MimeMessage;
 import javax.sql.DataSource;
 
 import org.junit.After;
@@ -23,9 +27,15 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.datasource.embedded.EmbeddedDatabaseBuilder;
 import org.springframework.jdbc.datasource.embedded.EmbeddedDatabaseType;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.crypto.password.PasswordEncoder;
 
+import com.ef.common.Context;
+import com.ef.common.EmailSender;
 import com.ef.common.Strategy;
+import com.ef.common.message.Channel;
 import com.ef.common.message.Response;
+import com.ef.common.message.StatusCode;
 import com.ef.dataaccess.Insert;
 import com.ef.dataaccess.Query;
 import com.ef.dataaccess.config.DbTestUtils;
@@ -131,4 +141,59 @@ class HsqlDbConfigPREventScheduleControllerTest {
         .addScript("classpath:com/ef/dataaccess/event/schedule/insertEventScheduleTimeslotData.sql").build();
   }
 
+  @Bean
+  public PasswordEncoder encoder() {
+    return new BCryptPasswordEncoder();
+  }
+
+  public EmailSender<MimeMessage, String> mailSender() {
+    EmailSender<MimeMessage, String> sender = new EmailSender<MimeMessage, String>() {
+
+      @Override
+      public Response<String> send(MimeMessage message) {
+        return new Response<String>("success", StatusCode.OK);
+      }
+    };
+
+    return sender;
+  }
+
+  private Session mailSession() {
+    final String username = "indvited@codeczar.co.uk";// change accordingly
+    final String password = "@SilverGun95@";// change accordingly
+
+    // Assuming you are sending email through relay.jangosmtp.net
+    String host = "mail.codeczar.co.uk";
+
+    Properties props = new Properties();
+    props.put("mail.smtp.auth", "true");
+    props.put("mail.smtp.starttls.enable", "true");
+    props.put("mail.smtp.host", host);
+    props.put("mail.smtp.port", "465");
+
+    // Get the Session object.
+    Session session = Session.getInstance(props, new javax.mail.Authenticator() {
+      protected PasswordAuthentication getPasswordAuthentication() {
+        return new PasswordAuthentication(username, password);
+      }
+    });
+
+    return session;
+  }
+
+  @Bean
+  public Channel eventSubscriptionChannel() {
+    return new Channel() {
+
+      @Override
+      public Long publish(String message, Context context) {
+        return (long) message.length();
+      }
+
+      @Override
+      public String getName() {
+        return Channel.class.getName();
+      }
+    };
+  }
 }

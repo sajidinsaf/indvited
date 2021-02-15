@@ -38,7 +38,7 @@ public class PREventScheduleSubscriptionTest {
 
   private long eventSubscriptionTimeslotId = new Random(10000000).nextLong();
   private int subscriberId = new Random(100000).nextInt();
-  private int priority = new Random(5).nextInt();
+  private String preferredTime = "1400";
 
   @SuppressWarnings({ "resource" })
   @Before
@@ -59,13 +59,13 @@ public class PREventScheduleSubscriptionTest {
   public void shouldInsertScheduleSuccessfullyWithOneTimeSlotWhenIsAllDayTrue() {
 
     prEventScheduleSubscriptionBindingModel = new PREventScheduleSubscriptionBindingModel(eventSubscriptionTimeslotId,
-        subscriberId, priority);
+        subscriberId, preferredTime);
 
     EventScheduleSubscription result = insertPREventScheduleSubscription.data(prEventScheduleSubscriptionBindingModel);
 
-    assertThat(result.getEventSubscriptionTimeslotId(), is(eventSubscriptionTimeslotId));
+    assertThat(result.getScheduleSubscriptionId(), is(eventSubscriptionTimeslotId));
     assertThat(result.getSubscriberId(), is(subscriberId));
-    assertThat(result.getPriority(), is(priority));
+    assertThat(result.getPreferredTime(), is(preferredTime));
     assertThat(result.getEventStatus().getId(), is(EventStatusMeta.KNOWN_STATUS_ID_APPLIED));
   }
 

@@ -59,9 +59,7 @@ public class PREventScheduleSubscriptionControllerTest {
   @Mock
   private Member member;
 
-  private StatusCode statusCode;
-
-  @SuppressWarnings("unchecked")
+  @SuppressWarnings({ "unchecked", "resource" })
   @Before
   public void setUp() throws Exception {
     openMocks(this);
@@ -79,38 +77,39 @@ public class PREventScheduleSubscriptionControllerTest {
     jdbcTemplate.execute("DROP SCHEMA PUBLIC CASCADE");
   }
 
+  @SuppressWarnings("unchecked")
   @Test
   public void shouldPersistAndGetScheduleSubscriptionList() throws Exception {
 
-    long eventScheduleTimeslotId = new Random().nextInt(10000000);
+    long eventScheduleId = new Random().nextInt(10000000);
     int subscriberId = new Random().nextInt(100000);
-    int priority = new Random().nextInt(5);
+    String preferredTime = "2000";
 
-    PREventScheduleSubscriptionBindingModel a = new PREventScheduleSubscriptionBindingModel(eventScheduleTimeslotId,
-        subscriberId, priority);
+    PREventScheduleSubscriptionBindingModel a = new PREventScheduleSubscriptionBindingModel(eventScheduleId,
+        subscriberId, preferredTime);
 
-    eventScheduleTimeslotId = new Random().nextInt(10000000);
+    eventScheduleId = new Random().nextInt(10000000);
     subscriberId = new Random().nextInt(100000);
-    priority = new Random().nextInt(5);
+    preferredTime = "1600";
 
-    PREventScheduleSubscriptionBindingModel b = new PREventScheduleSubscriptionBindingModel(eventScheduleTimeslotId,
-        subscriberId, priority);
+    PREventScheduleSubscriptionBindingModel b = new PREventScheduleSubscriptionBindingModel(eventScheduleId,
+        subscriberId, preferredTime);
 
-    eventScheduleTimeslotId = new Random().nextInt(10000000);
+    eventScheduleId = new Random().nextInt(10000000);
     subscriberId = new Random().nextInt(100000);
-    priority = new Random().nextInt(5);
+    preferredTime = "1200";
 
-    PREventScheduleSubscriptionBindingModel c = new PREventScheduleSubscriptionBindingModel(eventScheduleTimeslotId,
-        subscriberId, priority);
+    PREventScheduleSubscriptionBindingModel c = new PREventScheduleSubscriptionBindingModel(eventScheduleId,
+        subscriberId, preferredTime);
 
     ResponseEntity<?> response = controller
         .addEventScheduleSubscriptions(new PREventScheduleSubscriptionBindingModel[] { a, b, c }, httpServletRequest);
 
     List<EventScheduleSubscription> subscriptions = (List<EventScheduleSubscription>) response.getBody();
     assertThat(subscriptions.size(), is(3));
-    assertThat(subscriptions.get(0).getEventSubscriptionTimeslotId(), is(a.getEventSubscriptionTimeslotId()));
+    assertThat(subscriptions.get(0).getScheduleSubscriptionId(), is(a.getScheduleSubscriptionId()));
     assertThat(subscriptions.get(1).getSubscriberId(), is(b.getSubscriberId()));
-    assertThat(subscriptions.get(2).getPriority(), is(c.getPriority()));
+    assertThat(subscriptions.get(2).getPreferredTime(), is(c.getPreferredTime()));
 
     assertThat(subscriptions.get(0).getEventStatus().getId(), is(EventStatusMeta.KNOWN_STATUS_ID_APPLIED));
     assertThat(subscriptions.get(1).getEventStatus().getId(), is(EventStatusMeta.KNOWN_STATUS_ID_APPLIED));

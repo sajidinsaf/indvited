@@ -9,16 +9,16 @@ public class EventScheduleSubscription {
   private long id;
   private long eventSubscriptionTimeslotId;
   private int subscriberId;
-  private int priority;
+  private String preferredTime;
   private final EventStatusMeta eventStatus;
 
-  public EventScheduleSubscription(long id, long eventSubscriptionTimeslotId, int subscriberId, int priority,
+  public EventScheduleSubscription(long id, long eventSubscriptionTimeslotId, int subscriberId, String preferredTime,
       EventStatusMeta eventStatusMeta) {
     super();
     this.id = id;
     this.eventSubscriptionTimeslotId = eventSubscriptionTimeslotId;
     this.subscriberId = subscriberId;
-    this.priority = priority;
+    this.preferredTime = preferredTime;
     this.eventStatus = eventStatusMeta;
   }
 
@@ -26,13 +26,13 @@ public class EventScheduleSubscription {
     long eventScheduleTimeslotIdSubscriptionId = new Random(10000000).nextLong();
     long eventScheduleTimeslotId = new Random(10000000).nextLong();
     int subscriberId = new Random(100000).nextInt();
-    int priority = new Random(5).nextInt();
+    String preferredTime = "1200";
     int statusId = new Random(5).nextInt();
     String name = "statusName-" + statusId;
     String description = "statusDescription-" + eventScheduleTimeslotIdSubscriptionId;
     EventStatusMeta status = new EventStatusMeta(statusId, name, description);
     EventScheduleSubscription a = new EventScheduleSubscription(eventScheduleTimeslotIdSubscriptionId,
-        eventScheduleTimeslotId, subscriberId, priority, status);
+        eventScheduleTimeslotId, subscriberId, preferredTime, status);
 
 //      PREventTimeSlotBindingModel prEventTimeSlot1 = new PREventTimeSlotBindingModel();
 //      prEventTimeSlot1.setEventDate("15/01/2021");
@@ -57,11 +57,11 @@ public class EventScheduleSubscription {
     this.id = id;
   }
 
-  public long getEventSubscriptionTimeslotId() {
+  public long getScheduleSubscriptionId() {
     return eventSubscriptionTimeslotId;
   }
 
-  public void setEventSubscriptionTimeslotId(long eventSubscriptionTimeslotId) {
+  public void setScheduleSubscriptionId(long eventSubscriptionTimeslotId) {
     this.eventSubscriptionTimeslotId = eventSubscriptionTimeslotId;
   }
 
@@ -73,22 +73,30 @@ public class EventScheduleSubscription {
     this.subscriberId = subscriberId;
   }
 
-  public int getPriority() {
-    return priority;
-  }
-
-  public void setPriority(int priority) {
-    this.priority = priority;
-  }
-
   public EventStatusMeta getEventStatus() {
     return eventStatus;
+  }
+
+  public long getEventSubscriptionTimeslotId() {
+    return eventSubscriptionTimeslotId;
+  }
+
+  public void setEventSubscriptionTimeslotId(long eventSubscriptionTimeslotId) {
+    this.eventSubscriptionTimeslotId = eventSubscriptionTimeslotId;
+  }
+
+  public String getPreferredTime() {
+    return preferredTime;
+  }
+
+  public void setPreferredTime(String preferredTime) {
+    this.preferredTime = preferredTime;
   }
 
   @Override
   public String toString() {
     return "EventScheduleSubscription [id=" + id + ", eventSubscriptionTimeslotId=" + eventSubscriptionTimeslotId
-        + ", subscriberId=" + subscriberId + ", priority=" + priority + ", eventStatus=" + eventStatus + "]";
+        + ", subscriberId=" + subscriberId + ", preferredTime=" + preferredTime + ", eventStatus=" + eventStatus + "]";
   }
 
 }
