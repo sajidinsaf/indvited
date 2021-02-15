@@ -61,7 +61,7 @@ public class PREventScheduleControllerTest {
         .getBean("insertPrEventSchedule", Insert.class);
 
     Strategy<PREventPublisherContext, Response<?>> prEventScheduleNowStrategy = appContext
-        .getBean("prEventScheduleNowStrategy", Strategy.class);
+        .getBean("prEventScheduleStrategy", Strategy.class);
 
     Query<Integer, List<PREventSchedule>> queryPREventScheduleListByEventId = appContext
         .getBean("queryPREventScheduleListByEventId", Query.class);

@@ -14,7 +14,7 @@ import com.ef.model.member.MemberCriteriaData;
 @Component(value = "queryMemberCriteriaDataById")
 public class QueryMemberCriteriaDataById implements Query<Pair<String, EventCriteriaMetadata>, MemberCriteriaData> {
 
-  private final String SELECT_MEMBER = "select id, member_id, criteria_meta_id, member_criteria_value from member_criteria_data where id=?";
+  private final String SELECT_MEMBER_CRITERIA_DATA = "select * from member_criteria_data where id=?";
 
   private final JdbcTemplate jdbcTemplate;
 
@@ -29,7 +29,7 @@ public class QueryMemberCriteriaDataById implements Query<Pair<String, EventCrit
 
     String memberCriteriaId = memberCriteriaIdAndEventCriteriaMetadataPair.getLeft();
     EventCriteriaMetadata eventCriteriaMetadata = memberCriteriaIdAndEventCriteriaMetadataPair.getRight();
-    MemberCriteriaData memberCriteriaData = jdbcTemplate.queryForObject(SELECT_MEMBER,
+    MemberCriteriaData memberCriteriaData = jdbcTemplate.queryForObject(SELECT_MEMBER_CRITERIA_DATA,
         new Object[] { memberCriteriaId }, new MemberCriteriaDataRowMapper(eventCriteriaMetadata));
     return memberCriteriaData;
   }

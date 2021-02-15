@@ -17,7 +17,7 @@ import com.ef.model.event.PREvent;
 import com.ef.model.event.PREventSchedule;
 import com.ef.model.event.PREventScheduleBindingModel;
 
-@Component("prEventScheduleNowStrategy")
+@Component("prEventScheduleStrategy")
 public class PREventSchedulingStrategy implements Strategy<PREventPublisherContext, Response<PREvent>> {
 
   private final Query<Integer, PREvent> queryPREventById;

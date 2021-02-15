@@ -43,17 +43,17 @@ public class PREventScheduleController {
 
   private final Insert<PREventScheduleBindingModel, EventScheduleResult> insertPrEventSchedule;
 
-  private final Strategy<PREventPublisherContext, Response<?>> prEventScheduleNowStrategy;
+  private final Strategy<PREventPublisherContext, Response<?>> prEventScheduleStrategy;
 
   private final Query<Integer, List<PREventSchedule>> queryPREventScheduleListByEventId;
 
   @Autowired
   public PREventScheduleController(
       @Qualifier("insertPrEventSchedule") Insert<PREventScheduleBindingModel, EventScheduleResult> insertPrEventSchedule,
-      @Qualifier("prEventScheduleNowStrategy") Strategy<PREventPublisherContext, Response<?>> prEventScheduleNowStrategy,
+      @Qualifier("prEventScheduleStrategy") Strategy<PREventPublisherContext, Response<?>> prEventScheduleStrategy,
       @Qualifier("queryPREventScheduleListByEventId") Query<Integer, List<PREventSchedule>> queryPREventScheduleListByEventId) {
     this.insertPrEventSchedule = insertPrEventSchedule;
-    this.prEventScheduleNowStrategy = prEventScheduleNowStrategy;
+    this.prEventScheduleStrategy = prEventScheduleStrategy;
     this.queryPREventScheduleListByEventId = queryPREventScheduleListByEventId;
   }
 
@@ -82,7 +82,7 @@ public class PREventScheduleController {
       context.put(PR_EVENT_SCHEDULE_PERSIST_RESULT, prEventScheduleResult);
 
       if (eventSchedule.getScheduleOnDate() == null) {
-        Response<?> publishResponse = prEventScheduleNowStrategy.apply(context);
+        Response<?> publishResponse = prEventScheduleStrategy.apply(context);
 
         if (publishResponse.getFailureReasons() != null && publishResponse.getFailureReasons().size() > 0) {
           return new ResponseEntity<List<String>>(publishResponse.getFailureReasons(), HttpStatus.PRECONDITION_FAILED);
