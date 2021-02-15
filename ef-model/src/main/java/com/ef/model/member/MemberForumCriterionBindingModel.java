@@ -51,27 +51,28 @@ public class MemberForumCriterionBindingModel {
       int zomatoReviewCount, boolean catDiet, boolean catFashion, boolean catHealth, boolean catHotel,
       boolean catLifestyle, boolean catRestaurant, boolean catBabyProducts, boolean catTravel, boolean catTechnology) {
     super();
-    this.memberId = memberId;
-    this.instagramUrl = instagramUrl;
-    this.zomatoUrl = zomatoUrl;
-    this.youtubeUrl = youtubeUrl;
-    this.instagramFollowerCount = instagramFollowerCount;
-    this.youtubeFollowerCount = youtubeFollowerCount;
-    this.zomatoLevel = zomatoLevel;
-    this.zomatoFollowerCount = zomatoFollowerCount;
-    this.zomatoReviewCount = zomatoReviewCount;
-    this.catDiet = catDiet;
-    this.catFashion = catFashion;
-    this.catHealth = catHealth;
-    this.catHotel = catHotel;
-    this.catLifestyle = catLifestyle;
-    this.catRestaurant = catRestaurant;
-    this.catBabyProducts = catBabyProducts;
-    this.catTravel = catTravel;
-    this.catTechnology = catTechnology;
     enabledDomainIds = new ArrayList<Integer>();
     criteriaValueMap = new HashMap<Integer, Integer>();
     memberForumUrls = new HashMap<Integer, String>();
+    setMemberId(memberId);
+    setInstagramUrl(instagramUrl);
+    setZomatoUrl(zomatoUrl);
+    setYoutubeUrl(youtubeUrl);
+    setInstagramFollowerCount(instagramFollowerCount);
+    setYoutubeFollowerCount(youtubeFollowerCount);
+    setZomatoLevel(zomatoLevel);
+    setZomatoFollowerCount(zomatoFollowerCount);
+    setZomatoReviewCount(zomatoReviewCount);
+    setCatDiet(catDiet);
+    setCatFashion(catFashion);
+    setCatHealth(catHealth);
+    setCatHotel(catHotel);
+    setCatLifestyle(catLifestyle);
+    setCatRestaurant(catRestaurant);
+    setCatBabyProducts(catBabyProducts);
+    setCatTravel(catTravel);
+    setCatTechnology(catTechnology);
+
   }
 
   public int getMemberId() {
