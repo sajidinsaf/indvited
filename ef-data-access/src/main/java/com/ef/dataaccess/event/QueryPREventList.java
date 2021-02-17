@@ -20,14 +20,17 @@ public class QueryPREventList implements Query<Integer, List<PREvent>> {
   private final JdbcTemplate jdbcTemplate;
   private final Query<Integer, EventVenue> queryVenue;
   private final Query<Integer, List<PREventSchedule>> queryPREventScheduleListByEventId;
+  private final EventTypeCache eventTypeCache;
 
   @Autowired
   public QueryPREventList(@Qualifier("indvitedDbJdbcTemplate") JdbcTemplate jdbcTemplate,
       @Qualifier("queryEventVenueById") Query<Integer, EventVenue> queryVenue,
-      @Qualifier("queryPREventScheduleListByEventId") Query<Integer, List<PREventSchedule>> queryPREventScheduleListByEventId) {
+      @Qualifier("queryPREventScheduleListByEventId") Query<Integer, List<PREventSchedule>> queryPREventScheduleListByEventId,
+      EventTypeCache eventTypeCache) {
     this.jdbcTemplate = jdbcTemplate;
     this.queryVenue = queryVenue;
     this.queryPREventScheduleListByEventId = queryPREventScheduleListByEventId;
+    this.eventTypeCache = eventTypeCache;
   }
 
   @Override
@@ -46,6 +49,8 @@ public class QueryPREventList implements Query<Integer, List<PREvent>> {
       List<PREventSchedule> eventSchedules = queryPREventScheduleListByEventId.data(event.getId());
 
       event.setSchedules(eventSchedules);
+
+      event.setEventType(eventTypeCache.getEventType(event.getEventTypeId()));
 
     }
 

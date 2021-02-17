@@ -4,24 +4,24 @@ import java.util.List;
 
 public class EventScheduleResult {
 
-  private final long scheduleId;
+  private final PREventSchedule schedule;
   private final long[] timeSlotIds;
   private final List<String> failureReasons;
 
-  public EventScheduleResult(long scheduleId, long[] timeSlotIds) {
-    this.scheduleId = scheduleId;
+  public EventScheduleResult(PREventSchedule schedule, long[] timeSlotIds) {
+    this.schedule = schedule;
     this.timeSlotIds = timeSlotIds;
     failureReasons = null;
   }
 
   public EventScheduleResult(List<String> failureReasons) {
     this.failureReasons = failureReasons;
-    scheduleId = -1;
+    schedule = null;
     timeSlotIds = new long[0];
   }
 
-  public long getScheduleId() {
-    return scheduleId;
+  public PREventSchedule getSchedule() {
+    return schedule;
   }
 
   public List<String> getFailureReasons() {

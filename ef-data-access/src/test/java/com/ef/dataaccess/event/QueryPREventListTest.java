@@ -1,6 +1,7 @@
 package com.ef.dataaccess.event;
 
 import static org.hamcrest.Matchers.is;
+import static org.hamcrest.Matchers.notNullValue;
 import static org.junit.Assert.assertThat;
 
 import java.text.ParseException;
@@ -52,7 +53,8 @@ public class QueryPREventListTest {
     assertThat(events.get(0).getEventVenue().getName(), is("Esora"));
     assertThat(events.get(0).getSchedules().size(), is(2));
     assertThat(events.get(1).getSchedules().size(), is(0));
-    System.out.println(events.get(0).getSchedules().get(0));
+    assertThat(events.get(0).getEventType(), notNullValue());
+    assertThat(events.get(0).getEventType().getId(), is(events.get(0).getEventTypeId()));
   }
 
 }
@@ -72,7 +74,8 @@ class HsqlDbConfigQueryPREventListTest {
     return new DbTestUtils().addCreateScripts(embeddedDatabaseBuilder)
         .addScript("classpath:com/ef/dataaccess/event/insertEventData.sql")
         .addScript("classpath:com/ef/dataaccess/event/insertVenueData.sql")
-        .addScript("classpath:com/ef/dataaccess/event/insertEventScheduleDataForQueryPREventListTest.sql").build();
+        .addScript("classpath:com/ef/dataaccess/event/insertEventScheduleDataForQueryPREventListTest.sql")
+        .addScript("classpath:com/ef/dataaccess/event/insertEventTypeData.sql").build();
 
   }
 

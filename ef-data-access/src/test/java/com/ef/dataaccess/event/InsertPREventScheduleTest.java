@@ -80,7 +80,7 @@ public class InsertPREventScheduleTest {
 
     EventScheduleResult result = insertPREventSchedule.data(scheduleData);
 
-    assertThat(result.getScheduleId(), is(0L));
+    assertThat(result.getSchedule().getId(), is(0L));
     assertThat(result.getTimeSlotIds().length, is(0));
   }
 
@@ -101,7 +101,7 @@ public class InsertPREventScheduleTest {
 
     EventScheduleResult result = insertPREventSchedule.data(scheduleData);
 
-    assertThat(result.getScheduleId(), is(0L));
+    assertThat(result.getSchedule().getId(), is(0L));
     assertThat(result.getTimeSlotIds().length, is(0));
 
   }

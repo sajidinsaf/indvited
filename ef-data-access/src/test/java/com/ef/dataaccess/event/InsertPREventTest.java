@@ -49,7 +49,7 @@ public class InsertPREventTest {
   private PREventBindingModel eventData;
 
   private int memberId = 0;
-  private int eventType = 0;
+  private int eventType = 1;
   private String domainName = "Restaurant";
   private PREventTimeSlotBindingModel[] prEventTimeSlotBindingModel = new PREventTimeSlotBindingModel[] {
       new PREventTimeSlotBindingModel("1400", "1800"), new PREventTimeSlotBindingModel("1200", "1700") };

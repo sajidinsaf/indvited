@@ -90,7 +90,7 @@ public class PREventScheduleController {
 
         return new ResponseEntity(publishResponse.getResponseResult(), HttpStatus.OK);
       } else {
-        return new ResponseEntity("Even scheduled with id: " + prEventScheduleResult.getScheduleId(), HttpStatus.OK);
+        return new ResponseEntity("Even scheduled: " + prEventScheduleResult.getSchedule(), HttpStatus.OK);
       }
     } catch (RuntimeException e) {
       logUtil.exception(logger, e, "Input Data: ", eventSchedule);

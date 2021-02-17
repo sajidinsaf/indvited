@@ -1,6 +1,6 @@
 package com.ef.eventservice.scheduler;
 
-import static com.ef.eventservice.controller.EventControllerConstants.PR_EVENT_SCHEDULE_BINDING_MODEL;
+import static com.ef.eventservice.controller.EventControllerConstants.PR_EVENT_SCHEDULE_PERSIST_RESULT;
 
 import java.util.List;
 
@@ -13,9 +13,9 @@ import com.ef.common.message.Response;
 import com.ef.common.message.StatusCode;
 import com.ef.dataaccess.Query;
 import com.ef.eventservice.publisher.PREventPublisherContext;
+import com.ef.model.event.EventScheduleResult;
 import com.ef.model.event.PREvent;
 import com.ef.model.event.PREventSchedule;
-import com.ef.model.event.PREventScheduleBindingModel;
 
 @Component("prEventScheduleStrategy")
 public class PREventSchedulingStrategy implements Strategy<PREventPublisherContext, Response<PREvent>> {
@@ -33,9 +33,9 @@ public class PREventSchedulingStrategy implements Strategy<PREventPublisherConte
   @Override
   public Response<PREvent> apply(PREventPublisherContext context) {
 
-    PREventScheduleBindingModel eventScheduleBindingModel = context.get(PR_EVENT_SCHEDULE_BINDING_MODEL);
+    EventScheduleResult prEventScheduleResult = context.get(PR_EVENT_SCHEDULE_PERSIST_RESULT);
 
-    int eventId = eventScheduleBindingModel.getEventId();
+    int eventId = prEventScheduleResult.getSchedule().getEventId();
 
     PREvent prEvent = queryPREventById.data(eventId);
 

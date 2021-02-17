@@ -1,1 +1,1 @@
-insert into event_type(name, domain_id) values ('Restaurant Review', 1);
+insert into event_type(id, name, domain_id) values (1, 'Restaurant Review', 1);

@@ -20,8 +20,10 @@ import org.springframework.stereotype.Component;
 
 import com.ef.common.logging.ServiceLoggingUtil;
 import com.ef.dataaccess.Insert;
+import com.ef.dataaccess.Query;
 import com.ef.model.event.EventScheduleResult;
 import com.ef.model.event.EventTimeslot;
+import com.ef.model.event.PREventSchedule;
 import com.ef.model.event.PREventScheduleBindingModel;
 import com.ef.model.event.PREventTimeSlotBindingModel;
 
@@ -45,9 +47,13 @@ public class InsertPREventSchedule implements Insert<PREventScheduleBindingModel
 
   private final JdbcTemplate jdbcTemplate;
 
+  private final Query<Long, PREventSchedule> queryEventScheduleById;
+
   @Autowired
-  public InsertPREventSchedule(@Qualifier("indvitedDbJdbcTemplate") JdbcTemplate jdbcTemplate) {
+  public InsertPREventSchedule(@Qualifier("indvitedDbJdbcTemplate") JdbcTemplate jdbcTemplate,
+      @Qualifier("queryEventScheduleById") Query<Long, PREventSchedule> queryEventScheduleById) {
     this.jdbcTemplate = jdbcTemplate;
+    this.queryEventScheduleById = queryEventScheduleById;
 
   }
 
@@ -75,7 +81,9 @@ public class InsertPREventSchedule implements Insert<PREventScheduleBindingModel
 
     // long[] eventTimeSlotIds = insertEventTimeSlots(input, scheduleId);
 
-    EventScheduleResult scheduleResult = new EventScheduleResult(scheduleId, new long[] {});
+    PREventSchedule schedule = queryEventScheduleById.data(scheduleId);
+
+    EventScheduleResult scheduleResult = new EventScheduleResult(schedule, new long[] {});
 
     return scheduleResult;
   }
