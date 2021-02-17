@@ -125,7 +125,7 @@ public class PREventBindingModel {
 
   public void setMinZomatoReviews(int minZomatoReviews) {
     if (minZomatoReviews > 0) {
-      eventCriteria.add(new PREventCriteriaBindingModel("Mininum Zomato reviews", minZomatoReviews));
+      eventCriteria.add(new PREventCriteriaBindingModel("Minimum Zomato reviews", minZomatoReviews));
     }
     this.minZomatoReviews = minZomatoReviews;
   }

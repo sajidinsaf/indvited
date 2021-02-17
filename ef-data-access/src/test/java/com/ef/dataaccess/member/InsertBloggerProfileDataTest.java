@@ -89,7 +89,7 @@ public class InsertBloggerProfileDataTest {
 
     List<MemberDomain> memberDomainList = member.getMemberDomainMappings();
     assertThat(memberDomainList.size(), is(9));
-    System.out.println(memberDomainList);
+
   }
 
 }

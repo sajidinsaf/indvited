@@ -25,7 +25,7 @@ public class InsertMemberCriteriaData implements Insert<MemberCriteriaDataBindin
 
   private final ServiceLoggingUtil loggingUtil = new ServiceLoggingUtil();
   private final String INSERT_STATEMENT = "INSERT INTO member_criteria_data(id, member_id, criteria_meta_id, member_criteria_value) VALUES (?,?,?,?) ";
-  private final String UPDATE_STATEMENT = "UPDATE member_criteria_data SET (member_id, criteria_meta_id, member_criteria_value,timestamp_of_last_update) VALUES (?,?,?,?) where id=?";
+  private final String UPDATE_STATEMENT = "UPDATE member_criteria_data SET criteria_meta_id=?, member_criteria_value=?, timestamp_of_last_update=? where id=?";
 
   private final JdbcTemplate jdbcTemplate;
   private final EventCriteriaMetadataCache eventCriteriaMetadataCache;
@@ -57,8 +57,8 @@ public class InsertMemberCriteriaData implements Insert<MemberCriteriaDataBindin
 
       queryMemberCriteriaDataById.data(memberCriteriaIdAndEventCriteriaMetadataPair);
       // update if the entry for this memberId_criteriaId exists in the database
-      jdbcTemplate.update(UPDATE_STATEMENT, new Object[] { memberId, criteriaMetaId, memberCriteriaValue, id,
-          new java.sql.Timestamp(System.currentTimeMillis()) });
+      jdbcTemplate.update(UPDATE_STATEMENT,
+          new Object[] { criteriaMetaId, memberCriteriaValue, new java.sql.Timestamp(System.currentTimeMillis()), id });
     } catch (EmptyResultDataAccessException e) {
       jdbcTemplate.update(INSERT_STATEMENT, new Object[] { id, memberId, criteriaMetaId, memberCriteriaValue });
     }

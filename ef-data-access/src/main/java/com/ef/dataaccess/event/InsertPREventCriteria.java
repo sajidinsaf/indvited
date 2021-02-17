@@ -50,14 +50,15 @@ public class InsertPREventCriteria implements Insert<Pair<PREventBindingModel, P
     int count = 0;
     for (PREventCriteriaBindingModel eventCriteriaModel : eventCriteriaModelList) {
       int eventId = input.getRight().getId();
-      EventCriteriaMetadata criteriaMetaData = eventCriteriaMetadataCache
-          .getEventCriteria(eventCriteriaModel.getCriterionName());
+      String criteriaName = eventCriteriaModel.getCriterionName();
+
+      EventCriteriaMetadata criteriaMetaData = eventCriteriaMetadataCache.getEventCriteria(criteriaName);
 
       int criteriaId = DEFAULT_CRITERIA_ID_WHEN_METADATA_NOT_FOUND;
-      String criteriaName = eventCriteriaModel.getCriterionName();
+
       if (criteriaMetaData == null) {
-        loggingUtil.warn(logger, "Event criteria metadata not found for: ", eventCriteriaModel.getCriterionName(),
-            "criteria id will be set to ", criteriaId);
+        loggingUtil.warn(logger, "Event criteria metadata not found for: ", criteriaName,
+            ". Criteria id will be set to ", criteriaId + " [" + eventCriteriaMetadataCache + "]");
       } else {
         criteriaId = criteriaMetaData.getId();
       }

@@ -196,7 +196,7 @@ public class PREvent implements Event {
 
   @Override
   public String getDescription() {
-    return eventType.getName();
+    return eventType != null ? eventType.getName() : id + "";
   }
 
 }
