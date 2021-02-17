@@ -10,6 +10,7 @@ import org.springframework.stereotype.Component;
 import com.ef.dataaccess.Query;
 import com.ef.model.event.EventVenue;
 import com.ef.model.event.PREvent;
+import com.ef.model.event.PREventSchedule;
 
 @Component(value = "queryPREventList")
 public class QueryPREventList implements Query<Integer, List<PREvent>> {
@@ -18,12 +19,15 @@ public class QueryPREventList implements Query<Integer, List<PREvent>> {
 
   private final JdbcTemplate jdbcTemplate;
   private final Query<Integer, EventVenue> queryVenue;
+  private final Query<Integer, List<PREventSchedule>> queryPREventScheduleListByEventId;
 
   @Autowired
   public QueryPREventList(@Qualifier("indvitedDbJdbcTemplate") JdbcTemplate jdbcTemplate,
-      @Qualifier("queryEventVenueById") Query<Integer, EventVenue> queryVenue) {
+      @Qualifier("queryEventVenueById") Query<Integer, EventVenue> queryVenue,
+      @Qualifier("queryPREventScheduleListByEventId") Query<Integer, List<PREventSchedule>> queryPREventScheduleListByEventId) {
     this.jdbcTemplate = jdbcTemplate;
     this.queryVenue = queryVenue;
+    this.queryPREventScheduleListByEventId = queryPREventScheduleListByEventId;
   }
 
   @Override
@@ -39,7 +43,12 @@ public class QueryPREventList implements Query<Integer, List<PREvent>> {
       EventVenue eventVenue = queryVenue.data(event.getEventVenueId());
       event.setEventVenue(eventVenue);
 
+      List<PREventSchedule> eventSchedules = queryPREventScheduleListByEventId.data(event.getId());
+
+      event.setSchedules(eventSchedules);
+
     }
+
     return events;
   }
 

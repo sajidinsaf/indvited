@@ -16,7 +16,7 @@ import com.ef.model.member.Member;
 import com.ef.model.member.MemberCriteriaData;
 
 @Component(value = "querySubscriberByCriteria")
-public class QuerySubscriberByCriteria implements Query<EventCriteria, List<Member>> {
+public class QuerySubscriberByCriteria implements Query<List<EventCriteria>, List<Member>> {
 
   private final String SELECT_EVENT = "select * from member";
 
@@ -34,7 +34,7 @@ public class QuerySubscriberByCriteria implements Query<EventCriteria, List<Memb
   }
 
   @Override
-  public List<Member> data(final EventCriteria eventCriteria) {
+  public List<Member> data(final List<EventCriteria> eventCriteria) {
 
     List<Member> members = jdbcTemplate.query(String.format(SELECT_EVENT),
         (rs, rowNum) -> new Member(rs.getInt("ID"), rs.getString("FIRSTNAME"), rs.getString("LASTNAME"),
