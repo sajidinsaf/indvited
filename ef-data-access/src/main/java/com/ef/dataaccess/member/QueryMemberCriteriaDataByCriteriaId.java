@@ -12,14 +12,14 @@ import com.ef.model.event.EventCriteriaMetadata;
 import com.ef.model.member.MemberCriteriaData;
 
 @Component(value = "queryMemberCriteriaDataById")
-public class QueryMemberCriteriaDataById implements Query<Pair<String, EventCriteriaMetadata>, MemberCriteriaData> {
+public class QueryMemberCriteriaDataByCriteriaId implements Query<Pair<String, EventCriteriaMetadata>, MemberCriteriaData> {
 
   private final String SELECT_MEMBER_CRITERIA_DATA = "select * from member_criteria_data where id=?";
 
   private final JdbcTemplate jdbcTemplate;
 
   @Autowired
-  public QueryMemberCriteriaDataById(@Qualifier("indvitedDbJdbcTemplate") JdbcTemplate jdbcTemplate) {
+  public QueryMemberCriteriaDataByCriteriaId(@Qualifier("indvitedDbJdbcTemplate") JdbcTemplate jdbcTemplate) {
     this.jdbcTemplate = jdbcTemplate;
 
   }

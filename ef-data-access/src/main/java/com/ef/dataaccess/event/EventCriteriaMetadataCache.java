@@ -51,4 +51,11 @@ public class EventCriteriaMetadataCache {
   public List<EventCriteriaMetadata> getEventCriteriaMetadataList() {
     return new ArrayList<EventCriteriaMetadata>(idToEventCriteriaMap.values());
   }
+
+  @Override
+  public String toString() {
+    return "eventCriterionNameToEventCriteriaMap=" + eventCriterionNameToEventCriteriaMap + ", idToEventCriteriaMap="
+        + idToEventCriteriaMap + "]";
+  }
+
 }

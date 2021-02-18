@@ -1,6 +1,6 @@
 package com.ef.eventservice.controller;
 
-import static com.ef.eventservice.controller.EventControllerConstants.GET_PR_SUBSCRIBER_ELIGIBLE_LIST;
+import static com.ef.eventservice.controller.EventControllerConstants.GET_SUBSCRIBER_ELIGIBLE_LIST_V1;
 
 import java.util.List;
 
@@ -18,7 +18,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import com.ef.common.logging.ServiceLoggingUtil;
 import com.ef.dataaccess.Query;
 import com.ef.eventservice.controller.util.PREventScheduleUtil;
-import com.ef.model.event.PREvent;
+import com.ef.model.event.PREventSchedule;
 
 /**
  * Handles requests for the event service.
@@ -29,22 +29,23 @@ public class SubscriberEventController {
   private static final Logger logger = LoggerFactory.getLogger(SubscriberEventController.class);
   private final ServiceLoggingUtil logUtil = new ServiceLoggingUtil();
 
-  private final Query<Integer, List<PREvent>> prEventListQuery;
+  private final Query<Integer, List<PREventSchedule>> queryEligibleSchedulesByBloggerProfile;
 
   @Autowired
-  public SubscriberEventController(@Qualifier("queryPREventList") Query<Integer, List<PREvent>> prEventListQuery,
+  public SubscriberEventController(
+      @Qualifier("queryEligibleSchedulesByBloggerProfile") Query<Integer, List<PREventSchedule>> queryEligibleSchedulesByBloggerProfile,
       PREventScheduleUtil prEventScheduleUtil) {
-    this.prEventListQuery = prEventListQuery;
+    this.queryEligibleSchedulesByBloggerProfile = queryEligibleSchedulesByBloggerProfile;
   }
 
-  @GetMapping(GET_PR_SUBSCRIBER_ELIGIBLE_LIST)
+  @GetMapping(GET_SUBSCRIBER_ELIGIBLE_LIST_V1)
   @ResponseBody
   public ResponseEntity<?> getBloggerEligibleEventList(@RequestParam Integer bloggerId) {
 
-    List<PREvent> events = prEventListQuery.data(bloggerId);
+    List<PREventSchedule> events = queryEligibleSchedulesByBloggerProfile.data(bloggerId);
     logUtil.debug(logger, "Returning ", events.size(), " events for member id ", bloggerId);
 
-    return new ResponseEntity<List<PREvent>>(events, HttpStatus.OK);
+    return new ResponseEntity<List<PREventSchedule>>(events, HttpStatus.OK);
   }
 
 }

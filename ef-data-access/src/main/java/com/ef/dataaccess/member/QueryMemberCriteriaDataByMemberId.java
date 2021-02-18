@@ -14,7 +14,7 @@ import com.ef.model.member.MemberCriteriaData;
 @Component(value = "queryMemberCriteriaDataByMemberId")
 public class QueryMemberCriteriaDataByMemberId implements Query<Integer, List<MemberCriteriaData>> {
 
-  private final String SELECT_MEMBER_CRITERIA_DATA = "select * from member_criteria_data where member_id=?";
+  private final String SELECT_MEMBER_CRITERIA_DATA = "select * from member_criteria_data where member_id=%d";
 
   private final JdbcTemplate jdbcTemplate;
   private final EventCriteriaMetadataCache eventCriteriaMetadataCache;
@@ -30,11 +30,13 @@ public class QueryMemberCriteriaDataByMemberId implements Query<Integer, List<Me
   @Override
   public List<MemberCriteriaData> data(Integer memberId) {
 
-    List<MemberCriteriaData> memberCriteriaDataList = jdbcTemplate.query(String.format(SELECT_MEMBER_CRITERIA_DATA),
+    List<MemberCriteriaData> memberCriteriaDataList = jdbcTemplate.query(
+        String.format(SELECT_MEMBER_CRITERIA_DATA, memberId),
         (rs, rowNum) -> new MemberCriteriaData(rs.getString("ID"), memberId,
-            eventCriteriaMetadataCache.getEventCriteria(rs.getInt("criteriaMetaId")),
+            eventCriteriaMetadataCache.getEventCriteria(rs.getInt("criteria_meta_id")),
             rs.getInt("member_criteria_value")));
-
+    System.out.println(eventCriteriaMetadataCache);
+    System.out.println(memberCriteriaDataList);
     return memberCriteriaDataList;
   }
 

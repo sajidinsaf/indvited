@@ -15,7 +15,7 @@ import com.ef.model.event.EventCriteriaData;
 @Component(value = "queryEventCriteriaDataByEventId")
 public class QueryEventCriteriaDataByEventId implements Query<Integer, Map<Integer, EventCriteriaData>> {
 
-  private final String SELECT_EVENT_CRITERIA_DATA = "select * from event_criteria_data where event_id=?";
+  private final String SELECT_EVENT_CRITERIA_DATA = "select * from event_criteria_data where event_id=%d";
 
   private final JdbcTemplate jdbcTemplate;
 

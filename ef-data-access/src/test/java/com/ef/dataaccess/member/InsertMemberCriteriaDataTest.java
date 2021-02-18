@@ -45,7 +45,7 @@ public class InsertMemberCriteriaDataTest {
 
   private int memberCriteriaValue = new Random().nextInt(10000);
   private int memberId = new Random().nextInt(10000000);
-  private int criteriaMetadataId = 0;
+  private int criteriaMetadataId = 1;
 
   @SuppressWarnings("resource")
   @Before
@@ -72,7 +72,7 @@ public class InsertMemberCriteriaDataTest {
 
     String expectedId = memberId + "_" + criteriaMetadataId;
     assertThat(memberCriteriaData.getId(), Matchers.is(expectedId));
-    assertThat(memberCriteriaData.getCriteriaMetadata().getId(), Matchers.is(0));
+    assertThat(memberCriteriaData.getCriteriaMetadata().getId(), Matchers.is(1));
     assertThat(memberCriteriaData.getMemberCriteriaValue(), Matchers.is(memberCriteriaValue));
 
   }

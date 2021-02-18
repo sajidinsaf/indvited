@@ -90,7 +90,7 @@ public class QueryEligibleSchedulesByBloggerProfile implements Query<Integer, Li
 
     }
 
-    return schedules;
+    return eligibleSchedules;
   }
 
 }
