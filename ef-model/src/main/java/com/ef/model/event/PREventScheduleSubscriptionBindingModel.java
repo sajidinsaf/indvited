@@ -8,17 +8,19 @@ public class PREventScheduleSubscriptionBindingModel {
 
   private long scheduleSubscriptionId;
   private int subscriberId;
+  private String scheduleDate;
   private String preferredTime;
 
   public PREventScheduleSubscriptionBindingModel() {
     // TODO Auto-generated constructor stub
   }
 
-  public PREventScheduleSubscriptionBindingModel(long eventSubscriptionTimeslotId, int subscriberId,
+  public PREventScheduleSubscriptionBindingModel(long scheduleSubscriptionId, int subscriberId, String scheduleDate,
       String preferredTime) {
     super();
-    this.scheduleSubscriptionId = eventSubscriptionTimeslotId;
+    this.scheduleSubscriptionId = scheduleSubscriptionId;
     this.subscriberId = subscriberId;
+    this.scheduleDate = scheduleDate;
     this.preferredTime = preferredTime;
   }
 
@@ -42,9 +44,10 @@ public class PREventScheduleSubscriptionBindingModel {
     long eventScheduleSubscriptionId = new Random().nextInt(10000000);
     int subscriberId = new Random().nextInt(100000);
     String preferredTime = "1400";
+    String scheduleDateStr = "15/01/2021";
 
     PREventScheduleSubscriptionBindingModel a = new PREventScheduleSubscriptionBindingModel(eventScheduleSubscriptionId,
-        subscriberId, preferredTime);
+        subscriberId, scheduleDateStr, preferredTime);
 
     System.out.println(new Gson().toJson(a));
 
@@ -57,4 +60,20 @@ public class PREventScheduleSubscriptionBindingModel {
   public void setPreferredTime(String preferredTime) {
     this.preferredTime = preferredTime;
   }
+
+  public String getScheduleDate() {
+    return scheduleDate;
+  }
+
+  public void setScheduleDate(String scheduleDate) {
+    this.scheduleDate = scheduleDate;
+  }
+
+  @Override
+  public String toString() {
+    return "PREventScheduleSubscriptionBindingModel [scheduleSubscriptionId=" + scheduleSubscriptionId
+        + ", subscriberId=" + subscriberId + ", scheduleDate=" + scheduleDate + ", preferredTime=" + preferredTime
+        + "]";
+  }
+
 }

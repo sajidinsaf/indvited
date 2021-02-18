@@ -30,6 +30,7 @@ public class MemberRegistrationBindingModel implements CredentialBindingModel {
     this.email = email;
     this.phone = phone;
     this.memberType = memberType;
+    this.gender = gender;
 
   }
 

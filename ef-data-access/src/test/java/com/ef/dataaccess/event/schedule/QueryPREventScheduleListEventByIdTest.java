@@ -63,12 +63,12 @@ public class QueryPREventScheduleListEventByIdTest {
     assertThat(schedule.getEndDate().getTime(),
         is(new SimpleDateFormat("yyyy-mm-dd HH:mm:ss").parse("2080-01-30 00:00:00").getTime()));
     assertThat(schedule.isSunday(), is(false));
-    assertThat(schedule.isMonday(), is(true));
+    assertThat(schedule.isMonday(), is(false));
     assertThat(schedule.isTuesday(), is(true));
-    assertThat(schedule.isWednesday(), is(false));
-    assertThat(schedule.isThursday(), is(true));
+    assertThat(schedule.isWednesday(), is(true));
+    assertThat(schedule.isThursday(), is(false));
     assertThat(schedule.isFriday(), is(true));
-    assertThat(schedule.isSaturday(), is(false));
+    assertThat(schedule.isSaturday(), is(true));
     assertThat(schedule.isInnerCircle(), is(true));
     assertThat(schedule.isMyBloggers(), is(true));
     assertThat(schedule.isAllEligible(), is(false));

@@ -14,7 +14,7 @@ public class EventScheduleTimeslotSubscriptionStatus {
     this.eventTimeSlotSubscriptionStatus = eventTimeSlotSubscriptionStatus;
   }
 
-  public long getId() {
+  public long getEventId() {
     return id;
   }
 

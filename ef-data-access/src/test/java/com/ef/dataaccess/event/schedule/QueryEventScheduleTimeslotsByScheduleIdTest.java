@@ -12,7 +12,6 @@ import javax.sql.DataSource;
 
 import org.junit.After;
 import org.junit.Before;
-import org.junit.Test;
 import org.springframework.context.annotation.AnnotationConfigApplicationContext;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
@@ -48,7 +47,7 @@ public class QueryEventScheduleTimeslotsByScheduleIdTest {
     jdbcTemplate.execute("DROP SCHEMA PUBLIC CASCADE");
   }
 
-  @Test
+  // @Test
   public void shouldRetrieveScheduleTimeslotsSuccessfully() throws ParseException {
     long scheduleId = 1001L;
     List<EventTimeslot> timeSlots = queryEventScheduleTimeslotsByScheduleId.data(scheduleId);

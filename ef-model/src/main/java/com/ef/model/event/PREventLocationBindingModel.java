@@ -50,11 +50,11 @@ public class PREventLocationBindingModel {
     this.venueUrl = venueUrl;
   }
 
-  public int getId() {
+  public int getEventId() {
     return id;
   }
 
-  public void setId(int id) {
+  public void setEventId(int id) {
     this.id = id;
   }
 

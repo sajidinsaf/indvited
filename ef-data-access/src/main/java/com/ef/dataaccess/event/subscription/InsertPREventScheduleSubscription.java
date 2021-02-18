@@ -1,6 +1,7 @@
 package com.ef.dataaccess.event.subscription;
 
 import java.sql.Connection;
+import java.sql.Date;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
 import java.sql.Statement;
@@ -17,6 +18,7 @@ import org.springframework.stereotype.Component;
 import com.ef.common.logging.ServiceLoggingUtil;
 import com.ef.dataaccess.Insert;
 import com.ef.dataaccess.event.EventStatusMetaCache;
+import com.ef.dataaccess.event.InsertPREventSchedule;
 import com.ef.model.event.EventScheduleSubscription;
 import com.ef.model.event.EventStatusMeta;
 import com.ef.model.event.PREventScheduleSubscriptionBindingModel;
@@ -28,7 +30,7 @@ public class InsertPREventScheduleSubscription
   private static final Logger logger = LoggerFactory.getLogger(InsertPREventScheduleSubscription.class);
   private final ServiceLoggingUtil logUtil = new ServiceLoggingUtil();
 
-  private final String INSERT_SCHEDULE_SUBSCRIPTION_STATEMENT = "INSERT INTO event_schedule_subscription (event_schedule_id, subscriber_id, preferred_time, status_id) VALUES (?,?,?,?)";
+  private final String INSERT_SCHEDULE_SUBSCRIPTION_STATEMENT = "INSERT INTO event_schedule_subscription (event_schedule_id, subscriber_id, schedule_date, preferred_time, status_id) VALUES (?,?,?,?,?)";
 
   private final JdbcTemplate jdbcTemplate;
 
@@ -58,8 +60,8 @@ public class InsertPREventScheduleSubscription
     logUtil.debug(logger, "created event schedule subscription with id", subscriptionId);
 
     EventScheduleSubscription eventScheduleSubscription = new EventScheduleSubscription(subscriptionId,
-        input.getScheduleSubscriptionId(), input.getSubscriberId(), input.getPreferredTime(),
-        eventStatusMetaCache.getEventStatusMeta(EventStatusMeta.KNOWN_STATUS_ID_APPLIED));
+        input.getScheduleSubscriptionId(), input.getSubscriberId(), getDate(input.getScheduleDate()),
+        input.getPreferredTime(), eventStatusMetaCache.getEventStatusMeta(EventStatusMeta.KNOWN_STATUS_ID_APPLIED));
 
     return eventScheduleSubscription;
   }
@@ -71,10 +73,14 @@ public class InsertPREventScheduleSubscription
         Statement.RETURN_GENERATED_KEYS);
     ps.setLong(1, input.getScheduleSubscriptionId());
     ps.setInt(2, input.getSubscriberId());
-    ps.setString(3, input.getPreferredTime());
-    ps.setInt(4, EventStatusMeta.KNOWN_STATUS_ID_APPLIED);
+    ps.setDate(3, getDate(input.getScheduleDate()));
+    ps.setString(4, input.getPreferredTime());
+    ps.setInt(5, EventStatusMeta.KNOWN_STATUS_ID_APPLIED);
 
     return ps;
   }
 
+  private Date getDate(String dateString) {
+    return InsertPREventSchedule.getDate(dateString, InsertPREventSchedule.DATE_FORMAT);
+  }
 }

@@ -38,6 +38,7 @@ public class PREventScheduleSubscriptionTest {
 
   private long eventSubscriptionTimeslotId = new Random(10000000).nextLong();
   private int subscriberId = new Random(100000).nextInt();
+  private String scheduleDate = "15/01/2021";
   private String preferredTime = "1400";
 
   @SuppressWarnings({ "resource" })
@@ -59,7 +60,7 @@ public class PREventScheduleSubscriptionTest {
   public void shouldInsertScheduleSuccessfullyWithOneTimeSlotWhenIsAllDayTrue() {
 
     prEventScheduleSubscriptionBindingModel = new PREventScheduleSubscriptionBindingModel(eventSubscriptionTimeslotId,
-        subscriberId, preferredTime);
+        subscriberId, scheduleDate, preferredTime);
 
     EventScheduleSubscription result = insertPREventScheduleSubscription.data(prEventScheduleSubscriptionBindingModel);
 

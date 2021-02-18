@@ -27,7 +27,7 @@ public class EventCriteria implements Identifiable {
     return id;
   }
 
-  public void setId(int id) {
+  public void setEventId(int id) {
     this.id = id;
   }
 
@@ -39,11 +39,11 @@ public class EventCriteria implements Identifiable {
     this.name = name;
   }
 
-  public int getCriteriValue() {
+  public int getCriterionValue() {
     return criteriValue;
   }
 
-  public void setCriteriValue(int criteriValue) {
+  public void setCriterionValue(int criteriValue) {
     this.criteriValue = criteriValue;
   }
 

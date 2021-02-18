@@ -8,7 +8,7 @@ import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Component;
 
 import com.ef.dataaccess.Query;
-import com.ef.model.event.EventTimeslot;
+import com.ef.model.event.EventScheduleSubscription;
 import com.ef.model.event.PREventSchedule;
 
 @Component(value = "queryPREventScheduleListByEventId")
@@ -17,13 +17,13 @@ public class QueryPREventScheduleListByEventId implements Query<Integer, List<PR
   private final String SELECT = "select * from event_schedule where event_id=%d";
 
   private final JdbcTemplate jdbcTemplate;
-  private final Query<Long, List<EventTimeslot>> queryEventScheduleTimeslotId;
+  private final Query<Long, List<EventScheduleSubscription>> queryEventScheduleSubscriptionByScheduleId;
 
   @Autowired
   public QueryPREventScheduleListByEventId(@Qualifier("indvitedDbJdbcTemplate") JdbcTemplate jdbcTemplate,
-      @Qualifier("queryEventScheduleTimeslotsByScheduleId") Query<Long, List<EventTimeslot>> queryEventScheduleTimeslotId) {
+      @Qualifier("queryEventScheduleSubscriptionByScheduleId") Query<Long, List<EventScheduleSubscription>> queryEventScheduleSubscriptionByScheduleId) {
     this.jdbcTemplate = jdbcTemplate;
-    this.queryEventScheduleTimeslotId = queryEventScheduleTimeslotId;
+    this.queryEventScheduleSubscriptionByScheduleId = queryEventScheduleSubscriptionByScheduleId;
   }
 
   @Override
@@ -38,8 +38,8 @@ public class QueryPREventScheduleListByEventId implements Query<Integer, List<PR
 
     for (PREventSchedule schedule : schedules) {
 
-      List<EventTimeslot> eventTimeslots = queryEventScheduleTimeslotId.data(schedule.getId());
-      schedule.setEventTimeSlots(eventTimeslots);
+      List<EventScheduleSubscription> subscriptions = queryEventScheduleSubscriptionByScheduleId.data(schedule.getId());
+      schedule.setSubscriptions(subscriptions);
 
     }
     return schedules;

@@ -1,7 +1,7 @@
 package com.ef.model.event;
 
+import java.time.DayOfWeek;
 import java.util.Arrays;
-import java.util.Calendar;
 
 import com.google.gson.Gson;
 
@@ -212,25 +212,25 @@ public class PREventScheduleBindingModel {
   public String getScheduledDaysOfTheWeekString() {
     StringBuilder sb = new StringBuilder();
     if (sunday) {
-      sb.append(Calendar.SUNDAY);
+      sb.append(DayOfWeek.SUNDAY.getValue());
     }
     if (monday) {
-      sb.append(sb.toString().equals("") ? "" : ",").append(Calendar.MONDAY);
+      sb.append(sb.toString().equals("") ? "" : ",").append(DayOfWeek.MONDAY.getValue());
     }
     if (tuesday) {
-      sb.append(sb.toString().equals("") ? "" : ",").append(Calendar.TUESDAY);
+      sb.append(sb.toString().equals("") ? "" : ",").append(DayOfWeek.TUESDAY.getValue());
     }
     if (wednesday) {
-      sb.append(sb.toString().equals("") ? "" : ",").append(Calendar.WEDNESDAY);
+      sb.append(sb.toString().equals("") ? "" : ",").append(DayOfWeek.WEDNESDAY.getValue());
     }
     if (thursday) {
-      sb.append(sb.toString().equals("") ? "" : ",").append(Calendar.THURSDAY);
+      sb.append(sb.toString().equals("") ? "" : ",").append(DayOfWeek.THURSDAY.getValue());
     }
     if (friday) {
-      sb.append(sb.toString().equals("") ? "" : ",").append(Calendar.FRIDAY);
+      sb.append(sb.toString().equals("") ? "" : ",").append(DayOfWeek.FRIDAY.getValue());
     }
     if (saturday) {
-      sb.append(sb.toString().equals("") ? "" : ",").append(Calendar.SATURDAY);
+      sb.append(sb.toString().equals("") ? "" : ",").append(DayOfWeek.SATURDAY.getValue());
     }
     return sb.toString();
   }

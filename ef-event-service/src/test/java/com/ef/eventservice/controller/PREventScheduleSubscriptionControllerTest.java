@@ -83,24 +83,25 @@ public class PREventScheduleSubscriptionControllerTest {
 
     long eventScheduleId = new Random().nextInt(10000000);
     int subscriberId = new Random().nextInt(100000);
+    String dateString = "15/01/2021";
     String preferredTime = "2000";
 
     PREventScheduleSubscriptionBindingModel a = new PREventScheduleSubscriptionBindingModel(eventScheduleId,
-        subscriberId, preferredTime);
+        subscriberId, dateString, preferredTime);
 
     eventScheduleId = new Random().nextInt(10000000);
     subscriberId = new Random().nextInt(100000);
     preferredTime = "1600";
 
     PREventScheduleSubscriptionBindingModel b = new PREventScheduleSubscriptionBindingModel(eventScheduleId,
-        subscriberId, preferredTime);
+        subscriberId, dateString, preferredTime);
 
     eventScheduleId = new Random().nextInt(10000000);
     subscriberId = new Random().nextInt(100000);
     preferredTime = "1200";
 
     PREventScheduleSubscriptionBindingModel c = new PREventScheduleSubscriptionBindingModel(eventScheduleId,
-        subscriberId, preferredTime);
+        subscriberId, dateString, preferredTime);
 
     ResponseEntity<?> response = controller
         .addEventScheduleSubscriptions(new PREventScheduleSubscriptionBindingModel[] { a, b, c }, httpServletRequest);

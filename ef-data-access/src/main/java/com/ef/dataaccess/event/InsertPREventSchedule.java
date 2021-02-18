@@ -30,11 +30,11 @@ import com.ef.model.event.PREventTimeSlotBindingModel;
 @Component("insertPrEventSchedule")
 public class InsertPREventSchedule implements Insert<PREventScheduleBindingModel, EventScheduleResult> {
 
-  private static final String DATE_FORMAT = System.getProperty("event.schedule.date.format") != null
+  public static final String DATE_FORMAT = System.getProperty("event.schedule.date.format") != null
       ? System.getProperty("event.schedule.date.format")
       : "dd/MM/yyyy";
 
-  private static final String TIME_FORMAT = System.getProperty("event.schedule.time.format") != null
+  public static final String TIME_FORMAT = System.getProperty("event.schedule.time.format") != null
       ? System.getProperty("event.schedule.time.format")
       : "HH.mm";
 
@@ -170,7 +170,7 @@ public class InsertPREventSchedule implements Insert<PREventScheduleBindingModel
     return new Timestamp(date.getTime());
   }
 
-  private Date getDate(String date, String dateFormat) {
+  public static Date getDate(String date, String dateFormat) {
 
     SimpleDateFormat format = new SimpleDateFormat(DATE_FORMAT);
     java.util.Date parsed = null;

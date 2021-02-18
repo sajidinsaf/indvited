@@ -110,7 +110,7 @@ public class InsertPREvent implements Insert<PREventBindingModel, PREvent> {
   private final PreparedStatement getInsertEventPreparedStatement(PREventBindingModel input, EventVenue eventVenue,
       Connection connection) throws SQLException {
     int memberId = input.getMemberId();
-    input.getEventLocation().setId(eventVenue.getId());
+    input.getEventLocation().setEventId(eventVenue.getId());
 
     Integer eventTypeId = getEventTypeId(input);
     logUtil.debug(logger, "EventType Id:", eventTypeId);

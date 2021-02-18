@@ -112,7 +112,7 @@ public class InsertPREventTest {
     assertThat(event.getEventVenue().getName(), is("Esora"));
     assertThat(event.getEventVenue().getId(), is(0));
 
-    assertThat(event.getEventCriteria()[0].getCriteriValue(), is(175));
+    assertThat(event.getEventCriteria()[0].getCriterionValue(), is(175));
     assertThat(event.getEventCriteria()[1].getName(), is("Minimum Instagram followers"));
 
     assertThat(event.getEventDeliverables()[0].getEventId(), is(event.getId()));

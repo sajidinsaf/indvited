@@ -1,5 +1,13 @@
 package com.ef.model.event;
 
+import static java.time.DayOfWeek.FRIDAY;
+import static java.time.DayOfWeek.MONDAY;
+import static java.time.DayOfWeek.SATURDAY;
+import static java.time.DayOfWeek.SUNDAY;
+import static java.time.DayOfWeek.THURSDAY;
+import static java.time.DayOfWeek.TUESDAY;
+import static java.time.DayOfWeek.WEDNESDAY;
+
 import java.sql.Date;
 import java.sql.Timestamp;
 import java.util.List;
@@ -14,8 +22,9 @@ public class PREventSchedule {
   private boolean innerCircle, myBloggers, allEligible;
   private int bloggersPerDay;
   private String scheduleTimeInfo;
+  private String daysOfTheWeek;
 
-  private List<EventTimeslot> eventTimeSlots;
+  private List<EventScheduleSubscription> subscriptions;
 
   public PREventSchedule() {
 
@@ -28,13 +37,14 @@ public class PREventSchedule {
     this.eventId = eventId;
     this.startDate = startDate;
     this.endDate = endDate;
-    this.monday = daysOfTheWeek.contains("2");
-    this.tuesday = daysOfTheWeek.contains("3");
-    this.wednesday = daysOfTheWeek.contains("4");
-    this.thursday = daysOfTheWeek.contains("5");
-    this.friday = daysOfTheWeek.contains("6");
-    this.saturday = daysOfTheWeek.contains("7");
-    this.sunday = daysOfTheWeek.contains("1");
+    this.daysOfTheWeek = daysOfTheWeek;
+    this.monday = daysOfTheWeek.contains(String.valueOf(MONDAY.getValue()));
+    this.tuesday = daysOfTheWeek.contains(String.valueOf(TUESDAY.getValue()));
+    this.wednesday = daysOfTheWeek.contains(String.valueOf(WEDNESDAY.getValue()));
+    this.thursday = daysOfTheWeek.contains(String.valueOf(THURSDAY.getValue()));
+    this.friday = daysOfTheWeek.contains(String.valueOf(FRIDAY.getValue()));
+    this.saturday = daysOfTheWeek.contains(String.valueOf(SATURDAY.getValue()));
+    this.sunday = daysOfTheWeek.contains(String.valueOf(SUNDAY.getValue()));
     this.innerCircle = innerCircle;
     this.myBloggers = myBloggers;
     this.allEligible = allEligible;
@@ -44,14 +54,6 @@ public class PREventSchedule {
     this.bloggersPerDay = bloggersPerDay;
     this.scheduleTimeInfo = scheduleTimeInfo;
 
-  }
-
-  public List<EventTimeslot> getEventTimeSlots() {
-    return eventTimeSlots;
-  }
-
-  public void setEventTimeSlots(List<EventTimeslot> eventTimeSlots) {
-    this.eventTimeSlots = eventTimeSlots;
   }
 
   public int getEventId() {
@@ -206,6 +208,23 @@ public class PREventSchedule {
     this.scheduleTimeInfo = scheduleTimeInfo;
   }
 
+  public String getDaysOfTheWeek() {
+    return daysOfTheWeek;
+  }
+
+  public void setDaysOfTheWeek(String daysOfTheWeek) {
+    this.daysOfTheWeek = daysOfTheWeek;
+
+  }
+
+  public List<EventScheduleSubscription> getSubscriptions() {
+    return subscriptions;
+  }
+
+  public void setSubscriptions(List<EventScheduleSubscription> subscriptions) {
+    this.subscriptions = subscriptions;
+  }
+
   @Override
   public String toString() {
     return "PREventSchedule [eventId=" + eventId + ", id=" + id + ", startDate=" + startDate + ", endDate=" + endDate
@@ -213,8 +232,8 @@ public class PREventSchedule {
         + publishedOnTimestamp + ", monday=" + monday + ", tuesday=" + tuesday + ", wednesday=" + wednesday
         + ", thursday=" + thursday + ", friday=" + friday + ", saturday=" + saturday + ", sunday=" + sunday
         + ", innerCircle=" + innerCircle + ", myBloggers=" + myBloggers + ", allEligible=" + allEligible
-        + ", bloggersPerDay=" + bloggersPerDay + ", scheduleTimeInfo=" + scheduleTimeInfo + ", eventTimeSlots="
-        + eventTimeSlots + "]";
+        + ", bloggersPerDay=" + bloggersPerDay + ", scheduleTimeInfo=" + scheduleTimeInfo + ", subscriptions="
+        + subscriptions + "]";
   }
 
 }

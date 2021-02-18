@@ -1,7 +1,6 @@
 package com.ef.eventservice.controller;
 
-import static com.ef.eventservice.controller.EventControllerConstants.GET_PR_EVENT_LIST;
-import static com.ef.eventservice.controller.EventControllerConstants.GET_PR_EVENT_LIST_BY_DATE;
+import static com.ef.eventservice.controller.EventControllerConstants.GET_PR_SUBSCRIBER_ELIGIBLE_LIST;
 
 import java.util.List;
 
@@ -25,36 +24,27 @@ import com.ef.model.event.PREvent;
  * Handles requests for the event service.
  */
 @Controller
-public class EventController {
+public class SubscriberEventController {
 
-  private static final Logger logger = LoggerFactory.getLogger(EventController.class);
+  private static final Logger logger = LoggerFactory.getLogger(SubscriberEventController.class);
   private final ServiceLoggingUtil logUtil = new ServiceLoggingUtil();
 
   private final Query<Integer, List<PREvent>> prEventListQuery;
 
   @Autowired
-  public EventController(@Qualifier("queryPREventList") Query<Integer, List<PREvent>> prEventListQuery,
+  public SubscriberEventController(@Qualifier("queryPREventList") Query<Integer, List<PREvent>> prEventListQuery,
       PREventScheduleUtil prEventScheduleUtil) {
     this.prEventListQuery = prEventListQuery;
   }
 
-  @GetMapping(GET_PR_EVENT_LIST)
+  @GetMapping(GET_PR_SUBSCRIBER_ELIGIBLE_LIST)
   @ResponseBody
-  public ResponseEntity<?> getPrEventList(@RequestParam Integer id) {
+  public ResponseEntity<?> getBloggerEligibleEventList(@RequestParam Integer bloggerId) {
 
-    List<PREvent> events = prEventListQuery.data(id);
-    logUtil.debug(logger, "Returning ", events.size(), " events for member id ", id);
+    List<PREvent> events = prEventListQuery.data(bloggerId);
+    logUtil.debug(logger, "Returning ", events.size(), " events for member id ", bloggerId);
 
     return new ResponseEntity<List<PREvent>>(events, HttpStatus.OK);
   }
 
-  @GetMapping(GET_PR_EVENT_LIST_BY_DATE)
-  @ResponseBody
-  public ResponseEntity<?> getPrEventListByDate(@RequestParam Integer id) {
-
-    List<PREvent> events = prEventListQuery.data(id);
-    logUtil.debug(logger, "Returning ", events.size(), " events for member id ", id);
-
-    return new ResponseEntity<List<PREvent>>(events, HttpStatus.OK);
-  }
 }

@@ -1,5 +1,6 @@
 package com.ef.model.event;
 
+import java.sql.Date;
 import java.util.Random;
 
 import com.google.gson.Gson;
@@ -9,30 +10,33 @@ public class EventScheduleSubscription {
   private long id;
   private long eventSubscriptionTimeslotId;
   private int subscriberId;
+  private Date scheduleDate;
   private String preferredTime;
   private final EventStatusMeta eventStatus;
 
-  public EventScheduleSubscription(long id, long eventSubscriptionTimeslotId, int subscriberId, String preferredTime,
-      EventStatusMeta eventStatusMeta) {
+  public EventScheduleSubscription(long id, long eventSubscriptionTimeslotId, int subscriberId, Date scheduleDate,
+      String preferredTime, EventStatusMeta eventStatus) {
     super();
     this.id = id;
     this.eventSubscriptionTimeslotId = eventSubscriptionTimeslotId;
     this.subscriberId = subscriberId;
+    this.scheduleDate = scheduleDate;
     this.preferredTime = preferredTime;
-    this.eventStatus = eventStatusMeta;
+    this.eventStatus = eventStatus;
   }
 
   public static void main(String args[]) {
     long eventScheduleTimeslotIdSubscriptionId = new Random(10000000).nextLong();
     long eventScheduleTimeslotId = new Random(10000000).nextLong();
     int subscriberId = new Random(100000).nextInt();
+    Date scheduleDate = new Date(System.currentTimeMillis());
     String preferredTime = "1200";
     int statusId = new Random(5).nextInt();
     String name = "statusName-" + statusId;
     String description = "statusDescription-" + eventScheduleTimeslotIdSubscriptionId;
     EventStatusMeta status = new EventStatusMeta(statusId, name, description);
     EventScheduleSubscription a = new EventScheduleSubscription(eventScheduleTimeslotIdSubscriptionId,
-        eventScheduleTimeslotId, subscriberId, preferredTime, status);
+        eventScheduleTimeslotId, subscriberId, scheduleDate, preferredTime, status);
 
 //      PREventTimeSlotBindingModel prEventTimeSlot1 = new PREventTimeSlotBindingModel();
 //      prEventTimeSlot1.setEventDate("15/01/2021");
@@ -49,7 +53,7 @@ public class EventScheduleSubscription {
 
   }
 
-  public long getId() {
+  public long getEventId() {
     return id;
   }
 
@@ -93,10 +97,19 @@ public class EventScheduleSubscription {
     this.preferredTime = preferredTime;
   }
 
+  public Date getScheduleDate() {
+    return scheduleDate;
+  }
+
+  public void setScheduleDate(Date scheduleDate) {
+    this.scheduleDate = scheduleDate;
+  }
+
   @Override
   public String toString() {
     return "EventScheduleSubscription [id=" + id + ", eventSubscriptionTimeslotId=" + eventSubscriptionTimeslotId
-        + ", subscriberId=" + subscriberId + ", preferredTime=" + preferredTime + ", eventStatus=" + eventStatus + "]";
+        + ", subscriberId=" + subscriberId + ", scheduleDate=" + scheduleDate + ", preferredTime=" + preferredTime
+        + ", eventStatus=" + eventStatus + "]";
   }
 
 }

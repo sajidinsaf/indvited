@@ -16,18 +16,22 @@ import com.ef.eventservice.publisher.PREventPublisherContext;
 import com.ef.model.event.EventScheduleResult;
 import com.ef.model.event.PREvent;
 import com.ef.model.event.PREventSchedule;
+import com.ef.model.member.Member;
 
 @Component("prEventScheduleStrategy")
 public class PREventSchedulingStrategy implements Strategy<PREventPublisherContext, Response<PREvent>> {
 
   private final Query<Integer, PREvent> queryPREventById;
   private final Query<Integer, List<PREventSchedule>> queryEventScheduleList;
+  private final Query<PREventSchedule, List<Member>> querySubscriberByCriteria;
 
   @Autowired
   public PREventSchedulingStrategy(@Qualifier("queryEventById") Query<Integer, PREvent> queryPREventById,
-      @Qualifier("queryPREventScheduleListByEventId") Query<Integer, List<PREventSchedule>> queryEventScheduleList) {
+      @Qualifier("queryPREventScheduleListByEventId") Query<Integer, List<PREventSchedule>> queryEventScheduleList,
+      @Qualifier("querySubscriberByCriteria") Query<PREventSchedule, List<Member>> querySubscriberByCriteria) {
     this.queryPREventById = queryPREventById;
     this.queryEventScheduleList = queryEventScheduleList;
+    this.querySubscriberByCriteria = querySubscriberByCriteria;
   }
 
   @Override
@@ -35,7 +39,11 @@ public class PREventSchedulingStrategy implements Strategy<PREventPublisherConte
 
     EventScheduleResult prEventScheduleResult = context.get(PR_EVENT_SCHEDULE_PERSIST_RESULT);
 
-    int eventId = prEventScheduleResult.getSchedule().getEventId();
+    PREventSchedule schedule = prEventScheduleResult.getSchedule();
+
+    List<Member> eligibleMembers = querySubscriberByCriteria.data(schedule);
+
+    int eventId = schedule.getEventId();
 
     PREvent prEvent = queryPREventById.data(eventId);
 
