@@ -26,11 +26,12 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 
 import com.ef.dataaccess.Query;
 import com.ef.dataaccess.config.DbTestUtils;
+import com.ef.model.event.PREvent;
 import com.ef.model.event.PREventSchedule;
 
 public class QueryEligibleSchedulesByBloggerProfileTest {
 
-  private Query<Integer, List<PREventSchedule>> queryEligibleSchedulesByBloggerProfile;
+  private Query<Integer, List<PREvent>> queryEligibleSchedulesByBloggerProfile;
   private JdbcTemplate jdbcTemplate;
 
   @SuppressWarnings({ "resource", "unchecked" })
@@ -50,7 +51,13 @@ public class QueryEligibleSchedulesByBloggerProfileTest {
 
   @Test
   public void shouldRetrieveTwoScheduleSuccessfully() throws ParseException {
-    List<PREventSchedule> schedules = queryEligibleSchedulesByBloggerProfile.data(1000010016);
+    List<PREvent> prEvents = queryEligibleSchedulesByBloggerProfile.data(1000010016);
+
+    assertThat(prEvents.size(), is(1));
+
+    PREvent prEvent = prEvents.get(0);
+
+    List<PREventSchedule> schedules = prEvent.getSchedules();
 
     assertThat(schedules.size(), is(2));
     PREventSchedule schedule = schedules.get(0);
@@ -78,10 +85,17 @@ public class QueryEligibleSchedulesByBloggerProfileTest {
 
   @Test
   public void shouldRetrieveFourSchedulesSuccessfully() throws ParseException {
-    List<PREventSchedule> schedules = queryEligibleSchedulesByBloggerProfile.data(1000010037);
 
-    assertThat(schedules.size(), is(4));
-    PREventSchedule schedule = schedules.get(0);
+    List<PREvent> prEvents = queryEligibleSchedulesByBloggerProfile.data(1000010037);
+    assertThat(prEvents.size(), is(2));
+
+    List<PREventSchedule> schedules1 = prEvents.get(0).getSchedules();
+    assertThat(schedules1.size(), is(2));
+
+    List<PREventSchedule> schedules2 = prEvents.get(1).getSchedules();
+    assertThat(schedules2.size(), is(2));
+
+    PREventSchedule schedule = schedules1.get(0);
     assertThat(schedule.getId(), is(100L));
     assertThat(schedule.getEventId(), is(200));
     assertThat(schedule.getStartDate().getTime(),
@@ -99,7 +113,7 @@ public class QueryEligibleSchedulesByBloggerProfileTest {
     assertThat(schedule.isMyBloggers(), is(true));
     assertThat(schedule.isAllEligible(), is(false));
 
-    schedule = schedules.get(1);
+    schedule = schedules1.get(1);
     assertThat(schedule.getId(), is(101L));
     assertThat(schedule.getEventId(), is(200));
   }
@@ -121,7 +135,9 @@ class HsqlDbConfigQueryEligibleSchedulesByBloggerProfileTest {
         .addScript("classpath:com/ef/dataaccess/event/blogger/query/insertEventCriteriaData.sql")
         .addScript("classpath:com/ef/dataaccess/event/blogger/query/insertMemberCriteriaData.sql")
         .addScript("classpath:com/ef/dataaccess/event/blogger/query/insertEventScheduleData.sql")
-        .addScript("classpath:com/ef/dataaccess/event/insertEventCriteriaMeta.sql").build();
+        .addScript("classpath:com/ef/dataaccess/event/blogger/query/insertEventData.sql")
+        .addScript("classpath:com/ef/dataaccess/event/insertEventCriteriaMeta.sql")
+        .addScript("classpath:com/ef/dataaccess/event/insertVenueData.sql").build();
   }
 
   @Bean

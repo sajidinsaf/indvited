@@ -14,29 +14,33 @@ import org.springframework.stereotype.Component;
 
 import com.ef.dataaccess.Query;
 import com.ef.model.event.EventCriteriaData;
+import com.ef.model.event.PREvent;
 import com.ef.model.event.PREventSchedule;
 import com.ef.model.member.MemberCriteriaData;
 
 @Component(value = "queryEligibleSchedulesByBloggerProfile")
-public class QueryEligibleSchedulesByBloggerProfile implements Query<Integer, List<PREventSchedule>> {
+public class QueryEligibleSchedulesByBloggerProfile implements Query<Integer, List<PREvent>> {
 
   private final String SELECT = "select * from event_schedule";
 
   private final JdbcTemplate jdbcTemplate;
   private final Query<Integer, List<MemberCriteriaData>> queryMemberCriteriaDataByMemberId;
   private final Query<Integer, Map<Integer, EventCriteriaData>> queryEventCriteriaDataByEventId;
+  private final Query<Integer, PREvent> queryEventById;
 
   @Autowired
   public QueryEligibleSchedulesByBloggerProfile(@Qualifier("indvitedDbJdbcTemplate") JdbcTemplate jdbcTemplate,
       @Qualifier("queryMemberCriteriaDataByMemberId") Query<Integer, List<MemberCriteriaData>> queryMemberCriteriaDataByMemberId,
-      @Qualifier("queryEventCriteriaDataByEventId") Query<Integer, Map<Integer, EventCriteriaData>> queryEventCriteriaDataByEventId) {
+      @Qualifier("queryEventCriteriaDataByEventId") Query<Integer, Map<Integer, EventCriteriaData>> queryEventCriteriaDataByEventId,
+      @Qualifier("queryEventById") Query<Integer, PREvent> queryEventById) {
     this.jdbcTemplate = jdbcTemplate;
     this.queryMemberCriteriaDataByMemberId = queryMemberCriteriaDataByMemberId;
     this.queryEventCriteriaDataByEventId = queryEventCriteriaDataByEventId;
+    this.queryEventById = queryEventById;
   }
 
   @Override
-  public List<PREventSchedule> data(final Integer bloggerId) {
+  public List<PREvent> data(final Integer bloggerId) {
 
     List<MemberCriteriaData> bloggersCriteriaData = queryMemberCriteriaDataByMemberId.data(bloggerId);
 
@@ -51,7 +55,7 @@ public class QueryEligibleSchedulesByBloggerProfile implements Query<Integer, Li
 
     Set<Integer> uneligibleEventsSet = new TreeSet<Integer>();
 
-    List<PREventSchedule> eligibleSchedules = new ArrayList<PREventSchedule>();
+    Map<Integer, PREvent> prEvents = new HashMap<Integer, PREvent>();
 
     for (PREventSchedule schedule : schedules) {
       int eventId = schedule.getEventId();
@@ -85,12 +89,17 @@ public class QueryEligibleSchedulesByBloggerProfile implements Query<Integer, Li
       }
 
       if (eligible) {
-        eligibleSchedules.add(schedule);
+        PREvent event = prEvents.get(schedule.getEventId());
+        if (event == null) {
+          event = queryEventById.data(schedule.getEventId());
+        }
+        event.addSchedule(schedule);
+        prEvents.put(schedule.getEventId(), event);
       }
 
     }
-
-    return eligibleSchedules;
+    List<PREvent> events = new ArrayList<PREvent>(prEvents.values());
+    return events;
   }
 
 }

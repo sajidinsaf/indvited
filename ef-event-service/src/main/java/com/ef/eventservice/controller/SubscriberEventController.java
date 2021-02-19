@@ -18,7 +18,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import com.ef.common.logging.ServiceLoggingUtil;
 import com.ef.dataaccess.Query;
 import com.ef.eventservice.controller.util.PREventScheduleUtil;
-import com.ef.model.event.PREventSchedule;
+import com.ef.model.event.PREvent;
 
 /**
  * Handles requests for the event service.
@@ -29,23 +29,23 @@ public class SubscriberEventController {
   private static final Logger logger = LoggerFactory.getLogger(SubscriberEventController.class);
   private final ServiceLoggingUtil logUtil = new ServiceLoggingUtil();
 
-  private final Query<Integer, List<PREventSchedule>> queryEligibleSchedulesByBloggerProfile;
+  private final Query<Integer, List<PREvent>> queryEligibleSchedulesByBloggerProfile;
 
   @Autowired
   public SubscriberEventController(
-      @Qualifier("queryEligibleSchedulesByBloggerProfile") Query<Integer, List<PREventSchedule>> queryEligibleSchedulesByBloggerProfile,
+      @Qualifier("queryEligibleSchedulesByBloggerProfile") Query<Integer, List<PREvent>> queryEligibleSchedulesByBloggerProfile,
       PREventScheduleUtil prEventScheduleUtil) {
     this.queryEligibleSchedulesByBloggerProfile = queryEligibleSchedulesByBloggerProfile;
   }
 
   @GetMapping(GET_SUBSCRIBER_ELIGIBLE_LIST_V1)
   @ResponseBody
-  public ResponseEntity<?> getBloggerEligibleEventList(@RequestParam Integer bloggerId) {
+  public ResponseEntity<?> getBloggerEligibleEventList(@RequestParam Integer memberId) {
 
-    List<PREventSchedule> events = queryEligibleSchedulesByBloggerProfile.data(bloggerId);
-    logUtil.debug(logger, "Returning ", events.size(), " events for member id ", bloggerId);
+    List<PREvent> events = queryEligibleSchedulesByBloggerProfile.data(memberId);
+    logUtil.debug(logger, "Returning ", events.size(), " events for member id ", memberId);
 
-    return new ResponseEntity<List<PREventSchedule>>(events, HttpStatus.OK);
+    return new ResponseEntity<List<PREvent>>(events, HttpStatus.OK);
   }
 
 }

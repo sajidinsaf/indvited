@@ -129,8 +129,6 @@ public class InsertMember implements Insert<MemberRegistrationBindingModel, Prec
   }
 
   public static void main(String args[]) {
-    System.out.println(login_session_expiry_period_in_milliseconds);
     Timestamp t = new Timestamp(System.currentTimeMillis() + login_session_expiry_period_in_milliseconds);
-    System.out.println(t.toString());
   }
 }

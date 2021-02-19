@@ -1,6 +1,7 @@
 package com.ef.model.event;
 
 import java.sql.Date;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
@@ -41,6 +42,7 @@ public class PREvent implements Event {
     this.eventVenueId = eventVenueId;
     this.exclusions = exclusions;
     this.memberId = memberId;
+    schedules = new ArrayList<PREventSchedule>();
   }
 
   public PREvent(int id, EventType eventType, String cap, Member member, EventVenue eventVenue, String notes,
@@ -54,6 +56,7 @@ public class PREvent implements Event {
     this.notes = notes;
     this.createdDate = createdDate;
     this.eventTimeSlots = eventTimeSlots;
+    schedules = new ArrayList<PREventSchedule>();
   }
 
   public int getId() {
@@ -182,6 +185,10 @@ public class PREvent implements Event {
 
   public void setSchedules(List<PREventSchedule> schedules) {
     this.schedules = schedules;
+  }
+
+  public void addSchedule(PREventSchedule schedule) {
+    schedules.add(schedule);
   }
 
   @Override

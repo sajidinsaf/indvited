@@ -49,8 +49,6 @@ public class InsertRegistrationConfirmationCode implements Insert<Member, Member
   }
 
   public static void main(String args[]) {
-    System.out.println(registration_code_expiry_period_in_milliseconds);
     Timestamp t = new Timestamp(System.currentTimeMillis() + registration_code_expiry_period_in_milliseconds);
-    System.out.println(t.toString());
   }
 }

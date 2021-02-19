@@ -97,7 +97,8 @@ class HsqlDbConfigPREventSchedulingStrategyTest {
     EmbeddedDatabaseBuilder embeddedDatabaseBuilder = new EmbeddedDatabaseBuilder().setType(EmbeddedDatabaseType.HSQL);
     return new DbTestUtils().addCreateScripts(embeddedDatabaseBuilder)
         .addScript("classpath:com/ef/dataaccess/event/insertEventData.sql")
-        .addScript("classpath:com/ef/dataaccess/event/schedule/insertEventScheduleData.sql").build();
+        .addScript("classpath:com/ef/dataaccess/event/schedule/insertEventScheduleData.sql")
+        .addScript("classpath:com/ef/dataaccess/event/insertVenueData.sql").build();
   }
 
   @Bean

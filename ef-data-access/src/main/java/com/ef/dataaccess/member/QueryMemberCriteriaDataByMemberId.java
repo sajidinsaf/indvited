@@ -35,8 +35,7 @@ public class QueryMemberCriteriaDataByMemberId implements Query<Integer, List<Me
         (rs, rowNum) -> new MemberCriteriaData(rs.getString("ID"), memberId,
             eventCriteriaMetadataCache.getEventCriteria(rs.getInt("criteria_meta_id")),
             rs.getInt("member_criteria_value")));
-    System.out.println(eventCriteriaMetadataCache);
-    System.out.println(memberCriteriaDataList);
+
     return memberCriteriaDataList;
   }
 
