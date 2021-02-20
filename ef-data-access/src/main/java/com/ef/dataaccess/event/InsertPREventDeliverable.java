@@ -1,5 +1,6 @@
 package com.ef.dataaccess.event;
 
+import java.util.Arrays;
 import java.util.List;
 
 import org.apache.commons.lang3.tuple.Pair;
@@ -69,7 +70,7 @@ public class InsertPREventDeliverable implements Insert<Pair<PREventBindingModel
       ++count;
     }
 
-    prEvent.setEventDeliverables(eventDeliverable);
+    prEvent.setEventDeliverables(Arrays.asList(eventDeliverable));
     return prEvent;
   }
 

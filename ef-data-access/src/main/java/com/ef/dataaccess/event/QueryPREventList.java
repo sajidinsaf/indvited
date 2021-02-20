@@ -8,6 +8,7 @@ import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Component;
 
 import com.ef.dataaccess.Query;
+import com.ef.model.event.EventDeliverable;
 import com.ef.model.event.EventVenue;
 import com.ef.model.event.PREvent;
 import com.ef.model.event.PREventSchedule;
@@ -21,16 +22,19 @@ public class QueryPREventList implements Query<Integer, List<PREvent>> {
   private final Query<Integer, EventVenue> queryVenue;
   private final Query<Integer, List<PREventSchedule>> queryPREventScheduleListByEventId;
   private final EventTypeCache eventTypeCache;
+  private final Query<Integer, List<EventDeliverable>> queryEventDeliverableListByEventId;
 
   @Autowired
   public QueryPREventList(@Qualifier("indvitedDbJdbcTemplate") JdbcTemplate jdbcTemplate,
       @Qualifier("queryEventVenueById") Query<Integer, EventVenue> queryVenue,
       @Qualifier("queryPREventScheduleListByEventId") Query<Integer, List<PREventSchedule>> queryPREventScheduleListByEventId,
-      EventTypeCache eventTypeCache) {
+      EventTypeCache eventTypeCache,
+      @Qualifier("queryEventDeliverableListByEventId") Query<Integer, List<EventDeliverable>> queryEventDeliverableListByEventId) {
     this.jdbcTemplate = jdbcTemplate;
     this.queryVenue = queryVenue;
     this.queryPREventScheduleListByEventId = queryPREventScheduleListByEventId;
     this.eventTypeCache = eventTypeCache;
+    this.queryEventDeliverableListByEventId = queryEventDeliverableListByEventId;
   }
 
   @Override
@@ -52,6 +56,8 @@ public class QueryPREventList implements Query<Integer, List<PREvent>> {
 
       event.setEventType(eventTypeCache.getEventType(event.getEventTypeId()));
 
+      List<EventDeliverable> deliverables = queryEventDeliverableListByEventId.data(event.getId());
+      event.setEventDeliverables(deliverables);
     }
 
     return events;

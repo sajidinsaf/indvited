@@ -55,6 +55,12 @@ public class QueryPREventListTest {
     assertThat(events.get(1).getSchedules().size(), is(0));
     assertThat(events.get(0).getEventType(), notNullValue());
     assertThat(events.get(0).getEventType().getId(), is(events.get(0).getEventTypeId()));
+    assertThat(events.get(0).getEventDeliverables(), notNullValue());
+    assertThat(events.get(0).getEventDeliverables().size(), is(2));
+    assertThat(events.get(0).getEventDeliverables().get(0).getEventId(), is(events.get(0).getId()));
+    assertThat(events.get(0).getEventDeliverables().get(1).getEventId(), is(events.get(0).getId()));
+    assertThat(events.get(0).getEventDeliverables().get(0).getDeliverableName(), is("Zomato Review"));
+    assertThat(events.get(0).getEventDeliverables().get(1).getDeliverableName(), is("Live Instagram Stories"));
   }
 
 }
@@ -75,7 +81,9 @@ class HsqlDbConfigQueryPREventListTest {
         .addScript("classpath:com/ef/dataaccess/event/insertEventData.sql")
         .addScript("classpath:com/ef/dataaccess/event/insertVenueData.sql")
         .addScript("classpath:com/ef/dataaccess/event/insertEventScheduleDataForQueryPREventListTest.sql")
-        .addScript("classpath:com/ef/dataaccess/event/insertEventTypeData.sql").build();
+        .addScript("classpath:com/ef/dataaccess/event/insertEventTypeData.sql")
+        .addScript("classpath:com/ef/dataaccess/event/insertEventDeliverableMeta.sql")
+        .addScript("classpath:com/ef/dataaccess/event/insertEventDeliverableData.sql").build();
 
   }
 

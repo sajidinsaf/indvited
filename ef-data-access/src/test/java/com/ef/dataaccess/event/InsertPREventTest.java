@@ -31,6 +31,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 
 import com.ef.dataaccess.config.DbTestUtils;
 import com.ef.dataaccess.member.MemberTypeCache;
+import com.ef.model.event.EventDeliverable;
 import com.ef.model.event.PREvent;
 import com.ef.model.event.PREventBindingModel;
 import com.ef.model.event.PREventCriteriaBindingModel;
@@ -115,13 +116,15 @@ public class InsertPREventTest {
     assertThat(event.getEventCriteria()[0].getCriterionValue(), is(175));
     assertThat(event.getEventCriteria()[1].getName(), is("Minimum Instagram followers"));
 
-    assertThat(event.getEventDeliverables()[0].getEventId(), is(event.getId()));
-    assertThat(event.getEventDeliverables()[0].getDeliverableId(), is(0));
-    assertThat(event.getEventDeliverables()[0].getDeliverableName(), is("Zomato Review"));
+    EventDeliverable deliverable = event.getEventDeliverables().get(0);
+    assertThat(deliverable.getEventId(), is(event.getId()));
+    assertThat(deliverable.getDeliverableId(), is(0));
+    assertThat(deliverable.getDeliverableName(), is("Zomato Review"));
 
-    assertThat(event.getEventDeliverables()[1].getEventId(), is(event.getId()));
-    assertThat(event.getEventDeliverables()[1].getDeliverableId(), is(1));
-    assertThat(event.getEventDeliverables()[1].getDeliverableName(), is("Instagram Post"));
+    deliverable = event.getEventDeliverables().get(1);
+    assertThat(deliverable.getEventId(), is(event.getId()));
+    assertThat(deliverable.getDeliverableId(), is(1));
+    assertThat(deliverable.getDeliverableName(), is("Instagram Post"));
 
   }
 

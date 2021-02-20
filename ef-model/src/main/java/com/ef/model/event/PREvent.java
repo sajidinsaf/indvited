@@ -18,7 +18,7 @@ public class PREvent implements Event {
   private Date createdDate;
   private EventTimeslot[] eventTimeSlots;
   private EventCriteria[] eventCriteria;
-  private EventDeliverable[] eventDeliverables;
+  private List<EventDeliverable> eventDeliverables;
   private int eventTypeId;
   private int domainId;
   private int eventVenueId;
@@ -171,11 +171,11 @@ public class PREvent implements Event {
     this.eventCriteria = eventCriteria;
   }
 
-  public EventDeliverable[] getEventDeliverables() {
+  public List<EventDeliverable> getEventDeliverables() {
     return eventDeliverables;
   }
 
-  public void setEventDeliverables(EventDeliverable[] eventDeliverables) {
+  public void setEventDeliverables(List<EventDeliverable> eventDeliverables) {
     this.eventDeliverables = eventDeliverables;
   }
 
@@ -196,9 +196,8 @@ public class PREvent implements Event {
     return "PREvent [id=" + id + ", eventType=" + eventType + ", cap=" + cap + ", member=" + member + ", eventVenue="
         + eventVenue + ", notes=" + notes + ", createdDate=" + createdDate + ", eventTimeSlots="
         + Arrays.toString(eventTimeSlots) + ", eventCriteria=" + Arrays.toString(eventCriteria) + ", eventDeliverables="
-        + Arrays.toString(eventDeliverables) + ", eventTypeId=" + eventTypeId + ", domainId=" + domainId
-        + ", eventVenueId=" + eventVenueId + ", exclusions=" + exclusions + ", memberId=" + memberId + ", schedules="
-        + schedules + "]";
+        + eventDeliverables + ", eventTypeId=" + eventTypeId + ", domainId=" + domainId + ", eventVenueId="
+        + eventVenueId + ", exclusions=" + exclusions + ", memberId=" + memberId + ", schedules=" + schedules + "]";
   }
 
   @Override
