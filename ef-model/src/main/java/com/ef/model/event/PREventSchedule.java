@@ -10,6 +10,8 @@ import static java.time.DayOfWeek.WEDNESDAY;
 
 import java.sql.Date;
 import java.sql.Timestamp;
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.List;
 
 public class PREventSchedule {
@@ -23,11 +25,14 @@ public class PREventSchedule {
   private int bloggersPerDay;
   private String scheduleTimeInfo;
   private String daysOfTheWeek;
+  private List<java.util.Date> availableDates;
+  private List<String> availableDatesForDisplay;
 
   private List<EventScheduleSubscription> subscriptions;
 
   public PREventSchedule() {
-
+    availableDates = new ArrayList<java.util.Date>();
+    availableDatesForDisplay = new ArrayList<String>();
   }
 
   public PREventSchedule(long id, int eventId, Date startDate, Date endDate, String daysOfTheWeek, boolean innerCircle,
@@ -53,7 +58,8 @@ public class PREventSchedule {
     this.publishedOnTimestamp = publishedOnTimestamp;
     this.bloggersPerDay = bloggersPerDay;
     this.scheduleTimeInfo = scheduleTimeInfo;
-
+    availableDates = new ArrayList<java.util.Date>();
+    availableDatesForDisplay = new ArrayList<String>();
   }
 
   public int getEventId() {
@@ -225,6 +231,22 @@ public class PREventSchedule {
     this.subscriptions = subscriptions;
   }
 
+  public List<java.util.Date> getAvailableDates() {
+    return availableDates;
+  }
+
+  public void setAvailableDates(List<java.util.Date> availableDates) {
+    this.availableDates = availableDates;
+    SimpleDateFormat formatter = new SimpleDateFormat("EEE d MMM yyyy");
+    for (java.util.Date date : availableDates) {
+      availableDatesForDisplay.add(formatter.format(date));
+    }
+  }
+
+  public List<String> getAvailableDatesForDisplay() {
+    return availableDatesForDisplay;
+  }
+
   @Override
   public String toString() {
     return "PREventSchedule [eventId=" + eventId + ", id=" + id + ", startDate=" + startDate + ", endDate=" + endDate
@@ -232,8 +254,8 @@ public class PREventSchedule {
         + publishedOnTimestamp + ", monday=" + monday + ", tuesday=" + tuesday + ", wednesday=" + wednesday
         + ", thursday=" + thursday + ", friday=" + friday + ", saturday=" + saturday + ", sunday=" + sunday
         + ", innerCircle=" + innerCircle + ", myBloggers=" + myBloggers + ", allEligible=" + allEligible
-        + ", bloggersPerDay=" + bloggersPerDay + ", scheduleTimeInfo=" + scheduleTimeInfo + ", subscriptions="
-        + subscriptions + "]";
+        + ", bloggersPerDay=" + bloggersPerDay + ", scheduleTimeInfo=" + scheduleTimeInfo + ", daysOfTheWeek="
+        + daysOfTheWeek + ", availableDates=" + availableDates + ", subscriptions=" + subscriptions + "]";
   }
 
 }

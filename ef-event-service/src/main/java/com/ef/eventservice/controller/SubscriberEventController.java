@@ -30,12 +30,14 @@ public class SubscriberEventController {
   private final ServiceLoggingUtil logUtil = new ServiceLoggingUtil();
 
   private final Query<Integer, List<PREvent>> queryEligibleSchedulesByBloggerProfile;
+  private final PREventScheduleUtil prEventScheduleUtil;
 
   @Autowired
   public SubscriberEventController(
       @Qualifier("queryEligibleSchedulesByBloggerProfile") Query<Integer, List<PREvent>> queryEligibleSchedulesByBloggerProfile,
       PREventScheduleUtil prEventScheduleUtil) {
     this.queryEligibleSchedulesByBloggerProfile = queryEligibleSchedulesByBloggerProfile;
+    this.prEventScheduleUtil = prEventScheduleUtil;
   }
 
   @GetMapping(GET_SUBSCRIBER_ELIGIBLE_LIST_V1)
@@ -44,6 +46,8 @@ public class SubscriberEventController {
 
     List<PREvent> events = queryEligibleSchedulesByBloggerProfile.data(memberId);
     logUtil.debug(logger, "Returning ", events.size(), " events for member id ", memberId);
+
+    prEventScheduleUtil.populateAvailableDates(events);
 
     return new ResponseEntity<List<PREvent>>(events, HttpStatus.OK);
   }

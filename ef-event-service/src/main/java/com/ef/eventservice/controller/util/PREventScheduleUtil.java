@@ -7,10 +7,19 @@ import java.util.List;
 
 import org.springframework.stereotype.Component;
 
+import com.ef.model.event.PREvent;
 import com.ef.model.event.PREventSchedule;
 
 @Component
 public class PREventScheduleUtil {
+
+  public void populateAvailableDates(List<PREvent> events) {
+    for (PREvent event : events) {
+      for (PREventSchedule schedule : event.getSchedules()) {
+        schedule.setAvailableDates(getAllScheduledDates(schedule));
+      }
+    }
+  }
 
   public List<java.util.Date> getAllScheduledDates(PREventSchedule schedule) {
 
