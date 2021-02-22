@@ -1,6 +1,7 @@
 package com.ef.dataaccess.event.blogger.query;
 
 import static org.hamcrest.Matchers.is;
+import static org.hamcrest.Matchers.notNullValue;
 //import static org.hamcrest.Matchers.nullValue;
 import static org.junit.Assert.assertThat;
 import static org.mockito.MockitoAnnotations.openMocks;
@@ -116,6 +117,10 @@ public class QueryEligibleSchedulesByBloggerProfileTest {
     schedule = schedules1.get(1);
     assertThat(schedule.getId(), is(101L));
     assertThat(schedule.getEventId(), is(200));
+
+    assertThat(prEvents.get(0).getMember(), notNullValue());
+    assertThat(prEvents.get(0).getEventCriteria(), notNullValue());
+    assertThat(prEvents.get(0).getEventCriteria().length, is(2));
   }
 }
 
@@ -137,7 +142,9 @@ class HsqlDbConfigQueryEligibleSchedulesByBloggerProfileTest {
         .addScript("classpath:com/ef/dataaccess/event/blogger/query/insertEventScheduleData.sql")
         .addScript("classpath:com/ef/dataaccess/event/blogger/query/insertEventData.sql")
         .addScript("classpath:com/ef/dataaccess/event/insertEventCriteriaMeta.sql")
-        .addScript("classpath:com/ef/dataaccess/event/insertVenueData.sql").build();
+        .addScript("classpath:com/ef/dataaccess/event/insertVenueData.sql")
+        .addScript("classpath:com/ef/dataaccess/member/insertMemberDataForQueryPREventListTest.sql")
+        .addScript("classpath:com/ef/dataaccess/event/insertEventCriteriaData.sql").build();
   }
 
   @Bean

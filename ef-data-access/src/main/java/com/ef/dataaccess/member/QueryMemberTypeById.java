@@ -25,7 +25,6 @@ public class QueryMemberTypeById implements Query<Integer, MemberType> {
 
   @Override
   public MemberType data(Integer id) {
-
     int memberTypeId = jdbcTemplate.queryForObject(SELECT_MEMBER, new Object[] { id }, Integer.class);
     return memberTypeCache.getMemberType(memberTypeId);
   }

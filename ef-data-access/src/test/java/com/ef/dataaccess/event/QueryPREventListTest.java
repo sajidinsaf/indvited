@@ -83,7 +83,8 @@ class HsqlDbConfigQueryPREventListTest {
         .addScript("classpath:com/ef/dataaccess/event/insertEventScheduleDataForQueryPREventListTest.sql")
         .addScript("classpath:com/ef/dataaccess/event/insertEventTypeData.sql")
         .addScript("classpath:com/ef/dataaccess/event/insertEventDeliverableMeta.sql")
-        .addScript("classpath:com/ef/dataaccess/event/insertEventDeliverableData.sql").build();
+        .addScript("classpath:com/ef/dataaccess/event/insertEventDeliverableData.sql")
+        .addScript("classpath:com/ef/dataaccess/member/insertMemberDataForQueryPREventListTest.sql").build();
 
   }
 

@@ -35,6 +35,7 @@ public class QueryPREventList implements Query<Integer, List<PREvent>> {
     this.queryPREventScheduleListByEventId = queryPREventScheduleListByEventId;
     this.eventTypeCache = eventTypeCache;
     this.queryEventDeliverableListByEventId = queryEventDeliverableListByEventId;
+
   }
 
   @Override
@@ -58,6 +59,7 @@ public class QueryPREventList implements Query<Integer, List<PREvent>> {
 
       List<EventDeliverable> deliverables = queryEventDeliverableListByEventId.data(event.getId());
       event.setEventDeliverables(deliverables);
+
     }
 
     return events;

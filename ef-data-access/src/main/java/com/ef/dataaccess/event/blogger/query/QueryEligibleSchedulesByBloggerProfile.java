@@ -13,9 +13,13 @@ import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Component;
 
 import com.ef.dataaccess.Query;
+import com.ef.dataaccess.event.EventCriteriaMetadataCache;
+import com.ef.model.event.EventCriteria;
 import com.ef.model.event.EventCriteriaData;
+import com.ef.model.event.EventCriteriaMetadata;
 import com.ef.model.event.PREvent;
 import com.ef.model.event.PREventSchedule;
+import com.ef.model.member.Member;
 import com.ef.model.member.MemberCriteriaData;
 
 @Component(value = "queryEligibleSchedulesByBloggerProfile")
@@ -27,16 +31,22 @@ public class QueryEligibleSchedulesByBloggerProfile implements Query<Integer, Li
   private final Query<Integer, List<MemberCriteriaData>> queryMemberCriteriaDataByMemberId;
   private final Query<Integer, Map<Integer, EventCriteriaData>> queryEventCriteriaDataByEventId;
   private final Query<Integer, PREvent> queryEventById;
+  private final Query<Integer, Member> queryMemberById;
+  private final EventCriteriaMetadataCache eventCriteriaMetadataCache;
 
   @Autowired
   public QueryEligibleSchedulesByBloggerProfile(@Qualifier("indvitedDbJdbcTemplate") JdbcTemplate jdbcTemplate,
       @Qualifier("queryMemberCriteriaDataByMemberId") Query<Integer, List<MemberCriteriaData>> queryMemberCriteriaDataByMemberId,
       @Qualifier("queryEventCriteriaDataByEventId") Query<Integer, Map<Integer, EventCriteriaData>> queryEventCriteriaDataByEventId,
-      @Qualifier("queryEventById") Query<Integer, PREvent> queryEventById) {
+      @Qualifier("queryEventById") Query<Integer, PREvent> queryEventById,
+      @Qualifier("queryMemberById") Query<Integer, Member> queryMemberById,
+      EventCriteriaMetadataCache eventCriteriaMetadataCache) {
     this.jdbcTemplate = jdbcTemplate;
     this.queryMemberCriteriaDataByMemberId = queryMemberCriteriaDataByMemberId;
     this.queryEventCriteriaDataByEventId = queryEventCriteriaDataByEventId;
     this.queryEventById = queryEventById;
+    this.queryMemberById = queryMemberById;
+    this.eventCriteriaMetadataCache = eventCriteriaMetadataCache;
   }
 
   @Override
@@ -89,17 +99,41 @@ public class QueryEligibleSchedulesByBloggerProfile implements Query<Integer, Li
       }
 
       if (eligible) {
+
         PREvent event = prEvents.get(schedule.getEventId());
         if (event == null) {
           event = queryEventById.data(schedule.getEventId());
+
+          populateEventCriteria(event, new ArrayList<EventCriteriaData>(eventCriteriaData.values()));
+
+          Member member = queryMemberById.data(event.getMemberId());
+          event.setMember(member);
         }
+
         event.addSchedule(schedule);
+
         prEvents.put(schedule.getEventId(), event);
+
       }
 
     }
     List<PREvent> events = new ArrayList<PREvent>(prEvents.values());
     return events;
+  }
+
+  private void populateEventCriteria(PREvent event, List<EventCriteriaData> eventCriteriaList) {
+
+    EventCriteria[] eventCriteriaArray = new EventCriteria[eventCriteriaList.size()];
+    for (int i = 0; i < eventCriteriaList.size(); i++) {
+      EventCriteriaData eventCriterionData = eventCriteriaList.get(i);
+      int criterionId = eventCriterionData.getCriterionId();
+      EventCriteriaMetadata criterionMeta = eventCriteriaMetadataCache.getEventCriteria(criterionId);
+      EventCriteria eventCriteria = new EventCriteria(criterionId, criterionMeta.getName(),
+          eventCriterionData.getCriterionValue());
+      eventCriteriaArray[i] = eventCriteria;
+    }
+    event.setEventCriteria(eventCriteriaArray);
+
   }
 
 }
