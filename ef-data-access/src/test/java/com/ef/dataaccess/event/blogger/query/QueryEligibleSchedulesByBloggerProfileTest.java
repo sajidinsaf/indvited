@@ -121,6 +121,8 @@ public class QueryEligibleSchedulesByBloggerProfileTest {
     assertThat(prEvents.get(0).getMember(), notNullValue());
     assertThat(prEvents.get(0).getEventCriteria(), notNullValue());
     assertThat(prEvents.get(0).getEventCriteria().length, is(2));
+
+    assertThat(prEvents.get(0).getEventCriteria()[0].getForum(), notNullValue());
   }
 }
 
@@ -144,7 +146,8 @@ class HsqlDbConfigQueryEligibleSchedulesByBloggerProfileTest {
         .addScript("classpath:com/ef/dataaccess/event/insertEventCriteriaMeta.sql")
         .addScript("classpath:com/ef/dataaccess/event/insertVenueData.sql")
         .addScript("classpath:com/ef/dataaccess/member/insertMemberDataForQueryPREventListTest.sql")
-        .addScript("classpath:com/ef/dataaccess/event/insertEventCriteriaData.sql").build();
+        .addScript("classpath:com/ef/dataaccess/event/insertEventCriteriaData.sql")
+        .addScript("classpath:com/ef/dataaccess/core/insertForums.sql").build();
   }
 
   @Bean

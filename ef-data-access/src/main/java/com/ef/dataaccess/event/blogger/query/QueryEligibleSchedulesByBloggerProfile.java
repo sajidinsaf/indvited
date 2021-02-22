@@ -13,7 +13,9 @@ import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Component;
 
 import com.ef.dataaccess.Query;
+import com.ef.dataaccess.core.ForumCache;
 import com.ef.dataaccess.event.EventCriteriaMetadataCache;
+import com.ef.model.core.Forum;
 import com.ef.model.event.EventCriteria;
 import com.ef.model.event.EventCriteriaData;
 import com.ef.model.event.EventCriteriaMetadata;
@@ -33,6 +35,7 @@ public class QueryEligibleSchedulesByBloggerProfile implements Query<Integer, Li
   private final Query<Integer, PREvent> queryEventById;
   private final Query<Integer, Member> queryMemberById;
   private final EventCriteriaMetadataCache eventCriteriaMetadataCache;
+  private final ForumCache forumCache;
 
   @Autowired
   public QueryEligibleSchedulesByBloggerProfile(@Qualifier("indvitedDbJdbcTemplate") JdbcTemplate jdbcTemplate,
@@ -40,13 +43,14 @@ public class QueryEligibleSchedulesByBloggerProfile implements Query<Integer, Li
       @Qualifier("queryEventCriteriaDataByEventId") Query<Integer, Map<Integer, EventCriteriaData>> queryEventCriteriaDataByEventId,
       @Qualifier("queryEventById") Query<Integer, PREvent> queryEventById,
       @Qualifier("queryMemberById") Query<Integer, Member> queryMemberById,
-      EventCriteriaMetadataCache eventCriteriaMetadataCache) {
+      EventCriteriaMetadataCache eventCriteriaMetadataCache, ForumCache forumCache) {
     this.jdbcTemplate = jdbcTemplate;
     this.queryMemberCriteriaDataByMemberId = queryMemberCriteriaDataByMemberId;
     this.queryEventCriteriaDataByEventId = queryEventCriteriaDataByEventId;
     this.queryEventById = queryEventById;
     this.queryMemberById = queryMemberById;
     this.eventCriteriaMetadataCache = eventCriteriaMetadataCache;
+    this.forumCache = forumCache;
   }
 
   @Override
@@ -128,8 +132,11 @@ public class QueryEligibleSchedulesByBloggerProfile implements Query<Integer, Li
       EventCriteriaData eventCriterionData = eventCriteriaList.get(i);
       int criterionId = eventCriterionData.getCriterionId();
       EventCriteriaMetadata criterionMeta = eventCriteriaMetadataCache.getEventCriteria(criterionId);
+
+      Forum forum = forumCache.getForum(criterionMeta.getForumId());
+
       EventCriteria eventCriteria = new EventCriteria(criterionId, criterionMeta.getName(),
-          eventCriterionData.getCriterionValue());
+          eventCriterionData.getCriterionValue(), forum);
       eventCriteriaArray[i] = eventCriteria;
     }
     event.setEventCriteria(eventCriteriaArray);

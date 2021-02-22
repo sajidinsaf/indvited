@@ -57,7 +57,7 @@ public class InsertPREventTest {
   private String cap = "1 cocktail each / 2 starters / 2 mains";
   private String exclusions = "*no red meat , no fish* IN case u want to order a *dessert or any dish apart of the above cap it would be *PAYABLE*";
   private List<PREventCriteriaBindingModel> eventCriteria = Arrays.asList(
-      new PREventCriteriaBindingModel("Mininum Zomato reviews", 175),
+      new PREventCriteriaBindingModel("Minimum Zomato reviews", 175),
       new PREventCriteriaBindingModel("Minimum Instagram followers", 9000));
   private List<PREventDeliverableBindingModel> eventDeliverables = Arrays.asList(
       new PREventDeliverableBindingModel("Zomato Review"), new PREventDeliverableBindingModel("Instagram Post"));
@@ -160,7 +160,8 @@ class HsqlDbConfigInsertPREventTest {
         .addScript("classpath:com/ef/dataaccess/event/insertEventTypeData.sql")
         .addScript("classpath:com/ef/dataaccess/event/insertEventCriteriaMeta.sql")
         .addScript("classpath:com/ef/dataaccess/event/insertEventDeliverableMeta.sql")
-        .addScript("classpath:com/ef/dataaccess/core/insertDomains.sql").build();
+        .addScript("classpath:com/ef/dataaccess/core/insertDomains.sql")
+        .addScript("classpath:com/ef/dataaccess/core/insertForums.sql").build();
   }
 
   @Bean

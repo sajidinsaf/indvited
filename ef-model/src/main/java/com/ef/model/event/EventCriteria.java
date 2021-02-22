@@ -1,5 +1,6 @@
 package com.ef.model.event;
 
+import com.ef.model.core.Forum;
 import com.ef.model.core.Identifiable;
 
 public class EventCriteria implements Identifiable {
@@ -10,17 +11,19 @@ public class EventCriteria implements Identifiable {
   private static final long serialVersionUID = -3443436689819945665L;
   private int id;
   private String name;
-  private int criteriValue;
+  private int criterionValue;
+  private Forum forum;
 
   public EventCriteria() {
 
   }
 
-  public EventCriteria(int id, String name, int criteriValue) {
+  public EventCriteria(int id, String name, int criteriaValue, Forum forum) {
     super();
     this.id = id;
     this.name = name;
-    this.criteriValue = criteriValue;
+    this.criterionValue = criteriaValue;
+    this.forum = forum;
   }
 
   public int getId() {
@@ -40,47 +43,25 @@ public class EventCriteria implements Identifiable {
   }
 
   public int getCriterionValue() {
-    return criteriValue;
+    return criterionValue;
   }
 
-  public void setCriterionValue(int criteriValue) {
-    this.criteriValue = criteriValue;
+  public void setCriterionValue(int criterionValue) {
+    this.criterionValue = criterionValue;
   }
 
-  @Override
-  public int hashCode() {
-    final int prime = 31;
-    int result = 1;
-    result = prime * result + criteriValue;
-    result = prime * result + id;
-    result = prime * result + ((name == null) ? 0 : name.hashCode());
-    return result;
+  public Forum getForum() {
+    return forum;
   }
 
-  @Override
-  public boolean equals(Object obj) {
-    if (this == obj)
-      return true;
-    if (obj == null)
-      return false;
-    if (getClass() != obj.getClass())
-      return false;
-    EventCriteria other = (EventCriteria) obj;
-    if (criteriValue != other.criteriValue)
-      return false;
-    if (id != other.id)
-      return false;
-    if (name == null) {
-      if (other.name != null)
-        return false;
-    } else if (!name.equals(other.name))
-      return false;
-    return true;
+  public void setForum(Forum forum) {
+    this.forum = forum;
   }
 
   @Override
   public String toString() {
-    return "EventCriteria [id=" + id + ", name=" + name + ", criteriValue=" + criteriValue + "]";
+    return "EventCriteria [id=" + id + ", name=" + name + ", criterionValue=" + criterionValue + ", forum=" + forum
+        + "]";
   }
 
 }

@@ -12,6 +12,8 @@ import org.springframework.stereotype.Component;
 
 import com.ef.common.logging.ServiceLoggingUtil;
 import com.ef.dataaccess.Insert;
+import com.ef.dataaccess.core.ForumCache;
+import com.ef.model.core.Forum;
 import com.ef.model.event.EventCriteria;
 import com.ef.model.event.EventCriteriaMetadata;
 import com.ef.model.event.PREvent;
@@ -29,17 +31,19 @@ public class InsertPREventCriteria implements Insert<Pair<PREventBindingModel, P
 
   private final JdbcTemplate jdbcTemplate;
   private final EventCriteriaMetadataCache eventCriteriaMetadataCache;
+  private final ForumCache forumCache;
 
   @Autowired
   public InsertPREventCriteria(@Qualifier("indvitedDbJdbcTemplate") JdbcTemplate jdbcTemplate,
-      EventCriteriaMetadataCache eventCriteriaMetadataCache) {
+      EventCriteriaMetadataCache eventCriteriaMetadataCache, ForumCache forumCache) {
     this.jdbcTemplate = jdbcTemplate;
     this.eventCriteriaMetadataCache = eventCriteriaMetadataCache;
+    this.forumCache = forumCache;
   }
 
   @Override
   public PREvent data(Pair<PREventBindingModel, PREvent> input) {
-
+    loggingUtil.debug(logger, "Creating entry for: ", input);
     List<PREventCriteriaBindingModel> eventCriteriaModelList = input.getLeft().getEventCriteria();
     PREvent prEvent = input.getRight();
     if (eventCriteriaModelList == null || eventCriteriaModelList.size() == 0) {
@@ -51,9 +55,10 @@ public class InsertPREventCriteria implements Insert<Pair<PREventBindingModel, P
     for (PREventCriteriaBindingModel eventCriteriaModel : eventCriteriaModelList) {
       int eventId = input.getRight().getId();
       String criteriaName = eventCriteriaModel.getCriterionName();
-
       EventCriteriaMetadata criteriaMetaData = eventCriteriaMetadataCache.getEventCriteria(criteriaName);
 
+      loggingUtil.debug(logger, "Got event criterion metadata : ", criteriaMetaData, " for metadata name: ",
+          criteriaName);
       int criteriaId = DEFAULT_CRITERIA_ID_WHEN_METADATA_NOT_FOUND;
 
       if (criteriaMetaData == null) {
@@ -67,7 +72,8 @@ public class InsertPREventCriteria implements Insert<Pair<PREventBindingModel, P
 
       jdbcTemplate.update(INSERT_STATEMENT, new Object[] { eventId, criteriaId, criteriaValue });
 
-      EventCriteria event = new EventCriteria(criteriaId, criteriaName, criteriaValue);
+      Forum forum = forumCache.getForum(criteriaMetaData.getForumId());
+      EventCriteria event = new EventCriteria(criteriaId, criteriaName, criteriaValue, forum);
       eventCriteria[count] = event;
       ++count;
     }
