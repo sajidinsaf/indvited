@@ -116,6 +116,10 @@ public class PREventScheduleUtilTest {
     assertThat(datesForDisplay.get(7), is("Thu 4 Mar 2021"));
     assertThat(datesForDisplay.get(8), is("Sun 7 Mar 2021"));
 
+    assertThat(prEvent.getAllAvailableScheduledDatesForDisplay().size(), is(9));
+    assertThat(prEvent.getAllAvailableScheduledDatesForDisplay().toString(), is(
+        "[AvailableScheduledDate [date=Tue 16 Feb 2021, scheduleId=0], AvailableScheduledDate [date=Thu 18 Feb 2021, scheduleId=0], AvailableScheduledDate [date=Sun 21 Feb 2021, scheduleId=0], AvailableScheduledDate [date=Tue 23 Feb 2021, scheduleId=0], AvailableScheduledDate [date=Thu 25 Feb 2021, scheduleId=0], AvailableScheduledDate [date=Sun 28 Feb 2021, scheduleId=0], AvailableScheduledDate [date=Tue 2 Mar 2021, scheduleId=0], AvailableScheduledDate [date=Thu 4 Mar 2021, scheduleId=0], AvailableScheduledDate [date=Sun 7 Mar 2021, scheduleId=0]]"));
+
   }
 
 }

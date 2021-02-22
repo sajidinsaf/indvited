@@ -7,6 +7,7 @@ import java.util.List;
 
 import org.springframework.stereotype.Component;
 
+import com.ef.model.event.AvailableScheduledDate;
 import com.ef.model.event.PREvent;
 import com.ef.model.event.PREventSchedule;
 
@@ -17,6 +18,9 @@ public class PREventScheduleUtil {
     for (PREvent event : events) {
       for (PREventSchedule schedule : event.getSchedules()) {
         schedule.setAvailableDates(getAllScheduledDates(schedule));
+        for (String date : schedule.getAvailableDatesForDisplay()) {
+          event.addAvailableScheduledDatesForDisplay(new AvailableScheduledDate(date, schedule.getId()));
+        }
       }
     }
   }

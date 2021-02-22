@@ -47,7 +47,7 @@ public class MemberProfileController {
     this.insertBloggerProfileData = insertBloggerProfileData;
   }
 
-//  curl -i -H "Accept: application/json" -H "Content-Type:application/json" -X POST --data '{"id":"1232455663","type":"PREvent","scheduledDate":"2020/12/25","scheduledTime":"18:03:51","location":"Mainland China","description":"Review Food Event"}' "http://secure.codeczar.co.uk/event-service/rest/event/publish"
+//  curl -i -H "Accept: application/json" -H "Content-Type:application/json" -X POST --data '{"id":"1232455663","type":"PREvent","scheduledDate":"2020/12/25","scheduledTime":"18:03:51","location":"Mainland China","description":"Review Food Event"}' "http://secure.codeczar.co.uk/event-service/api/v1/event/publish"
   @GetMapping(GET_PROFILE_FORM_DATA)
   public @ResponseBody ResponseEntity<?> getProfileFormInfo() {
 

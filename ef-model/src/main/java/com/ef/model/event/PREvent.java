@@ -4,6 +4,8 @@ import java.sql.Date;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Set;
+import java.util.TreeSet;
 
 import com.ef.model.member.Member;
 
@@ -25,9 +27,10 @@ public class PREvent implements Event {
   private String exclusions;
   private int memberId;
   private List<PREventSchedule> schedules;
+  private Set<AvailableScheduledDate> allAvailableScheduledDatesForDisplay;
 
   public PREvent() {
-
+    allAvailableScheduledDatesForDisplay = new TreeSet<AvailableScheduledDate>();
   }
 
   public PREvent(int id, String cap, String notes, Date createdDate, int eventTypeId, int domainId, int eventVenueId,
@@ -43,6 +46,7 @@ public class PREvent implements Event {
     this.exclusions = exclusions;
     this.memberId = memberId;
     schedules = new ArrayList<PREventSchedule>();
+    allAvailableScheduledDatesForDisplay = new TreeSet<AvailableScheduledDate>();
   }
 
   public PREvent(int id, EventType eventType, String cap, Member member, EventVenue eventVenue, String notes,
@@ -57,6 +61,7 @@ public class PREvent implements Event {
     this.createdDate = createdDate;
     this.eventTimeSlots = eventTimeSlots;
     schedules = new ArrayList<PREventSchedule>();
+    allAvailableScheduledDatesForDisplay = new TreeSet<AvailableScheduledDate>();
   }
 
   public int getId() {
@@ -203,6 +208,19 @@ public class PREvent implements Event {
   @Override
   public String getDescription() {
     return eventType != null ? eventType.getName() : id + "";
+  }
+
+  public Set<AvailableScheduledDate> getAllAvailableScheduledDatesForDisplay() {
+    return allAvailableScheduledDatesForDisplay;
+  }
+
+  public void addAvailableScheduledDatesForDisplay(AvailableScheduledDate availableScheduledDatesForDisplay) {
+    this.allAvailableScheduledDatesForDisplay.add(availableScheduledDatesForDisplay);
+  }
+
+  public void setAllAvailableScheduledDatesForDisplay(
+      Set<AvailableScheduledDate> allAvailableScheduledDatesForDisplay) {
+    this.allAvailableScheduledDatesForDisplay = allAvailableScheduledDatesForDisplay;
   }
 
 }
