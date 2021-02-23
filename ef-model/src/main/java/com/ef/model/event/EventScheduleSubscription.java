@@ -8,7 +8,7 @@ import com.google.gson.Gson;
 public class EventScheduleSubscription {
 
   private long id;
-  private long eventSubscriptionTimeslotId;
+  private long eventSubscriptionId;
   private int subscriberId;
   private Date scheduleDate;
   private String preferredTime;
@@ -18,7 +18,7 @@ public class EventScheduleSubscription {
       String preferredTime, EventStatusMeta eventStatus) {
     super();
     this.id = id;
-    this.eventSubscriptionTimeslotId = eventSubscriptionTimeslotId;
+    this.eventSubscriptionId = eventSubscriptionTimeslotId;
     this.subscriberId = subscriberId;
     this.scheduleDate = scheduleDate;
     this.preferredTime = preferredTime;
@@ -62,11 +62,11 @@ public class EventScheduleSubscription {
   }
 
   public long getScheduleSubscriptionId() {
-    return eventSubscriptionTimeslotId;
+    return eventSubscriptionId;
   }
 
   public void setScheduleSubscriptionId(long eventSubscriptionTimeslotId) {
-    this.eventSubscriptionTimeslotId = eventSubscriptionTimeslotId;
+    this.eventSubscriptionId = eventSubscriptionTimeslotId;
   }
 
   public int getSubscriberId() {
@@ -81,12 +81,12 @@ public class EventScheduleSubscription {
     return eventStatus;
   }
 
-  public long getEventSubscriptionTimeslotId() {
-    return eventSubscriptionTimeslotId;
+  public long getEventSubscriptionId() {
+    return eventSubscriptionId;
   }
 
-  public void setEventSubscriptionTimeslotId(long eventSubscriptionTimeslotId) {
-    this.eventSubscriptionTimeslotId = eventSubscriptionTimeslotId;
+  public void setEventSubscriptionId(long eventSubscriptionTimeslotId) {
+    this.eventSubscriptionId = eventSubscriptionTimeslotId;
   }
 
   public String getPreferredTime() {
@@ -107,7 +107,7 @@ public class EventScheduleSubscription {
 
   @Override
   public String toString() {
-    return "EventScheduleSubscription [id=" + id + ", eventSubscriptionTimeslotId=" + eventSubscriptionTimeslotId
+    return "EventScheduleSubscription [id=" + id + ", eventSubscriptionTimeslotId=" + eventSubscriptionId
         + ", subscriberId=" + subscriberId + ", scheduleDate=" + scheduleDate + ", preferredTime=" + preferredTime
         + ", eventStatus=" + eventStatus + "]";
   }
