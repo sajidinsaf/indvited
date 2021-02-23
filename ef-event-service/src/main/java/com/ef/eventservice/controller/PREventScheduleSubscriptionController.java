@@ -3,6 +3,7 @@ package com.ef.eventservice.controller;
 import static com.ef.eventservice.controller.EventControllerConstants.SUBSCRIBE_SCHEDULE;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 import javax.servlet.http.HttpServletRequest;
@@ -14,7 +15,7 @@ import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.ResponseBody;
 
@@ -22,6 +23,7 @@ import com.ef.common.logging.ServiceLoggingUtil;
 import com.ef.dataaccess.Insert;
 import com.ef.model.event.EventScheduleSubscription;
 import com.ef.model.event.PREventScheduleSubscriptionBindingModel;
+import com.ef.model.event.PREventScheduleSubscriptionBindingModelWorkaround;
 
 /**
  * Handles requests for the event service.
@@ -40,14 +42,22 @@ public class PREventScheduleSubscriptionController {
     this.insertPrEventScheduleSubscription = insertPrEventScheduleSubscription;
   }
 
-  @GetMapping(SUBSCRIBE_SCHEDULE)
+  @PostMapping(SUBSCRIBE_SCHEDULE)
   @ResponseBody
   public ResponseEntity<?> addEventScheduleSubscriptions(
-      @RequestBody PREventScheduleSubscriptionBindingModel[] scheduleSubscriptionChoices, HttpServletRequest request) {
+      @RequestBody PREventScheduleSubscriptionBindingModelWorkaround workaround, HttpServletRequest request) {
+
+    logUtil.debug(logger, "Received subscription data ", workaround);
+    PREventScheduleSubscriptionBindingModel[] scheduleSubscriptionChoices = workaround.getSubscriptions();
+
+    logUtil.debug(logger, "Parsed array from workaround ", Arrays.toString(scheduleSubscriptionChoices));
 
     List<EventScheduleSubscription> persistedSubscriptions = new ArrayList<EventScheduleSubscription>();
 
     for (PREventScheduleSubscriptionBindingModel subscription : scheduleSubscriptionChoices) {
+      if (subscription == null) {
+        continue;
+      }
       persistedSubscriptions.add(insertPrEventScheduleSubscription.data(subscription));
       logUtil.debug(logger, "Persisted subscription ", subscription);
     }

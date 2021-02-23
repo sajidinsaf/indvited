@@ -38,8 +38,8 @@ public class PREventScheduleSubscriptionTest {
 
   private long eventSubscriptionTimeslotId = new Random(10000000).nextLong();
   private int subscriberId = new Random(100000).nextInt();
-  private String scheduleDate = "15/01/2021";
-  private String preferredTime = "1400";
+  private String scheduleDate = "Wed 15 Jan 2020";
+  private String preferredTime = "14:00";
 
   @SuppressWarnings({ "resource" })
   @Before
@@ -66,7 +66,7 @@ public class PREventScheduleSubscriptionTest {
 
     assertThat(result.getScheduleSubscriptionId(), is(eventSubscriptionTimeslotId));
     assertThat(result.getSubscriberId(), is(subscriberId));
-    assertThat(result.getPreferredTime(), is(preferredTime));
+    assertThat(result.getPreferredTime(), is(prEventScheduleSubscriptionBindingModel.getPreferredTime()));
     assertThat(result.getEventStatus().getId(), is(EventStatusMeta.KNOWN_STATUS_ID_APPLIED));
   }
 

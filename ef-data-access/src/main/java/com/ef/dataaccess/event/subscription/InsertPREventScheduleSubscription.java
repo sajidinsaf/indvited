@@ -81,6 +81,6 @@ public class InsertPREventScheduleSubscription
   }
 
   private Date getDate(String dateString) {
-    return InsertPREventSchedule.getDate(dateString, InsertPREventSchedule.DATE_FORMAT);
+    return InsertPREventSchedule.getDate(dateString, PREventScheduleSubscriptionBindingModel.DISPLAY_DATE_FORMAT);
   }
 }

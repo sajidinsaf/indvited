@@ -5,7 +5,7 @@ import java.util.Random;
 import com.google.gson.Gson;
 
 public class PREventScheduleSubscriptionBindingModel {
-
+  public static final String DISPLAY_DATE_FORMAT = "EEE d MMM yyyy";
   private long scheduleSubscriptionId;
   private int subscriberId;
   private String scheduleDate;
@@ -21,7 +21,7 @@ public class PREventScheduleSubscriptionBindingModel {
     this.scheduleSubscriptionId = scheduleSubscriptionId;
     this.subscriberId = subscriberId;
     this.scheduleDate = scheduleDate;
-    this.preferredTime = preferredTime;
+    setPreferredTime(preferredTime);
   }
 
   public long getScheduleSubscriptionId() {
@@ -58,7 +58,7 @@ public class PREventScheduleSubscriptionBindingModel {
   }
 
   public void setPreferredTime(String preferredTime) {
-    this.preferredTime = preferredTime;
+    this.preferredTime = preferredTime == null ? preferredTime : preferredTime.replaceAll(":", "").replaceAll(" ", "");
   }
 
   public String getScheduleDate() {

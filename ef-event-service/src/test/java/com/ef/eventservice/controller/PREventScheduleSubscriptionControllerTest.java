@@ -42,6 +42,7 @@ import com.ef.dataaccess.config.DbTestUtils;
 import com.ef.model.event.EventScheduleSubscription;
 import com.ef.model.event.EventStatusMeta;
 import com.ef.model.event.PREventScheduleSubscriptionBindingModel;
+import com.ef.model.event.PREventScheduleSubscriptionBindingModelWorkaround;
 import com.ef.model.member.Member;
 
 public class PREventScheduleSubscriptionControllerTest {
@@ -81,36 +82,23 @@ public class PREventScheduleSubscriptionControllerTest {
   @Test
   public void shouldPersistAndGetScheduleSubscriptionList() throws Exception {
 
-    long eventScheduleId = new Random().nextInt(10000000);
     int subscriberId = new Random().nextInt(100000);
-    String dateString = "15/01/2021";
-    String preferredTime = "2000";
+    String preferredDate1 = "Thu 15 Jan 2020-23";
+    String preferredTime1 = "12:30";
+    String preferredDate2 = "Fri 17 Jan 2020-23";
+    String preferredTime2 = "2:30";
+    String preferredDate3 = "Sat 18 Jan 2020-23";
+    String preferredTime3 = "20:30";
 
-    PREventScheduleSubscriptionBindingModel a = new PREventScheduleSubscriptionBindingModel(eventScheduleId,
-        subscriberId, dateString, preferredTime);
-
-    eventScheduleId = new Random().nextInt(10000000);
-    subscriberId = new Random().nextInt(100000);
-    preferredTime = "1600";
-
-    PREventScheduleSubscriptionBindingModel b = new PREventScheduleSubscriptionBindingModel(eventScheduleId,
-        subscriberId, dateString, preferredTime);
-
-    eventScheduleId = new Random().nextInt(10000000);
-    subscriberId = new Random().nextInt(100000);
-    preferredTime = "1200";
-
-    PREventScheduleSubscriptionBindingModel c = new PREventScheduleSubscriptionBindingModel(eventScheduleId,
-        subscriberId, dateString, preferredTime);
-
-    ResponseEntity<?> response = controller
-        .addEventScheduleSubscriptions(new PREventScheduleSubscriptionBindingModel[] { a, b, c }, httpServletRequest);
+    PREventScheduleSubscriptionBindingModelWorkaround w = new PREventScheduleSubscriptionBindingModelWorkaround(
+        subscriberId, preferredDate1, preferredTime1, preferredDate2, preferredTime2, preferredDate3, preferredTime3);
+    ResponseEntity<?> response = controller.addEventScheduleSubscriptions(w, httpServletRequest);
 
     List<EventScheduleSubscription> subscriptions = (List<EventScheduleSubscription>) response.getBody();
     assertThat(subscriptions.size(), is(3));
-    assertThat(subscriptions.get(0).getScheduleSubscriptionId(), is(a.getScheduleSubscriptionId()));
-    assertThat(subscriptions.get(1).getSubscriberId(), is(b.getSubscriberId()));
-    assertThat(subscriptions.get(2).getPreferredTime(), is(c.getPreferredTime()));
+    assertThat(subscriptions.get(0).getScheduleSubscriptionId(), is(Long.parseLong(preferredDate1.split("-")[1])));
+    assertThat(subscriptions.get(1).getSubscriberId(), is(w.getMemberId()));
+    assertThat(subscriptions.get(2).getPreferredTime(), is(w.getPreferredTime3().replaceAll(":", "")));
 
     assertThat(subscriptions.get(0).getEventStatus().getId(), is(EventStatusMeta.KNOWN_STATUS_ID_APPLIED));
     assertThat(subscriptions.get(1).getEventStatus().getId(), is(EventStatusMeta.KNOWN_STATUS_ID_APPLIED));

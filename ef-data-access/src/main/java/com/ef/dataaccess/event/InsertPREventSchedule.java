@@ -172,7 +172,7 @@ public class InsertPREventSchedule implements Insert<PREventScheduleBindingModel
 
   public static Date getDate(String date, String dateFormat) {
 
-    SimpleDateFormat format = new SimpleDateFormat(DATE_FORMAT);
+    SimpleDateFormat format = new SimpleDateFormat(dateFormat);
     java.util.Date parsed = null;
     try {
       parsed = format.parse(date);

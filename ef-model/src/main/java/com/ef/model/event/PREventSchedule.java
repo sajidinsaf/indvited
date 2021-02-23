@@ -237,7 +237,7 @@ public class PREventSchedule {
 
   public void setAvailableDates(List<java.util.Date> availableDates) {
     this.availableDates = availableDates;
-    SimpleDateFormat formatter = new SimpleDateFormat("EEE d MMM yyyy");
+    SimpleDateFormat formatter = new SimpleDateFormat(PREventScheduleSubscriptionBindingModel.DISPLAY_DATE_FORMAT);
     for (java.util.Date date : availableDates) {
       availableDatesForDisplay.add(formatter.format(date));
     }
