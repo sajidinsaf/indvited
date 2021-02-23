@@ -52,9 +52,9 @@ public class QueryEligibleSchedulesByBloggerProfileTest {
 
   @Test
   public void shouldRetrieveTwoScheduleSuccessfully() throws ParseException {
-    List<PREvent> prEvents = queryEligibleSchedulesByBloggerProfile.data(1000010016);
+    List<PREvent> prEvents = queryEligibleSchedulesByBloggerProfile.data(1000010037);
 
-    assertThat(prEvents.size(), is(1));
+    assertThat(prEvents.size(), is(2));
 
     PREvent prEvent = prEvents.get(0);
 
@@ -82,6 +82,7 @@ public class QueryEligibleSchedulesByBloggerProfileTest {
     schedule = schedules.get(1);
     assertThat(schedule.getId(), is(101L));
     assertThat(schedule.getEventId(), is(200));
+    assertThat(schedule.getSubscriptions().size(), is(3));
   }
 
   @Test
@@ -113,6 +114,7 @@ public class QueryEligibleSchedulesByBloggerProfileTest {
     assertThat(schedule.isInnerCircle(), is(true));
     assertThat(schedule.isMyBloggers(), is(true));
     assertThat(schedule.isAllEligible(), is(false));
+    assertThat(schedule.getSubscriptions().size(), is(0));
 
     schedule = schedules1.get(1);
     assertThat(schedule.getId(), is(101L));
@@ -123,6 +125,7 @@ public class QueryEligibleSchedulesByBloggerProfileTest {
     assertThat(prEvents.get(0).getEventCriteria().length, is(2));
 
     assertThat(prEvents.get(0).getEventCriteria()[0].getForum(), notNullValue());
+    assertThat(schedule.getSubscriptions().size(), is(3));
   }
 }
 
@@ -146,8 +149,12 @@ class HsqlDbConfigQueryEligibleSchedulesByBloggerProfileTest {
         .addScript("classpath:com/ef/dataaccess/event/insertEventCriteriaMeta.sql")
         .addScript("classpath:com/ef/dataaccess/event/insertVenueData.sql")
         .addScript("classpath:com/ef/dataaccess/member/insertMemberDataForQueryPREventListTest.sql")
+        .addScript("classpath:com/ef/dataaccess/member/insertMemberTypeData.sql")
         .addScript("classpath:com/ef/dataaccess/event/insertEventCriteriaData.sql")
-        .addScript("classpath:com/ef/dataaccess/core/insertForums.sql").build();
+        .addScript("classpath:com/ef/dataaccess/core/insertForums.sql")
+        .addScript("classpath:com/ef/dataaccess/event/schedule/subscription/insertEventScheduleSubscriptionData.sql")
+        .build();
+
   }
 
   @Bean

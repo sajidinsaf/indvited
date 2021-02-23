@@ -7,11 +7,13 @@ import java.util.Map;
 import java.util.Set;
 import java.util.TreeSet;
 
+import org.apache.commons.lang3.tuple.Pair;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Component;
 
+import com.ef.common.LRPair;
 import com.ef.dataaccess.Query;
 import com.ef.dataaccess.core.ForumCache;
 import com.ef.dataaccess.event.EventCriteriaMetadataCache;
@@ -19,10 +21,12 @@ import com.ef.model.core.Forum;
 import com.ef.model.event.EventCriteria;
 import com.ef.model.event.EventCriteriaData;
 import com.ef.model.event.EventCriteriaMetadata;
+import com.ef.model.event.EventScheduleSubscription;
 import com.ef.model.event.PREvent;
 import com.ef.model.event.PREventSchedule;
 import com.ef.model.member.Member;
 import com.ef.model.member.MemberCriteriaData;
+import com.ef.model.member.MemberType;
 
 @Component(value = "queryEligibleSchedulesByBloggerProfile")
 public class QueryEligibleSchedulesByBloggerProfile implements Query<Integer, List<PREvent>> {
@@ -36,6 +40,8 @@ public class QueryEligibleSchedulesByBloggerProfile implements Query<Integer, Li
   private final Query<Integer, Member> queryMemberById;
   private final EventCriteriaMetadataCache eventCriteriaMetadataCache;
   private final ForumCache forumCache;
+  @Qualifier("queryEventScheduleSubscriptionByScheduleIdAndBloggerId")
+  Query<Pair<Integer, Long>, List<EventScheduleSubscription>> queryEventScheduleSubscriptionByScheduleIdAndBloggerId;
 
   @Autowired
   public QueryEligibleSchedulesByBloggerProfile(@Qualifier("indvitedDbJdbcTemplate") JdbcTemplate jdbcTemplate,
@@ -43,7 +49,8 @@ public class QueryEligibleSchedulesByBloggerProfile implements Query<Integer, Li
       @Qualifier("queryEventCriteriaDataByEventId") Query<Integer, Map<Integer, EventCriteriaData>> queryEventCriteriaDataByEventId,
       @Qualifier("queryEventById") Query<Integer, PREvent> queryEventById,
       @Qualifier("queryMemberById") Query<Integer, Member> queryMemberById,
-      EventCriteriaMetadataCache eventCriteriaMetadataCache, ForumCache forumCache) {
+      EventCriteriaMetadataCache eventCriteriaMetadataCache, ForumCache forumCache,
+      @Qualifier("queryEventScheduleSubscriptionByScheduleIdAndBloggerId") Query<Pair<Integer, Long>, List<EventScheduleSubscription>> queryEventScheduleSubscriptionByScheduleIdAndBloggerId) {
     this.jdbcTemplate = jdbcTemplate;
     this.queryMemberCriteriaDataByMemberId = queryMemberCriteriaDataByMemberId;
     this.queryEventCriteriaDataByEventId = queryEventCriteriaDataByEventId;
@@ -51,10 +58,17 @@ public class QueryEligibleSchedulesByBloggerProfile implements Query<Integer, Li
     this.queryMemberById = queryMemberById;
     this.eventCriteriaMetadataCache = eventCriteriaMetadataCache;
     this.forumCache = forumCache;
+    this.queryEventScheduleSubscriptionByScheduleIdAndBloggerId = queryEventScheduleSubscriptionByScheduleIdAndBloggerId;
   }
 
   @Override
   public List<PREvent> data(final Integer bloggerId) {
+
+    Member subscriber = queryMemberById.data(bloggerId);
+
+    if (subscriber.getMemberType().getId() != (MemberType.KNOWN_MEMBER_TYPE_BLOGGER)) {
+      throw new RuntimeException("Member: " + subscriber + " cannot subscriber to events");
+    }
 
     List<MemberCriteriaData> bloggersCriteriaData = queryMemberCriteriaDataByMemberId.data(bloggerId);
 
@@ -113,6 +127,10 @@ public class QueryEligibleSchedulesByBloggerProfile implements Query<Integer, Li
           Member member = queryMemberById.data(event.getMemberId());
           event.setMember(member);
         }
+
+        List<EventScheduleSubscription> subscriptions = queryEventScheduleSubscriptionByScheduleIdAndBloggerId
+            .data(new LRPair<Integer, Long>(bloggerId, schedule.getId()));
+        schedule.setSubscriptions(subscriptions);
 
         event.addSchedule(schedule);
 
