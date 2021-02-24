@@ -4,7 +4,7 @@ import com.ef.model.event.PREventSchedule;
 
 public class PREventScheduleForPrApprovalWrapper extends PREventSchedule {
 
-  private int totalScheduleDays;
+  private int availableSubsriptions;
 
   public PREventScheduleForPrApprovalWrapper(PREventSchedule prEventSchedule) {
     super(prEventSchedule.getEventId(), prEventSchedule.getId(), prEventSchedule.getStartDate(),
@@ -18,17 +18,17 @@ public class PREventScheduleForPrApprovalWrapper extends PREventSchedule {
 
   }
 
-  public int getTotalScheduleDays() {
-    return totalScheduleDays;
+  public int getAvailableSubsriptions() {
+    return availableSubsriptions;
   }
 
-  public void setTotalScheduleDays(int totalScheduleDays) {
-    this.totalScheduleDays = totalScheduleDays;
+  public void setAvailableSubsriptions(int availableSubsriptions) {
+    this.availableSubsriptions = availableSubsriptions;
   }
 
   @Override
   public String toString() {
-    return "PREventScheduleForPrApprovalWrapper [totalScheduleDays=" + totalScheduleDays + ", PREventSchedule()="
+    return "PREventScheduleForPrApprovalWrapper [totalScheduleDays=" + availableSubsriptions + ", PREventSchedule()="
         + super.toString() + "]";
   }
 

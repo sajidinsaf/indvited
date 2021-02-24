@@ -9,10 +9,12 @@ import java.util.Set;
 import java.util.TreeMap;
 import java.util.TreeSet;
 
+import org.apache.commons.lang3.tuple.Pair;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Component;
 
+import com.ef.common.LRPair;
 import com.ef.dataaccess.Query;
 import com.ef.dataaccess.event.util.EventEnricher;
 import com.ef.model.event.EventScheduleSubscription;
@@ -20,6 +22,7 @@ import com.ef.model.event.EventStatusMeta;
 import com.ef.model.event.PREvent;
 import com.ef.model.event.PREventSchedule;
 import com.ef.model.event.wrapper.EventScheduleSubscriptionForPrApprovalWrapper;
+import com.ef.model.event.wrapper.PREventScheduleForPrApprovalWrapper;
 
 @Component(value = "queryApprovalPendingSubscriptionsByPrId")
 public class QueryApprovalPendingSubscriptionsByPrId implements Query<Integer, List<PREvent>> {
@@ -28,11 +31,15 @@ public class QueryApprovalPendingSubscriptionsByPrId implements Query<Integer, L
 
   private final EventEnricher eventEnricher;
 
+  private final Query<Pair<Long, int[]>, Integer> queryEventScheduleSubscriptionCountByScheduleIdAndStatusIds;
+
   @Autowired
   public QueryApprovalPendingSubscriptionsByPrId(
-      @Qualifier("queryPREventList") Query<Integer, List<PREvent>> queryPREventList, EventEnricher eventEnricher) {
+      @Qualifier("queryPREventList") Query<Integer, List<PREvent>> queryPREventList, EventEnricher eventEnricher,
+      @Qualifier("queryEventScheduleSubscriptionCountByScheduleIdAndStatusIds") Query<Pair<Long, int[]>, Integer> queryEventScheduleSubscriptionCountByScheduleIdAndStatusIds) {
     this.queryPREventList = queryPREventList;
     this.eventEnricher = eventEnricher;
+    this.queryEventScheduleSubscriptionCountByScheduleIdAndStatusIds = queryEventScheduleSubscriptionCountByScheduleIdAndStatusIds;
   }
 
   @Override
@@ -91,16 +98,24 @@ public class QueryApprovalPendingSubscriptionsByPrId implements Query<Integer, L
     for (PREvent event : validEvents.keySet()) {
 
       List<PREventSchedule> schedulesForThisEvent = new ArrayList<PREventSchedule>(validEvents.get(event).keySet());
-
-      for (PREventSchedule schedule : schedulesForThisEvent) {
+      List<PREventSchedule> scheduleWrappersForThisEvent = new ArrayList<PREventSchedule>();
+      for (PREventSchedule rawSchedule : schedulesForThisEvent) {
 
         Set<EventScheduleSubscription> sortedSubscriptions = new TreeSet<EventScheduleSubscription>(comparator());
-        sortedSubscriptions.addAll(validEvents.get(event).get(schedule).keySet());
+        sortedSubscriptions.addAll(validEvents.get(event).get(rawSchedule).keySet());
 
-        schedule.setSubscriptions(new ArrayList<EventScheduleSubscription>(sortedSubscriptions));
+        PREventScheduleForPrApprovalWrapper scheduleWrapper = new PREventScheduleForPrApprovalWrapper(rawSchedule);
 
+        scheduleWrapper.setSubscriptions(new ArrayList<EventScheduleSubscription>(sortedSubscriptions));
+
+        int approvedSubscriptions = queryEventScheduleSubscriptionCountByScheduleIdAndStatusIds
+            .data(new LRPair<Long, int[]>(rawSchedule.getId(), new int[] { 3 }));
+
+        scheduleWrapper
+            .setAvailableSubsriptions(rawSchedule.getTotalNumberOfSubscriptionForSchedule() - approvedSubscriptions);
+        scheduleWrappersForThisEvent.add(scheduleWrapper);
       }
-      event.setSchedules(schedulesForThisEvent);
+      event.setSchedules(scheduleWrappersForThisEvent);
 
       eventEnricher.populateEventCriteria(event);
 

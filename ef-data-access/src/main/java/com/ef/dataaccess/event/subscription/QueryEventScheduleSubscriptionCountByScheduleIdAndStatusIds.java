@@ -15,7 +15,7 @@ import com.ef.model.event.EventScheduleSubscription;
 @Component(value = "queryEventScheduleSubscriptionCountByScheduleIdAndStatusIds")
 public class QueryEventScheduleSubscriptionCountByScheduleIdAndStatusIds implements Query<Pair<Long, int[]>, Integer> {
 
-  private final String SELECT_COUNT = "select count(*) from event_schedule_subscription where event_schedule_id=%d and status_id in (%s)";
+  private final String SELECT_COUNT = "select count(*) from event_schedule_subscription where event_schedule_id=%d and status_id in (%s) and schedule_date > cast((now()) as date)";
 
   private final JdbcTemplate jdbcTemplate;
 

@@ -52,7 +52,7 @@ public class QueryEventScheduleSubscriptionCountByScheduleIdAndStatusIdsTest {
     int count = queryEventScheduleSubscriptionCountByScheduleIdAndStatusIds
         .data(new LRPair<Long, int[]>(100L, new int[] { 3, 4, 5 }));
 
-    assertThat(count, is(6));
+    assertThat(count, is(4));
 
   }
 
