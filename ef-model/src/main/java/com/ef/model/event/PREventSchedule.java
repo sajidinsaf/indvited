@@ -14,7 +14,7 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.List;
 
-public class PREventSchedule {
+public class PREventSchedule implements Comparable<PREventSchedule> {
 
   private int eventId;
   private long id;
@@ -256,6 +256,33 @@ public class PREventSchedule {
         + ", innerCircle=" + innerCircle + ", myBloggers=" + myBloggers + ", allEligible=" + allEligible
         + ", bloggersPerDay=" + bloggersPerDay + ", scheduleTimeInfo=" + scheduleTimeInfo + ", daysOfTheWeek="
         + daysOfTheWeek + ", availableDates=" + availableDates + ", subscriptions=" + subscriptions + "]";
+  }
+
+  @Override
+  public int compareTo(PREventSchedule o) {
+    return ((Long) getId()).compareTo((Long) o.getId());
+  }
+
+  @Override
+  public int hashCode() {
+    final int prime = 31;
+    int result = 1;
+    result = prime * result + (int) (id ^ (id >>> 32));
+    return result;
+  }
+
+  @Override
+  public boolean equals(Object obj) {
+    if (this == obj)
+      return true;
+    if (obj == null)
+      return false;
+    if (getClass() != obj.getClass())
+      return false;
+    PREventSchedule other = (PREventSchedule) obj;
+    if (id != other.id)
+      return false;
+    return true;
   }
 
 }

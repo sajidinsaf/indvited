@@ -17,10 +17,13 @@ public class QueryMemberByPhoneAndMemberType implements Query<Pair<String, Membe
   private final String SELECT_MEMBER = "select id, firstname, lastname, email, gender, phone, date_registered, timestamp_of_last_login, is_enabled from member where phone=? and member_type_id=?";
 
   private final JdbcTemplate jdbcTemplate;
+  private final MemberTypeCache memberTypeCache;
 
   @Autowired
-  public QueryMemberByPhoneAndMemberType(@Qualifier("indvitedDbJdbcTemplate") JdbcTemplate jdbcTemplate) {
+  public QueryMemberByPhoneAndMemberType(@Qualifier("indvitedDbJdbcTemplate") JdbcTemplate jdbcTemplate,
+      MemberTypeCache memberTypeCache) {
     this.jdbcTemplate = jdbcTemplate;
+    this.memberTypeCache = memberTypeCache;
   }
 
   @Override
@@ -30,7 +33,7 @@ public class QueryMemberByPhoneAndMemberType implements Query<Pair<String, Membe
     MemberType memberType = phoneAndMemberType.getRight();
     Integer memberTypeId = phoneAndMemberType.getRight().getId();
     Member member = jdbcTemplate.queryForObject(SELECT_MEMBER, new Object[] { phone, memberTypeId },
-        new MemberRowMapper(memberType));
+        new MemberRowMapper(memberTypeCache));
     return member;
   }
 

@@ -38,9 +38,11 @@ import com.ef.common.message.Channel;
 import com.ef.common.message.Response;
 import com.ef.common.message.StatusCode;
 import com.ef.dataaccess.Insert;
+import com.ef.dataaccess.Query;
 import com.ef.dataaccess.config.DbTestUtils;
 import com.ef.model.event.EventScheduleSubscription;
 import com.ef.model.event.EventStatusMeta;
+import com.ef.model.event.PREvent;
 import com.ef.model.event.PREventScheduleSubscriptionBindingModel;
 import com.ef.model.event.PREventScheduleSubscriptionBindingModelWorkaround;
 import com.ef.model.member.Member;
@@ -69,8 +71,11 @@ public class PREventScheduleSubscriptionControllerTest {
     jdbcTemplate = appContext.getBean(JdbcTemplate.class);
     Insert<PREventScheduleSubscriptionBindingModel, EventScheduleSubscription> insertPrEventScheduleSubscription = appContext
         .getBean("insertPrEventScheduleSubscription", Insert.class);
+    Query<Integer, List<PREvent>> queryApprovalPendingSubscriptionsByPrId = appContext
+        .getBean("queryApprovalPendingSubscriptionsByPrId", Query.class);
 
-    controller = new PREventScheduleSubscriptionController(insertPrEventScheduleSubscription);
+    controller = new PREventScheduleSubscriptionController(insertPrEventScheduleSubscription,
+        queryApprovalPendingSubscriptionsByPrId);
   }
 
   @After

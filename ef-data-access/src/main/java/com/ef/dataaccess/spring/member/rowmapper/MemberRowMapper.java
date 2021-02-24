@@ -5,28 +5,30 @@ import java.sql.SQLException;
 
 import org.springframework.jdbc.core.RowMapper;
 
+import com.ef.dataaccess.member.MemberTypeCache;
 import com.ef.model.member.Member;
 import com.ef.model.member.MemberLoginControl;
 import com.ef.model.member.MemberType;
 
 public class MemberRowMapper implements RowMapper<Member> {
 
-  private final MemberType memberType;
+  private final MemberTypeCache memberTypeCache;
   private final MemberLoginControl memberLoginControl;
 
-  public MemberRowMapper(MemberType memberType) {
-    this.memberType = memberType;
+  public MemberRowMapper(MemberTypeCache memberTypeCache) {
+    this.memberTypeCache = memberTypeCache;
     this.memberLoginControl = null;
   }
 
-  public MemberRowMapper(MemberType memberType, MemberLoginControl memberLoginControl) {
-    this.memberType = memberType;
+  public MemberRowMapper(MemberTypeCache memberTypeCache, MemberLoginControl memberLoginControl) {
+    this.memberTypeCache = memberTypeCache;
     this.memberLoginControl = memberLoginControl;
   }
 
   @Override
   public Member mapRow(ResultSet rs, int rowNum) throws SQLException {
     Member member = null;
+    MemberType memberType = memberTypeCache.getMemberType(rs.getInt("MEMBER_TYPE_ID"));
     if (memberLoginControl != null) {
       member = new Member(rs.getInt("ID"), rs.getString("FIRSTNAME"), rs.getString("LASTNAME"), rs.getString("EMAIL"),
           rs.getString("GENDER"), rs.getString("PHONE"), memberType, rs.getTimestamp("DATE_REGISTERED"),

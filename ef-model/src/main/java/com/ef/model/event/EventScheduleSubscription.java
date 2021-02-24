@@ -3,9 +3,10 @@ package com.ef.model.event;
 import java.sql.Date;
 import java.util.Random;
 
+import com.ef.model.member.Member;
 import com.google.gson.Gson;
 
-public class EventScheduleSubscription {
+public class EventScheduleSubscription implements Comparable<EventScheduleSubscription> {
 
   private long id;
   private long eventSubscriptionId;
@@ -13,6 +14,7 @@ public class EventScheduleSubscription {
   private Date scheduleDate;
   private String preferredTime;
   private final EventStatusMeta eventStatus;
+  private Member subscriber;
 
   public EventScheduleSubscription(long id, long eventSubscriptionTimeslotId, int subscriberId, Date scheduleDate,
       String preferredTime, EventStatusMeta eventStatus) {
@@ -53,7 +55,7 @@ public class EventScheduleSubscription {
 
   }
 
-  public long getEventId() {
+  public long getId() {
     return id;
   }
 
@@ -105,11 +107,46 @@ public class EventScheduleSubscription {
     this.scheduleDate = scheduleDate;
   }
 
+  public Member getSubscriber() {
+    return subscriber;
+  }
+
+  public void setSubscriber(Member subscriber) {
+    this.subscriber = subscriber;
+  }
+
+  @Override
+  public int compareTo(EventScheduleSubscription o) {
+    return ((Long) getId()).compareTo((Long) o.getId());
+  }
+
+  @Override
+  public int hashCode() {
+    final int prime = 31;
+    int result = 1;
+    result = prime * result + (int) (id ^ (id >>> 32));
+    return result;
+  }
+
+  @Override
+  public boolean equals(Object obj) {
+    if (this == obj)
+      return true;
+    if (obj == null)
+      return false;
+    if (getClass() != obj.getClass())
+      return false;
+    EventScheduleSubscription other = (EventScheduleSubscription) obj;
+    if (id != other.id)
+      return false;
+    return true;
+  }
+
   @Override
   public String toString() {
-    return "EventScheduleSubscription [id=" + id + ", eventSubscriptionTimeslotId=" + eventSubscriptionId
-        + ", subscriberId=" + subscriberId + ", scheduleDate=" + scheduleDate + ", preferredTime=" + preferredTime
-        + ", eventStatus=" + eventStatus + "]";
+    return "EventScheduleSubscription [id=" + id + ", eventSubscriptionId=" + eventSubscriptionId + ", subscriberId="
+        + subscriberId + ", scheduleDate=" + scheduleDate + ", preferredTime=" + preferredTime + ", eventStatus="
+        + eventStatus + ", subscriber=" + subscriber + "]";
   }
 
 }

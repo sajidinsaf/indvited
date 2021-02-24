@@ -15,12 +15,8 @@ import org.springframework.stereotype.Component;
 
 import com.ef.common.LRPair;
 import com.ef.dataaccess.Query;
-import com.ef.dataaccess.core.ForumCache;
-import com.ef.dataaccess.event.EventCriteriaMetadataCache;
-import com.ef.model.core.Forum;
-import com.ef.model.event.EventCriteria;
+import com.ef.dataaccess.event.util.EventEnricher;
 import com.ef.model.event.EventCriteriaData;
-import com.ef.model.event.EventCriteriaMetadata;
 import com.ef.model.event.EventScheduleSubscription;
 import com.ef.model.event.PREvent;
 import com.ef.model.event.PREventSchedule;
@@ -38,8 +34,7 @@ public class QueryEligibleSchedulesByBloggerProfile implements Query<Integer, Li
   private final Query<Integer, Map<Integer, EventCriteriaData>> queryEventCriteriaDataByEventId;
   private final Query<Integer, PREvent> queryEventById;
   private final Query<Integer, Member> queryMemberById;
-  private final EventCriteriaMetadataCache eventCriteriaMetadataCache;
-  private final ForumCache forumCache;
+  private final EventEnricher eventEnricher;
   @Qualifier("queryEventScheduleSubscriptionByScheduleIdAndBloggerId")
   Query<Pair<Integer, Long>, List<EventScheduleSubscription>> queryEventScheduleSubscriptionByScheduleIdAndBloggerId;
 
@@ -49,16 +44,15 @@ public class QueryEligibleSchedulesByBloggerProfile implements Query<Integer, Li
       @Qualifier("queryEventCriteriaDataByEventId") Query<Integer, Map<Integer, EventCriteriaData>> queryEventCriteriaDataByEventId,
       @Qualifier("queryEventById") Query<Integer, PREvent> queryEventById,
       @Qualifier("queryMemberById") Query<Integer, Member> queryMemberById,
-      EventCriteriaMetadataCache eventCriteriaMetadataCache, ForumCache forumCache,
-      @Qualifier("queryEventScheduleSubscriptionByScheduleIdAndBloggerId") Query<Pair<Integer, Long>, List<EventScheduleSubscription>> queryEventScheduleSubscriptionByScheduleIdAndBloggerId) {
+      @Qualifier("queryEventScheduleSubscriptionByScheduleIdAndBloggerId") Query<Pair<Integer, Long>, List<EventScheduleSubscription>> queryEventScheduleSubscriptionByScheduleIdAndBloggerId,
+      EventEnricher eventEnricher) {
     this.jdbcTemplate = jdbcTemplate;
     this.queryMemberCriteriaDataByMemberId = queryMemberCriteriaDataByMemberId;
     this.queryEventCriteriaDataByEventId = queryEventCriteriaDataByEventId;
     this.queryEventById = queryEventById;
     this.queryMemberById = queryMemberById;
-    this.eventCriteriaMetadataCache = eventCriteriaMetadataCache;
-    this.forumCache = forumCache;
     this.queryEventScheduleSubscriptionByScheduleIdAndBloggerId = queryEventScheduleSubscriptionByScheduleIdAndBloggerId;
+    this.eventEnricher = eventEnricher;
   }
 
   @Override
@@ -122,7 +116,7 @@ public class QueryEligibleSchedulesByBloggerProfile implements Query<Integer, Li
         if (event == null) {
           event = queryEventById.data(schedule.getEventId());
 
-          populateEventCriteria(event, new ArrayList<EventCriteriaData>(eventCriteriaData.values()));
+          eventEnricher.populateEventCriteria(event, new ArrayList<EventCriteriaData>(eventCriteriaData.values()));
 
           Member member = queryMemberById.data(event.getMemberId());
           event.setMember(member);
@@ -141,24 +135,6 @@ public class QueryEligibleSchedulesByBloggerProfile implements Query<Integer, Li
     }
     List<PREvent> events = new ArrayList<PREvent>(prEvents.values());
     return events;
-  }
-
-  private void populateEventCriteria(PREvent event, List<EventCriteriaData> eventCriteriaList) {
-
-    EventCriteria[] eventCriteriaArray = new EventCriteria[eventCriteriaList.size()];
-    for (int i = 0; i < eventCriteriaList.size(); i++) {
-      EventCriteriaData eventCriterionData = eventCriteriaList.get(i);
-      int criterionId = eventCriterionData.getCriterionId();
-      EventCriteriaMetadata criterionMeta = eventCriteriaMetadataCache.getEventCriteria(criterionId);
-
-      Forum forum = forumCache.getForum(criterionMeta.getForumId());
-
-      EventCriteria eventCriteria = new EventCriteria(criterionId, criterionMeta.getName(),
-          eventCriterionData.getCriterionValue(), forum);
-      eventCriteriaArray[i] = eventCriteria;
-    }
-    event.setEventCriteria(eventCriteriaArray);
-
   }
 
 }

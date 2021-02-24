@@ -23,4 +23,7 @@ public class EventControllerConstants {
   public static final String PR_EVENT_SCHEDULE_PERSIST_RESULT = "PR_EVENT_PERSIST_RESULT";
 
   public static final String GET_SUBSCRIBER_ELIGIBLE_LIST_V1 = "/api/v1/event/blogger/list/eligible";
+
+  public static final String GET_AWAITING_APPROVAL_SUBSCRIPTIONS_V1 = "/api/v1/event/subscriptions/3";
+
 }
