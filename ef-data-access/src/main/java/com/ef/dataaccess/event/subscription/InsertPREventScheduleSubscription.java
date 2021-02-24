@@ -16,9 +16,9 @@ import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.stereotype.Component;
 
 import com.ef.common.logging.ServiceLoggingUtil;
+import com.ef.common.util.DateUtil;
 import com.ef.dataaccess.Insert;
 import com.ef.dataaccess.event.EventStatusMetaCache;
-import com.ef.dataaccess.event.InsertPREventSchedule;
 import com.ef.model.event.EventScheduleSubscription;
 import com.ef.model.event.EventStatusMeta;
 import com.ef.model.event.PREventScheduleSubscriptionBindingModel;
@@ -81,6 +81,6 @@ public class InsertPREventScheduleSubscription
   }
 
   private Date getDate(String dateString) {
-    return InsertPREventSchedule.getDate(dateString, PREventScheduleSubscriptionBindingModel.DISPLAY_DATE_FORMAT);
+    return new DateUtil().parseSqlDateFromEventDisplayString(dateString);
   }
 }

@@ -38,4 +38,9 @@ public class EventStatusMeta implements Identifiable {
     return description;
   }
 
+  @Override
+  public String toString() {
+    return "EventStatusMeta [id=" + id + ", name=" + name + ", description=" + description + "]";
+  }
+
 }

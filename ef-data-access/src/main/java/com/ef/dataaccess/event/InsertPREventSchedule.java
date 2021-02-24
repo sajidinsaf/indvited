@@ -6,8 +6,6 @@ import java.sql.PreparedStatement;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.sql.Timestamp;
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -19,6 +17,7 @@ import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.stereotype.Component;
 
 import com.ef.common.logging.ServiceLoggingUtil;
+import com.ef.common.util.DateUtil;
 import com.ef.dataaccess.Insert;
 import com.ef.dataaccess.Query;
 import com.ef.model.event.EventScheduleResult;
@@ -170,17 +169,7 @@ public class InsertPREventSchedule implements Insert<PREventScheduleBindingModel
     return new Timestamp(date.getTime());
   }
 
-  public static Date getDate(String date, String dateFormat) {
-
-    SimpleDateFormat format = new SimpleDateFormat(dateFormat);
-    java.util.Date parsed = null;
-    try {
-      parsed = format.parse(date);
-    } catch (ParseException e) {
-      throw new RuntimeException("Exception while parsing event time slot date: " + date + " with format" + DATE_FORMAT
-          + "The date format can be specified with the system property 'event.schedule.date.format'");
-    }
-    return new Date(parsed.getTime());
-
+  public Date getDate(String date, String dateFormat) {
+    return new DateUtil().parseSqlDateFromEventDisplayString(date, dateFormat);
   }
 }

@@ -1,6 +1,7 @@
 package com.ef.dataaccess.event.schedule;
 
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -18,6 +19,7 @@ import com.ef.model.event.EventScheduleSubscription;
 import com.ef.model.event.EventStatusMeta;
 import com.ef.model.event.PREvent;
 import com.ef.model.event.PREventSchedule;
+import com.ef.model.event.wrapper.EventScheduleSubscriptionForPrApprovalWrapper;
 
 @Component(value = "queryApprovalPendingSubscriptionsByPrId")
 public class QueryApprovalPendingSubscriptionsByPrId implements Query<Integer, List<PREvent>> {
@@ -38,7 +40,7 @@ public class QueryApprovalPendingSubscriptionsByPrId implements Query<Integer, L
 
     List<PREvent> allPrEvents = queryPREventList.data(prId);
 
-    Map<PREvent, TreeMap<PREventSchedule, Set<EventScheduleSubscription>>> validEvents = new HashMap<PREvent, TreeMap<PREventSchedule, Set<EventScheduleSubscription>>>();
+    Map<PREvent, Map<PREventSchedule, Map<EventScheduleSubscriptionForPrApprovalWrapper, EventScheduleSubscriptionForPrApprovalWrapper>>> validEvents = new HashMap<PREvent, Map<PREventSchedule, Map<EventScheduleSubscriptionForPrApprovalWrapper, EventScheduleSubscriptionForPrApprovalWrapper>>>();
 
     for (PREvent prEvent : allPrEvents) {
 
@@ -47,21 +49,37 @@ public class QueryApprovalPendingSubscriptionsByPrId implements Query<Integer, L
 
       for (PREventSchedule schedule : prEvent.getSchedules()) {
         List<EventScheduleSubscription> subscriptions = schedule.getSubscriptions();
-        for (EventScheduleSubscription subscription : subscriptions) {
-          if (subscription.getEventStatus().getId() == EventStatusMeta.KNOWN_STATUS_ID_APPLIED) {
+        for (EventScheduleSubscription rawSubscription : subscriptions) {
+          if (rawSubscription.getEventStatus().getId() == EventStatusMeta.KNOWN_STATUS_ID_APPLIED) {
 
-            TreeMap<PREventSchedule, Set<EventScheduleSubscription>> eventScheduleMap = validEvents.get(prEvent);
+            Map<PREventSchedule, Map<EventScheduleSubscriptionForPrApprovalWrapper, EventScheduleSubscriptionForPrApprovalWrapper>> eventScheduleMap = validEvents
+                .get(prEvent);
             if (eventScheduleMap == null) {
-              eventScheduleMap = new TreeMap<PREventSchedule, Set<EventScheduleSubscription>>();
+              eventScheduleMap = new TreeMap<PREventSchedule, Map<EventScheduleSubscriptionForPrApprovalWrapper, EventScheduleSubscriptionForPrApprovalWrapper>>();
             }
 
-            Set<EventScheduleSubscription> subscriptionsSet = eventScheduleMap.get(schedule);
+            Map<EventScheduleSubscriptionForPrApprovalWrapper, EventScheduleSubscriptionForPrApprovalWrapper> subscriptionsSet = eventScheduleMap
+                .get(schedule);
 
             if (subscriptionsSet == null) {
-              subscriptionsSet = new TreeSet<EventScheduleSubscription>();
+
+              subscriptionsSet = new HashMap<EventScheduleSubscriptionForPrApprovalWrapper, EventScheduleSubscriptionForPrApprovalWrapper>();
             }
 
-            subscriptionsSet.add(subscription);
+            EventScheduleSubscriptionForPrApprovalWrapper subscriptionWrapper = new EventScheduleSubscriptionForPrApprovalWrapper(
+                rawSubscription);
+
+            boolean exists = false;
+            if (subscriptionsSet.containsKey(subscriptionWrapper)) {
+              exists = true;
+              subscriptionWrapper = subscriptionsSet.remove(subscriptionWrapper);
+            }
+
+            if (exists) {
+              subscriptionWrapper.addSubscription(rawSubscription);
+            }
+
+            subscriptionsSet.put(subscriptionWrapper, subscriptionWrapper);
             eventScheduleMap.put(schedule, subscriptionsSet);
             validEvents.put(prEvent, eventScheduleMap);
 
@@ -76,10 +94,10 @@ public class QueryApprovalPendingSubscriptionsByPrId implements Query<Integer, L
 
       for (PREventSchedule schedule : schedulesForThisEvent) {
 
-        List<EventScheduleSubscription> subscriptionsForThisSchedule = new ArrayList<EventScheduleSubscription>(
-            validEvents.get(event).get(schedule));
+        Set<EventScheduleSubscription> sortedSubscriptions = new TreeSet<EventScheduleSubscription>(comparator());
+        sortedSubscriptions.addAll(validEvents.get(event).get(schedule).keySet());
 
-        schedule.setSubscriptions(subscriptionsForThisSchedule);
+        schedule.setSubscriptions(new ArrayList<EventScheduleSubscription>(sortedSubscriptions));
 
       }
       event.setSchedules(schedulesForThisEvent);
@@ -89,6 +107,13 @@ public class QueryApprovalPendingSubscriptionsByPrId implements Query<Integer, L
     }
 
     return new ArrayList<PREvent>(validEvents.keySet());
+  }
+
+  private Comparator<EventScheduleSubscription> comparator() {
+    // Compare the subscriptions by name and id
+    Comparator<EventScheduleSubscription> subscriptionComparator = Comparator
+        .comparing(EventScheduleSubscription::getId).thenComparing(EventScheduleSubscription::getSubscriberId);
+    return subscriptionComparator;
   }
 
 }

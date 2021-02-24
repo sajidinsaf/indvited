@@ -10,9 +10,10 @@ import static java.time.DayOfWeek.WEDNESDAY;
 
 import java.sql.Date;
 import java.sql.Timestamp;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.List;
+
+import com.ef.common.util.DateUtil;
 
 public class PREventSchedule implements Comparable<PREventSchedule> {
 
@@ -237,9 +238,9 @@ public class PREventSchedule implements Comparable<PREventSchedule> {
 
   public void setAvailableDates(List<java.util.Date> availableDates) {
     this.availableDates = availableDates;
-    SimpleDateFormat formatter = new SimpleDateFormat(PREventScheduleSubscriptionBindingModel.DISPLAY_DATE_FORMAT);
+
     for (java.util.Date date : availableDates) {
-      availableDatesForDisplay.add(formatter.format(date));
+      availableDatesForDisplay.add(new DateUtil().formatDateForEventDisplay(date));
     }
   }
 

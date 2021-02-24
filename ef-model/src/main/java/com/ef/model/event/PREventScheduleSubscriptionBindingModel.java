@@ -5,7 +5,6 @@ import java.util.Random;
 import com.google.gson.Gson;
 
 public class PREventScheduleSubscriptionBindingModel {
-  public static final String DISPLAY_DATE_FORMAT = "EEE d MMM yyyy";
   private long scheduleSubscriptionId;
   private int subscriberId;
   private String scheduleDate;

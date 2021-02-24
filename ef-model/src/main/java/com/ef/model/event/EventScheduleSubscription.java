@@ -6,21 +6,21 @@ import java.util.Random;
 import com.ef.model.member.Member;
 import com.google.gson.Gson;
 
-public class EventScheduleSubscription implements Comparable<EventScheduleSubscription> {
+public class EventScheduleSubscription {
 
   private long id;
-  private long eventSubscriptionId;
+  private long eventScheduleId;
   private int subscriberId;
   private Date scheduleDate;
   private String preferredTime;
   private final EventStatusMeta eventStatus;
   private Member subscriber;
 
-  public EventScheduleSubscription(long id, long eventSubscriptionTimeslotId, int subscriberId, Date scheduleDate,
+  public EventScheduleSubscription(long id, long eventSubscriptionId, int subscriberId, Date scheduleDate,
       String preferredTime, EventStatusMeta eventStatus) {
     super();
     this.id = id;
-    this.eventSubscriptionId = eventSubscriptionTimeslotId;
+    this.eventScheduleId = eventSubscriptionId;
     this.subscriberId = subscriberId;
     this.scheduleDate = scheduleDate;
     this.preferredTime = preferredTime;
@@ -64,11 +64,11 @@ public class EventScheduleSubscription implements Comparable<EventScheduleSubscr
   }
 
   public long getScheduleSubscriptionId() {
-    return eventSubscriptionId;
+    return eventScheduleId;
   }
 
   public void setScheduleSubscriptionId(long eventSubscriptionTimeslotId) {
-    this.eventSubscriptionId = eventSubscriptionTimeslotId;
+    this.eventScheduleId = eventSubscriptionTimeslotId;
   }
 
   public int getSubscriberId() {
@@ -83,12 +83,12 @@ public class EventScheduleSubscription implements Comparable<EventScheduleSubscr
     return eventStatus;
   }
 
-  public long getEventSubscriptionId() {
-    return eventSubscriptionId;
+  public long getEventScheduleId() {
+    return eventScheduleId;
   }
 
-  public void setEventSubscriptionId(long eventSubscriptionTimeslotId) {
-    this.eventSubscriptionId = eventSubscriptionTimeslotId;
+  public void setEventScheduleId(long eventSubscriptionTimeslotId) {
+    this.eventScheduleId = eventSubscriptionTimeslotId;
   }
 
   public String getPreferredTime() {
@@ -115,7 +115,7 @@ public class EventScheduleSubscription implements Comparable<EventScheduleSubscr
     this.subscriber = subscriber;
   }
 
-  @Override
+  // @Override
   public int compareTo(EventScheduleSubscription o) {
     return ((Long) getId()).compareTo((Long) o.getId());
   }
@@ -144,7 +144,7 @@ public class EventScheduleSubscription implements Comparable<EventScheduleSubscr
 
   @Override
   public String toString() {
-    return "EventScheduleSubscription [id=" + id + ", eventSubscriptionId=" + eventSubscriptionId + ", subscriberId="
+    return "EventScheduleSubscription [id=" + id + ", eventScheduleId=" + eventScheduleId + ", subscriberId="
         + subscriberId + ", scheduleDate=" + scheduleDate + ", preferredTime=" + preferredTime + ", eventStatus="
         + eventStatus + ", subscriber=" + subscriber + "]";
   }

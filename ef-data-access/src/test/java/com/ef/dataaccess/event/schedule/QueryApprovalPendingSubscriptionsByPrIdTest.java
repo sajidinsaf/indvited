@@ -30,6 +30,7 @@ import com.ef.dataaccess.Query;
 import com.ef.dataaccess.config.DbTestUtils;
 import com.ef.model.event.PREvent;
 import com.ef.model.event.PREventSchedule;
+import com.ef.model.event.wrapper.EventScheduleSubscriptionForPrApprovalWrapper;
 
 public class QueryApprovalPendingSubscriptionsByPrIdTest {
 
@@ -56,7 +57,7 @@ public class QueryApprovalPendingSubscriptionsByPrIdTest {
   public void shouldRetrieveTwoScheduleSuccessfully() throws ParseException {
     List<PREvent> prEvents = queryApprovalPendingSubscriptionsByPrId.data(1000010016);
 
-    assertThat(prEvents.size(), is(1));
+    assertThat(prEvents.size(), is(2));
 
     PREvent prEvent = prEvents.get(0);
 
@@ -84,14 +85,14 @@ public class QueryApprovalPendingSubscriptionsByPrIdTest {
     schedule = schedules.get(1);
     assertThat(schedule.getId(), is(101L));
     assertThat(schedule.getEventId(), is(37));
-    assertThat(schedule.getSubscriptions().size(), is(3));
+    assertThat(schedule.getSubscriptions().size(), is(1));
   }
 
   @Test
   public void shouldRetrieveFourSchedulesSuccessfully() throws ParseException {
 
     List<PREvent> prEvents = queryApprovalPendingSubscriptionsByPrId.data(1000010016);
-    assertThat(prEvents.size(), is(1));
+    assertThat(prEvents.size(), is(2));
 
     List<PREventSchedule> schedules1 = prEvents.get(0).getSchedules();
     assertThat(schedules1.size(), is(2));
@@ -113,7 +114,7 @@ public class QueryApprovalPendingSubscriptionsByPrIdTest {
     assertThat(schedule.isInnerCircle(), is(true));
     assertThat(schedule.isMyBloggers(), is(true));
     assertThat(schedule.isAllEligible(), is(false));
-    assertThat(schedule.getSubscriptions().size(), is(4));
+    assertThat(schedule.getSubscriptions().size(), is(1));
 
     schedule = schedules1.get(1);
     assertThat(schedule.getId(), is(101L));
@@ -124,7 +125,17 @@ public class QueryApprovalPendingSubscriptionsByPrIdTest {
     assertThat(prEvents.get(0).getEventCriteria().length, is(3));
 
     assertThat(prEvents.get(0).getEventCriteria()[0].getForum(), notNullValue());
-    assertThat(schedule.getSubscriptions().size(), is(3));
+
+    assertThat(schedule.getSubscriptions().size(), is(1));
+
+    assertThat(schedule.getSubscriptions().get(0).getClass().getName(),
+        is(EventScheduleSubscriptionForPrApprovalWrapper.class.getName()));
+
+    EventScheduleSubscriptionForPrApprovalWrapper wrapper = (EventScheduleSubscriptionForPrApprovalWrapper) schedule
+        .getSubscriptions().get(0);
+
+    assertThat(wrapper.getPrefferedDatesAndTimes().size(), is(3));
+
   }
 }
 
