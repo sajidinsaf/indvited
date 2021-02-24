@@ -63,6 +63,38 @@ public class PREventSchedule implements Comparable<PREventSchedule> {
     availableDatesForDisplay = new ArrayList<String>();
   }
 
+  public PREventSchedule(int eventId, long id, Date startDate, Date endDate, Timestamp scheduleOnTime,
+      Timestamp creationTimestamp, Timestamp publishedOnTimestamp, boolean monday, boolean tuesday, boolean wednesday,
+      boolean thursday, boolean friday, boolean saturday, boolean sunday, boolean innerCircle, boolean myBloggers,
+      boolean allEligible, int bloggersPerDay, String scheduleTimeInfo, String daysOfTheWeek,
+      List<java.util.Date> availableDates, List<String> availableDatesForDisplay,
+      List<EventScheduleSubscription> subscriptions) {
+    super();
+    this.eventId = eventId;
+    this.id = id;
+    this.startDate = startDate;
+    this.endDate = endDate;
+    this.scheduleOnTime = scheduleOnTime;
+    this.creationTimestamp = creationTimestamp;
+    this.publishedOnTimestamp = publishedOnTimestamp;
+    this.monday = monday;
+    this.tuesday = tuesday;
+    this.wednesday = wednesday;
+    this.thursday = thursday;
+    this.friday = friday;
+    this.saturday = saturday;
+    this.sunday = sunday;
+    this.innerCircle = innerCircle;
+    this.myBloggers = myBloggers;
+    this.allEligible = allEligible;
+    this.bloggersPerDay = bloggersPerDay;
+    this.scheduleTimeInfo = scheduleTimeInfo;
+    this.daysOfTheWeek = daysOfTheWeek;
+    this.availableDates = availableDates;
+    this.availableDatesForDisplay = availableDatesForDisplay;
+    this.subscriptions = subscriptions;
+  }
+
   public int getEventId() {
     return eventId;
   }
@@ -246,6 +278,10 @@ public class PREventSchedule implements Comparable<PREventSchedule> {
 
   public List<String> getAvailableDatesForDisplay() {
     return availableDatesForDisplay;
+  }
+
+  public int getTotalNumberOfSubscriptionForSchedule() {
+    return getAvailableDates().size() * getBloggersPerDay();
   }
 
   @Override
