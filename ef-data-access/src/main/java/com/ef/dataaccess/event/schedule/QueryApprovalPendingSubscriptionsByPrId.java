@@ -109,7 +109,7 @@ public class QueryApprovalPendingSubscriptionsByPrId implements Query<Integer, L
         scheduleWrapper.setSubscriptions(new ArrayList<EventScheduleSubscription>(sortedSubscriptions));
 
         int approvedSubscriptions = queryEventScheduleSubscriptionCountByScheduleIdAndStatusIds
-            .data(new LRPair<Long, int[]>(rawSchedule.getId(), new int[] { 3 }));
+            .data(new LRPair<Long, int[]>(rawSchedule.getId(), new int[] { 4 }));
 
         scheduleWrapper
             .setAvailableSubsriptions(rawSchedule.getTotalNumberOfSubscriptionForSchedule() - approvedSubscriptions);
