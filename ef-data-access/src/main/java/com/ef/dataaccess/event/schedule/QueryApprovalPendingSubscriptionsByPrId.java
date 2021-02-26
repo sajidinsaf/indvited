@@ -1,5 +1,7 @@
 package com.ef.dataaccess.event.schedule;
 
+import java.sql.Date;
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.HashMap;
@@ -9,12 +11,10 @@ import java.util.Set;
 import java.util.TreeMap;
 import java.util.TreeSet;
 
-import org.apache.commons.lang3.tuple.Pair;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Component;
 
-import com.ef.common.LRPair;
 import com.ef.dataaccess.Query;
 import com.ef.dataaccess.event.util.EventEnricher;
 import com.ef.model.event.EventScheduleSubscription;
@@ -31,15 +31,11 @@ public class QueryApprovalPendingSubscriptionsByPrId implements Query<Integer, L
 
   private final EventEnricher eventEnricher;
 
-  private final Query<Pair<Long, int[]>, Integer> queryEventScheduleSubscriptionCountByScheduleIdAndStatusIds;
-
   @Autowired
   public QueryApprovalPendingSubscriptionsByPrId(
-      @Qualifier("queryPREventList") Query<Integer, List<PREvent>> queryPREventList, EventEnricher eventEnricher,
-      @Qualifier("queryEventScheduleSubscriptionCountByScheduleIdAndStatusIds") Query<Pair<Long, int[]>, Integer> queryEventScheduleSubscriptionCountByScheduleIdAndStatusIds) {
+      @Qualifier("queryPREventList") Query<Integer, List<PREvent>> queryPREventList, EventEnricher eventEnricher) {
     this.queryPREventList = queryPREventList;
     this.eventEnricher = eventEnricher;
-    this.queryEventScheduleSubscriptionCountByScheduleIdAndStatusIds = queryEventScheduleSubscriptionCountByScheduleIdAndStatusIds;
   }
 
   @Override
@@ -57,7 +53,8 @@ public class QueryApprovalPendingSubscriptionsByPrId implements Query<Integer, L
       for (PREventSchedule schedule : prEvent.getSchedules()) {
         List<EventScheduleSubscription> subscriptions = schedule.getSubscriptions();
         for (EventScheduleSubscription rawSubscription : subscriptions) {
-          if (rawSubscription.getEventStatus().getId() == EventStatusMeta.KNOWN_STATUS_ID_APPLIED) {
+          if (rawSubscription.getEventStatus().getId() == EventStatusMeta.KNOWN_STATUS_ID_APPLIED
+              && isAfterToday(rawSubscription.getScheduleDate())) {
 
             Map<PREventSchedule, Map<EventScheduleSubscriptionForPrApprovalWrapper, EventScheduleSubscriptionForPrApprovalWrapper>> eventScheduleMap = validEvents
                 .get(prEvent);
@@ -108,11 +105,6 @@ public class QueryApprovalPendingSubscriptionsByPrId implements Query<Integer, L
 
         scheduleWrapper.setSubscriptions(new ArrayList<EventScheduleSubscription>(sortedSubscriptions));
 
-        int approvedSubscriptions = queryEventScheduleSubscriptionCountByScheduleIdAndStatusIds
-            .data(new LRPair<Long, int[]>(rawSchedule.getId(), new int[] { 4 }));
-
-        scheduleWrapper
-            .setAvailableSubsriptions(rawSchedule.getTotalNumberOfSubscriptionForSchedule() - approvedSubscriptions);
         scheduleWrappersForThisEvent.add(scheduleWrapper);
       }
       event.setSchedules(scheduleWrappersForThisEvent);
@@ -122,6 +114,10 @@ public class QueryApprovalPendingSubscriptionsByPrId implements Query<Integer, L
     }
 
     return new ArrayList<PREvent>(validEvents.keySet());
+  }
+
+  private boolean isAfterToday(Date scheduleDate) {
+    return scheduleDate.toLocalDate().isAfter(LocalDate.now());
   }
 
   private Comparator<EventScheduleSubscription> comparator() {

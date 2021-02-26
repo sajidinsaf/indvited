@@ -40,6 +40,7 @@ import com.ef.common.message.StatusCode;
 import com.ef.dataaccess.Insert;
 import com.ef.dataaccess.Query;
 import com.ef.dataaccess.config.DbTestUtils;
+import com.ef.eventservice.controller.util.PREventScheduleUtil;
 import com.ef.model.event.EventScheduleSubscription;
 import com.ef.model.event.EventStatusMeta;
 import com.ef.model.event.PREvent;
@@ -74,8 +75,9 @@ public class PREventScheduleSubscriptionControllerTest {
     Query<Integer, List<PREvent>> queryApprovalPendingSubscriptionsByPrId = appContext
         .getBean("queryApprovalPendingSubscriptionsByPrId", Query.class);
 
+    PREventScheduleUtil prEventScheduleUtil = appContext.getBean(PREventScheduleUtil.class);
     controller = new PREventScheduleSubscriptionController(insertPrEventScheduleSubscription,
-        queryApprovalPendingSubscriptionsByPrId);
+        queryApprovalPendingSubscriptionsByPrId, prEventScheduleUtil);
   }
 
   @After

@@ -136,8 +136,6 @@ public class QueryApprovalPendingSubscriptionsByPrIdTest {
 
     assertThat(wrapper.getPrefferedDatesAndTimes().size(), is(3));
 
-    System.out.println(schedule.getTotalNumberOfSubscriptionForSchedule());
-
   }
 }
 

@@ -1,79 +1,61 @@
 package com.ef.eventservice.controller.util;
 
+import static org.hamcrest.Matchers.greaterThan;
 import static org.hamcrest.Matchers.is;
 import static org.junit.Assert.assertThat;
+import static org.mockito.MockitoAnnotations.openMocks;
 
 import java.sql.Date;
 import java.text.SimpleDateFormat;
+import java.time.LocalDate;
 import java.util.Arrays;
 import java.util.List;
 
-import org.junit.Test;
+import javax.sql.DataSource;
 
+import org.junit.After;
+import org.junit.Before;
+import org.junit.Test;
+import org.springframework.context.annotation.AnnotationConfigApplicationContext;
+import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.ComponentScan;
+import org.springframework.context.annotation.Configuration;
+import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.jdbc.datasource.embedded.EmbeddedDatabaseBuilder;
+import org.springframework.jdbc.datasource.embedded.EmbeddedDatabaseType;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.crypto.password.PasswordEncoder;
+
+import com.ef.dataaccess.config.DbTestUtils;
 import com.ef.model.event.PREvent;
 import com.ef.model.event.PREventSchedule;
+import com.ef.model.event.wrapper.PREventScheduleForPrApprovalWrapper;
 
 public class PREventScheduleUtilTest {
 
-  @Test
-  public void testGetAllScheduledDates() throws Exception {
+  private PREventScheduleUtil prEventScheduleUtil;
+  private JdbcTemplate jdbcTemplate;
 
-    String startDateStr = "2021-02-15"; // Start date
-    String endDateStr = "2021-02-21"; // End date
-
-    SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
-
-    Date startDate = new Date(sdf.parse(startDateStr).getTime());
-    Date endDate = new Date(sdf.parse(endDateStr).getTime());
-
-    PREventSchedule schedule = new PREventSchedule();
-    schedule.setStartDate(startDate);
-    schedule.setEndDate(endDate);
-    schedule.setDaysOfTheWeek("1,3,5");
-
-    List<java.util.Date> dates = new PREventScheduleUtil().getAllScheduledDates(schedule);
-
-    assertThat(dates.size(), is(3));
-    assertThat(sdf.format(dates.get(0)), is(startDateStr));
-    assertThat(sdf.format(dates.get(1)), is("2021-02-17"));
-    assertThat(sdf.format(dates.get(2)), is("2021-02-19"));
+  @SuppressWarnings({ "resource", "unchecked" })
+  @Before
+  public void setUp() {
+    openMocks(this);
+    AnnotationConfigApplicationContext appContext = new AnnotationConfigApplicationContext(
+        HsqlDbConfigPREventScheduleUtilTest.class);
+    prEventScheduleUtil = appContext.getBean(PREventScheduleUtil.class);
+    jdbcTemplate = appContext.getBean(JdbcTemplate.class);
   }
 
-  @Test
-  public void testGetAllScheduledDatesForThreeWeeks() throws Exception {
-
-    String startDateStr = "2021-02-15"; // Start date
-    String endDateStr = "2021-03-07"; // End date
-
-    SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
-
-    Date startDate = new Date(sdf.parse(startDateStr).getTime());
-    Date endDate = new Date(sdf.parse(endDateStr).getTime());
-
-    PREventSchedule schedule = new PREventSchedule();
-    schedule.setStartDate(startDate);
-    schedule.setEndDate(endDate);
-    schedule.setDaysOfTheWeek("2,4,7");
-
-    List<java.util.Date> dates = new PREventScheduleUtil().getAllScheduledDates(schedule);
-
-    assertThat(dates.size(), is(9));
-    assertThat(sdf.format(dates.get(0)), is("2021-02-16"));
-    assertThat(sdf.format(dates.get(1)), is("2021-02-18"));
-    assertThat(sdf.format(dates.get(2)), is("2021-02-21"));
-    assertThat(sdf.format(dates.get(3)), is("2021-02-23"));
-    assertThat(sdf.format(dates.get(4)), is("2021-02-25"));
-    assertThat(sdf.format(dates.get(5)), is("2021-02-28"));
-    assertThat(sdf.format(dates.get(6)), is("2021-03-02"));
-    assertThat(sdf.format(dates.get(7)), is("2021-03-04"));
-    assertThat(sdf.format(dates.get(8)), is("2021-03-07"));
+  @After
+  public void tearDown() {
+    jdbcTemplate.execute("DROP SCHEMA PUBLIC CASCADE");
   }
 
   @Test
   public void shouldPopulateAllScheduledDatesForThreeWeeks() throws Exception {
 
-    String startDateStr = "2021-02-15"; // Start date
-    String endDateStr = "2021-03-07"; // End date
+    String startDateStr = "2061-02-15"; // Start date
+    String endDateStr = "2061-03-07"; // End date
 
     SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
 
@@ -88,38 +70,117 @@ public class PREventScheduleUtilTest {
     PREvent prEvent = new PREvent();
     prEvent.setSchedules(Arrays.asList(schedule));
 
-    new PREventScheduleUtil().populateAvailableDates(Arrays.asList(prEvent));
+    prEventScheduleUtil.populateAvailableDates(Arrays.asList(prEvent));
 
     List<java.util.Date> dates = prEvent.getSchedules().get(0).getAvailableDates();
 
     assertThat(dates.size(), is(9));
-    assertThat(sdf.format(dates.get(0)), is("2021-02-16"));
-    assertThat(sdf.format(dates.get(1)), is("2021-02-18"));
-    assertThat(sdf.format(dates.get(2)), is("2021-02-21"));
-    assertThat(sdf.format(dates.get(3)), is("2021-02-23"));
-    assertThat(sdf.format(dates.get(4)), is("2021-02-25"));
-    assertThat(sdf.format(dates.get(5)), is("2021-02-28"));
-    assertThat(sdf.format(dates.get(6)), is("2021-03-02"));
-    assertThat(sdf.format(dates.get(7)), is("2021-03-04"));
-    assertThat(sdf.format(dates.get(8)), is("2021-03-07"));
+    assertThat(sdf.format(dates.get(0)), is("2061-02-15"));
+    assertThat(sdf.format(dates.get(1)), is("2061-02-17"));
+    assertThat(sdf.format(dates.get(2)), is("2061-02-20"));
+    assertThat(sdf.format(dates.get(3)), is("2061-02-22"));
+    assertThat(sdf.format(dates.get(4)), is("2061-02-24"));
+    assertThat(sdf.format(dates.get(5)), is("2061-02-27"));
+    assertThat(sdf.format(dates.get(6)), is("2061-03-01"));
+    assertThat(sdf.format(dates.get(7)), is("2061-03-03"));
+    assertThat(sdf.format(dates.get(8)), is("2061-03-06"));
 
-    List<String> datesForDisplay = prEvent.getSchedules().get(0).getAvailableDatesForDisplay();
-
-    assertThat(dates.size(), is(9));
-    assertThat(datesForDisplay.get(0), is("Tue 16 Feb 2021"));
-    assertThat(datesForDisplay.get(1), is("Thu 18 Feb 2021"));
-    assertThat(datesForDisplay.get(2), is("Sun 21 Feb 2021"));
-    assertThat(datesForDisplay.get(3), is("Tue 23 Feb 2021"));
-    assertThat(datesForDisplay.get(4), is("Thu 25 Feb 2021"));
-    assertThat(datesForDisplay.get(5), is("Sun 28 Feb 2021"));
-    assertThat(datesForDisplay.get(6), is("Tue 2 Mar 2021"));
-    assertThat(datesForDisplay.get(7), is("Thu 4 Mar 2021"));
-    assertThat(datesForDisplay.get(8), is("Sun 7 Mar 2021"));
-
-    assertThat(prEvent.getAllAvailableScheduledDatesForDisplay().size(), is(9));
     assertThat(prEvent.getAllAvailableScheduledDatesForDisplay().toString(), is(
-        "[AvailableScheduledDate [date=Tue 16 Feb 2021, scheduleId=0], AvailableScheduledDate [date=Thu 18 Feb 2021, scheduleId=0], AvailableScheduledDate [date=Sun 21 Feb 2021, scheduleId=0], AvailableScheduledDate [date=Tue 23 Feb 2021, scheduleId=0], AvailableScheduledDate [date=Thu 25 Feb 2021, scheduleId=0], AvailableScheduledDate [date=Sun 28 Feb 2021, scheduleId=0], AvailableScheduledDate [date=Tue 2 Mar 2021, scheduleId=0], AvailableScheduledDate [date=Thu 4 Mar 2021, scheduleId=0], AvailableScheduledDate [date=Sun 7 Mar 2021, scheduleId=0]]"));
+        "[AvailableScheduledDate [date=Tue 15 Feb 2061, scheduleId=0], AvailableScheduledDate [date=Thu 17 Feb 2061, scheduleId=0], AvailableScheduledDate [date=Sun 20 Feb 2061, scheduleId=0], AvailableScheduledDate [date=Tue 22 Feb 2061, scheduleId=0], AvailableScheduledDate [date=Thu 24 Feb 2061, scheduleId=0], AvailableScheduledDate [date=Sun 27 Feb 2061, scheduleId=0], AvailableScheduledDate [date=Tue 1 Mar 2061, scheduleId=0], AvailableScheduledDate [date=Thu 3 Mar 2061, scheduleId=0], AvailableScheduledDate [date=Sun 6 Mar 2061, scheduleId=0]]"));
 
+  }
+
+  @Test
+  public void shouldPopulateAllScheduledDatesAndIgnoreOlderDate() throws Exception {
+
+    LocalDate yesterday = LocalDate.now().minusDays(1);
+    LocalDate plusTenDays = LocalDate.now().plusDays(10);
+
+    Date startDate = Date.valueOf(yesterday);
+    Date endDate = Date.valueOf(plusTenDays);
+    PREventSchedule schedule = new PREventSchedule();
+    schedule.setStartDate(startDate);
+    schedule.setEndDate(endDate);
+    schedule.setDaysOfTheWeek("2,4,7");
+
+    PREvent prEvent = new PREvent();
+    prEvent.setSchedules(Arrays.asList(schedule));
+
+    prEventScheduleUtil.populateAvailableDates(Arrays.asList(prEvent));
+
+    schedule = prEvent.getSchedules().get(0);
+    List<java.util.Date> dates = schedule.getAvailableDates();
+
+    assertThat(dates.size(), greaterThan(3));
+
+    assertThat(dates.contains(new java.util.Date(Date.valueOf(yesterday).getTime())), is(false));
+
+  }
+
+  @Test
+  public void shouldSetAvailableSubscritionCount() throws Exception {
+
+    shouldSetOnWrapper(0L, 40);
+  }
+
+  @Test
+  public void shouldMinusApprovedSubscriptionCount() throws Exception {
+
+    shouldSetOnWrapper(102L, 39);
+  }
+
+  public void shouldSetOnWrapper(long scheduleId, int expectedAvailableCount) throws Exception {
+
+    LocalDate yesterday = LocalDate.now().minusDays(1);
+    LocalDate plusTenDays = LocalDate.now().plusDays(10);
+
+    Date startDate = Date.valueOf(yesterday);
+    Date endDate = Date.valueOf(plusTenDays);
+    PREventSchedule schedule = new PREventSchedule();
+    schedule.setStartDate(startDate);
+    schedule.setEndDate(endDate);
+    schedule.setDaysOfTheWeek("2,4,7");
+    schedule.setBloggersPerDay(10);
+    schedule.setId(scheduleId);
+
+    PREvent prEvent = new PREvent();
+
+    PREventScheduleForPrApprovalWrapper wrapper = new PREventScheduleForPrApprovalWrapper(schedule);
+    prEvent.setSchedules(Arrays.asList(wrapper));
+
+    prEventScheduleUtil.populateAvailableDates(Arrays.asList(prEvent));
+
+    schedule = prEvent.getSchedules().get(0);
+    List<java.util.Date> dates = schedule.getAvailableDates();
+
+    assertThat(dates.size(), greaterThan(3));
+
+    assertThat(dates.contains(new java.util.Date(Date.valueOf(yesterday).getTime())), is(false));
+    assertThat(wrapper.getAvailableSubscriptions(), is(expectedAvailableCount));
+  }
+
+}
+
+@Configuration
+@ComponentScan(basePackages = { "com.ef.dataaccess.event", "com.ef.dataaccess.member", "com.ef.eventservice" })
+class HsqlDbConfigPREventScheduleUtilTest {
+
+  @Bean
+  public JdbcTemplate indvitedDbJdbcTemplate() {
+
+    return new JdbcTemplate(dataSource());
+  }
+
+  private DataSource dataSource() {
+    EmbeddedDatabaseBuilder embeddedDatabaseBuilder = new EmbeddedDatabaseBuilder().setType(EmbeddedDatabaseType.HSQL);
+    return new DbTestUtils().addCreateScripts(embeddedDatabaseBuilder)
+        .addScript("classpath:com/ef/eventservice/controller/util/insertEventScheduleSubscriptionData.sql").build();
+
+  }
+
+  @Bean
+  public PasswordEncoder encoder() {
+    return new BCryptPasswordEncoder();
   }
 
 }

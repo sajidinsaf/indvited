@@ -25,6 +25,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import com.ef.common.logging.ServiceLoggingUtil;
 import com.ef.dataaccess.Insert;
 import com.ef.dataaccess.Query;
+import com.ef.eventservice.controller.util.PREventScheduleUtil;
 import com.ef.model.event.EventScheduleSubscription;
 import com.ef.model.event.PREvent;
 import com.ef.model.event.PREventScheduleSubscriptionBindingModel;
@@ -41,13 +42,16 @@ public class PREventScheduleSubscriptionController {
 
   private final Insert<PREventScheduleSubscriptionBindingModel, EventScheduleSubscription> insertPrEventScheduleSubscription;
   private final Query<Integer, List<PREvent>> queryApprovalPendingSubscriptionsByPrId;
+  private final PREventScheduleUtil prEventScheduleUtil;
 
   @Autowired
   public PREventScheduleSubscriptionController(
       @Qualifier("insertPrEventScheduleSubscription") Insert<PREventScheduleSubscriptionBindingModel, EventScheduleSubscription> insertPrEventScheduleSubscription,
-      @Qualifier("queryApprovalPendingSubscriptionsByPrId") Query<Integer, List<PREvent>> queryApprovalPendingSubscriptionsByPrId) {
+      @Qualifier("queryApprovalPendingSubscriptionsByPrId") Query<Integer, List<PREvent>> queryApprovalPendingSubscriptionsByPrId,
+      PREventScheduleUtil prEventScheduleUtil) {
     this.insertPrEventScheduleSubscription = insertPrEventScheduleSubscription;
     this.queryApprovalPendingSubscriptionsByPrId = queryApprovalPendingSubscriptionsByPrId;
+    this.prEventScheduleUtil = prEventScheduleUtil;
   }
 
   @PostMapping(SUBSCRIBE_SCHEDULE)
@@ -79,6 +83,7 @@ public class PREventScheduleSubscriptionController {
     List<PREvent> events = queryApprovalPendingSubscriptionsByPrId.data(memberId);
     logUtil.debug(logger, "Returning ", events.size(), " events for member id ", memberId);
 
+    prEventScheduleUtil.populateAvailableDates(events);
     return new ResponseEntity<List<PREvent>>(events, HttpStatus.OK);
   }
 }
