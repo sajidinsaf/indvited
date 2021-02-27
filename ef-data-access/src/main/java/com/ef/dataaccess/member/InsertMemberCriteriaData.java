@@ -14,7 +14,6 @@ import com.ef.common.logging.ServiceLoggingUtil;
 import com.ef.dataaccess.Insert;
 import com.ef.dataaccess.Query;
 import com.ef.dataaccess.event.EventCriteriaMetadataCache;
-import com.ef.model.event.EventCriteriaMetadata;
 import com.ef.model.member.MemberCriteriaData;
 import com.ef.model.member.MemberCriteriaDataBindingModel;
 
@@ -24,20 +23,20 @@ public class InsertMemberCriteriaData implements Insert<MemberCriteriaDataBindin
   private static final Logger logger = LoggerFactory.getLogger(InsertMemberCriteriaData.class);
 
   private final ServiceLoggingUtil loggingUtil = new ServiceLoggingUtil();
-  private final String INSERT_STATEMENT = "INSERT INTO member_criteria_data(id, member_id, criteria_meta_id, member_criteria_value) VALUES (?,?,?,?) ";
-  private final String UPDATE_STATEMENT = "UPDATE member_criteria_data SET criteria_meta_id=?, member_criteria_value=?, timestamp_of_last_update=? where id=?";
+  private final String INSERT_STATEMENT = "INSERT INTO member_criteria_data(member_id, criteria_meta_id, member_criteria_value) VALUES (?,?,?) ";
+  private final String UPDATE_STATEMENT = "UPDATE member_criteria_data SET criteria_meta_id=?, member_criteria_value=?, timestamp_of_last_update=? where member_id=? and criteria_meta_id=?";
 
   private final JdbcTemplate jdbcTemplate;
   private final EventCriteriaMetadataCache eventCriteriaMetadataCache;
-  private final Query<Pair<String, EventCriteriaMetadata>, MemberCriteriaData> queryMemberCriteriaDataById;
+  private final Query<Pair<Integer, Integer>, MemberCriteriaData> queryMemberCriteriaDataByMemberIdAndCriteriaId;
 
   @Autowired
   public InsertMemberCriteriaData(@Qualifier("indvitedDbJdbcTemplate") JdbcTemplate jdbcTemplate,
       EventCriteriaMetadataCache eventCriteriaMetadataCache,
-      @Qualifier("queryMemberCriteriaDataById") Query<Pair<String, EventCriteriaMetadata>, MemberCriteriaData> queryMemberCriteriaDataById) {
+      @Qualifier("queryMemberCriteriaDataByMemberIdAndCriteriaId") Query<Pair<Integer, Integer>, MemberCriteriaData> queryMemberCriteriaDataByMemberIdAndCriteriaId) {
     this.jdbcTemplate = jdbcTemplate;
     this.eventCriteriaMetadataCache = eventCriteriaMetadataCache;
-    this.queryMemberCriteriaDataById = queryMemberCriteriaDataById;
+    this.queryMemberCriteriaDataByMemberIdAndCriteriaId = queryMemberCriteriaDataByMemberIdAndCriteriaId;
   }
 
   @Override
@@ -45,25 +44,26 @@ public class InsertMemberCriteriaData implements Insert<MemberCriteriaDataBindin
 
     int memberId = input.getMemberId();
     int criteriaMetaId = input.getCriteriaMetadataId();
-    EventCriteriaMetadata eventCriteriaMetadata = eventCriteriaMetadataCache.getEventCriteria(criteriaMetaId);
     int memberCriteriaValue = input.getMemberCriteriaValue();
 
-    // The id is created as memberId_criteriaMetaId
-    String id = new StringBuilder().append(memberId).append("_").append(criteriaMetaId).toString();
-
-    Pair<String, EventCriteriaMetadata> memberCriteriaIdAndEventCriteriaMetadataPair = new LRPair<String, EventCriteriaMetadata>(
-        id, eventCriteriaMetadata);
+    MemberCriteriaData memberCriteriaData = null;
     try {
 
-      queryMemberCriteriaDataById.data(memberCriteriaIdAndEventCriteriaMetadataPair);
+      memberCriteriaData = queryMemberCriteriaDataByMemberIdAndCriteriaId
+          .data(new LRPair<Integer, Integer>(memberId, criteriaMetaId));
       // update if the entry for this memberId_criteriaId exists in the database
-      jdbcTemplate.update(UPDATE_STATEMENT,
-          new Object[] { criteriaMetaId, memberCriteriaValue, new java.sql.Timestamp(System.currentTimeMillis()), id });
+      jdbcTemplate.update(UPDATE_STATEMENT, new Object[] { criteriaMetaId, memberCriteriaValue,
+          new java.sql.Timestamp(System.currentTimeMillis()), memberId, criteriaMetaId });
     } catch (EmptyResultDataAccessException e) {
-      jdbcTemplate.update(INSERT_STATEMENT, new Object[] { id, memberId, criteriaMetaId, memberCriteriaValue });
+      jdbcTemplate.update(INSERT_STATEMENT, new Object[] { memberId, criteriaMetaId, memberCriteriaValue });
     }
-    return queryMemberCriteriaDataById.data(memberCriteriaIdAndEventCriteriaMetadataPair);
 
+    if (memberCriteriaData == null) {
+      memberCriteriaData = queryMemberCriteriaDataByMemberIdAndCriteriaId
+          .data(new LRPair<Integer, Integer>(memberId, criteriaMetaId));
+    }
+
+    return memberCriteriaData;
   }
 
 }

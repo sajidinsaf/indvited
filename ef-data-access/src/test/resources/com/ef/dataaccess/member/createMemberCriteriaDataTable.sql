@@ -1,5 +1,5 @@
 CREATE TABLE member_criteria_data (
-  id varchar(21), 
+  id INTEGER IDENTITY, 
   member_id INT, 
   criteria_meta_id INT,
   member_criteria_value INT,

@@ -120,13 +120,13 @@ public class PREventScheduleUtilTest {
   @Test
   public void shouldSetAvailableSubscritionCount() throws Exception {
 
-    shouldSetOnWrapper(0L, 40);
+    shouldSetOnWrapper(0L, 50);
   }
 
   @Test
   public void shouldMinusApprovedSubscriptionCount() throws Exception {
 
-    shouldSetOnWrapper(102L, 39);
+    shouldSetOnWrapper(102L, 49);
   }
 
   public void shouldSetOnWrapper(long scheduleId, int expectedAvailableCount) throws Exception {

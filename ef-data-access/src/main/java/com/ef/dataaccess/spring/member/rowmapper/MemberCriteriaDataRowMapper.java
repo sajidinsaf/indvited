@@ -19,7 +19,7 @@ public class MemberCriteriaDataRowMapper implements RowMapper<MemberCriteriaData
   @Override
   public MemberCriteriaData mapRow(ResultSet rs, int rowNum) throws SQLException {
 
-    MemberCriteriaData memberCriteriaData = new MemberCriteriaData(rs.getString("ID"), rs.getInt("MEMBER_ID"),
+    MemberCriteriaData memberCriteriaData = new MemberCriteriaData(rs.getInt("ID"), rs.getInt("MEMBER_ID"),
         eventCriteriaMetadata, rs.getInt("MEMBER_CRITERIA_VALUE"));
     return memberCriteriaData;
   }

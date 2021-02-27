@@ -32,7 +32,7 @@ public class QueryMemberCriteriaDataByMemberId implements Query<Integer, List<Me
 
     List<MemberCriteriaData> memberCriteriaDataList = jdbcTemplate.query(
         String.format(SELECT_MEMBER_CRITERIA_DATA, memberId),
-        (rs, rowNum) -> new MemberCriteriaData(rs.getString("ID"), memberId,
+        (rs, rowNum) -> new MemberCriteriaData(rs.getInt("ID"), memberId,
             eventCriteriaMetadataCache.getEventCriteria(rs.getInt("criteria_meta_id")),
             rs.getInt("member_criteria_value")));
 

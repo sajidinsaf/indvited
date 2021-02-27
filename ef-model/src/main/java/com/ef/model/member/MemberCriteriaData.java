@@ -9,12 +9,12 @@ public class MemberCriteriaData {
   public static final int KNOWN_CRITERIA_ID_YOUTUBE_FOLLOWER_COUNT = 4;
   public static final int KNOWN_CRITERIA_ID_ZOMATO_FOLLOWER_COUNT = 5;
 
-  private String id;
+  private int id;
   private int memberId;
   private EventCriteriaMetadata criteriaMetadata;
   private int memberCriteriaValue;
 
-  public MemberCriteriaData(String id, int memberId, EventCriteriaMetadata criteriaMetadata, int memberCriteriaValue) {
+  public MemberCriteriaData(int id, int memberId, EventCriteriaMetadata criteriaMetadata, int memberCriteriaValue) {
     super();
     this.id = id;
     this.memberId = memberId;
@@ -22,11 +22,11 @@ public class MemberCriteriaData {
     this.memberCriteriaValue = memberCriteriaValue;
   }
 
-  public String getId() {
+  public int getId() {
     return id;
   }
 
-  public void setId(String id) {
+  public void setId(int id) {
     this.id = id;
   }
 
@@ -52,37 +52,6 @@ public class MemberCriteriaData {
 
   public void setMemberCriteriaValue(int memberCriteriaValue) {
     this.memberCriteriaValue = memberCriteriaValue;
-  }
-
-  @Override
-  public int hashCode() {
-    final int prime = 31;
-    int result = 1;
-    result = prime * result + ((criteriaMetadata == null) ? 0 : criteriaMetadata.hashCode());
-    result = prime * result + ((id == null) ? 0 : id.hashCode());
-    return result;
-  }
-
-  @Override
-  public boolean equals(Object obj) {
-    if (this == obj)
-      return true;
-    if (obj == null)
-      return false;
-    if (getClass() != obj.getClass())
-      return false;
-    MemberCriteriaData other = (MemberCriteriaData) obj;
-    if (criteriaMetadata == null) {
-      if (other.criteriaMetadata != null)
-        return false;
-    } else if (!criteriaMetadata.equals(other.criteriaMetadata))
-      return false;
-    if (id == null) {
-      if (other.id != null)
-        return false;
-    } else if (!id.equals(other.id))
-      return false;
-    return true;
   }
 
   @Override

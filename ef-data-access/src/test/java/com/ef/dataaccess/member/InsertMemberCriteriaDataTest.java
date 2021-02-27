@@ -70,7 +70,7 @@ public class InsertMemberCriteriaDataTest {
 
     MemberCriteriaData memberCriteriaData = insertMemberCriteriaData.data(memberCriteriaDataBindingModel);
 
-    String expectedId = memberId + "_" + criteriaMetadataId;
+    int expectedId = 0;
     assertThat(memberCriteriaData.getId(), Matchers.is(expectedId));
     assertThat(memberCriteriaData.getCriteriaMetadata().getId(), Matchers.is(1));
     assertThat(memberCriteriaData.getMemberCriteriaValue(), Matchers.is(memberCriteriaValue));
