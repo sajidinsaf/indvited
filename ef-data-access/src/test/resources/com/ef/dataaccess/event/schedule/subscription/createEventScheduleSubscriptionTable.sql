@@ -4,5 +4,6 @@ CREATE TABLE event_schedule_subscription (
  subscriber_id int,
  schedule_date date,
  preferred_time varchar(4),
- status_id int
+ status_id int,
+ approver_id int
  );

@@ -39,6 +39,7 @@ import com.ef.common.message.Response;
 import com.ef.common.message.StatusCode;
 import com.ef.dataaccess.Insert;
 import com.ef.dataaccess.Query;
+import com.ef.dataaccess.Update;
 import com.ef.dataaccess.config.DbTestUtils;
 import com.ef.eventservice.controller.util.PREventScheduleUtil;
 import com.ef.model.event.EventScheduleSubscription;
@@ -46,6 +47,7 @@ import com.ef.model.event.EventStatusMeta;
 import com.ef.model.event.PREvent;
 import com.ef.model.event.PREventScheduleSubscriptionBindingModel;
 import com.ef.model.event.PREventScheduleSubscriptionBindingModelWorkaround;
+import com.ef.model.event.PREventScheduleSubscriptionStatusChangeBindingModel;
 import com.ef.model.member.Member;
 
 public class PREventScheduleSubscriptionControllerTest {
@@ -75,9 +77,15 @@ public class PREventScheduleSubscriptionControllerTest {
     Query<Integer, List<PREvent>> queryApprovalPendingSubscriptionsByPrId = appContext
         .getBean("queryApprovalPendingSubscriptionsByPrId", Query.class);
 
+    Update<PREventScheduleSubscriptionStatusChangeBindingModel, Integer> approvePREventScheduleSubscriptionStatus = appContext
+        .getBean("approvePREventScheduleSubscriptionStatus", Update.class);
+    Update<PREventScheduleSubscriptionStatusChangeBindingModel, Integer> rejectPREventScheduleSubscriptionStatus = appContext
+        .getBean("rejectPREventScheduleSubscriptionStatus", Update.class);
+
     PREventScheduleUtil prEventScheduleUtil = appContext.getBean(PREventScheduleUtil.class);
     controller = new PREventScheduleSubscriptionController(insertPrEventScheduleSubscription,
-        queryApprovalPendingSubscriptionsByPrId, prEventScheduleUtil);
+        queryApprovalPendingSubscriptionsByPrId, prEventScheduleUtil, approvePREventScheduleSubscriptionStatus,
+        rejectPREventScheduleSubscriptionStatus);
   }
 
   @After

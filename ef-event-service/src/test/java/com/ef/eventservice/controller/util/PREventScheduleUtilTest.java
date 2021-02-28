@@ -120,13 +120,13 @@ public class PREventScheduleUtilTest {
   @Test
   public void shouldSetAvailableSubscritionCount() throws Exception {
 
-    shouldSetOnWrapper(0L, 50);
+    shouldSetOnWrapper(0L, 60);
   }
 
   @Test
   public void shouldMinusApprovedSubscriptionCount() throws Exception {
 
-    shouldSetOnWrapper(102L, 49);
+    shouldSetOnWrapper(102L, 59);
   }
 
   public void shouldSetOnWrapper(long scheduleId, int expectedAvailableCount) throws Exception {
@@ -139,7 +139,23 @@ public class PREventScheduleUtilTest {
     PREventSchedule schedule = new PREventSchedule();
     schedule.setStartDate(startDate);
     schedule.setEndDate(endDate);
-    schedule.setDaysOfTheWeek("2,4,7");
+    int dayNumber = LocalDate.now().getDayOfWeek().getValue();
+
+    // select the next three days of the week after today. So we should encounter
+    // each day twice in the next 10 days.
+    StringBuilder sb = new StringBuilder();
+    for (int i = 0; i < 3; i++) {
+      ++dayNumber;
+      if (dayNumber > 7) {
+        dayNumber = 1;
+      }
+      sb.append(dayNumber).append(",");
+    }
+
+    String daysOfTheWeek = sb.toString();
+
+    schedule.setDaysOfTheWeek(daysOfTheWeek.substring(0, daysOfTheWeek.lastIndexOf(",")));
+
     schedule.setBloggersPerDay(10);
     schedule.setId(scheduleId);
 

@@ -26,4 +26,7 @@ public class EventControllerConstants {
 
   public static final String GET_AWAITING_APPROVAL_SUBSCRIPTIONS_V1 = "/api/v1/event/subscriptions/3";
 
+  public static final String SUBSCRIPTIONS_APPROVE_V1 = "/api/v1/event/subscriptions/approve";
+
+  public static final String SUBSCRIPTIONS_REJECT_V1 = "/api/v1/event/subscriptions/reject";
 }

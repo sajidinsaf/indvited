@@ -2,6 +2,8 @@ package com.ef.eventservice.controller;
 
 import static com.ef.eventservice.controller.EventControllerConstants.GET_AWAITING_APPROVAL_SUBSCRIPTIONS_V1;
 import static com.ef.eventservice.controller.EventControllerConstants.SUBSCRIBE_SCHEDULE;
+import static com.ef.eventservice.controller.EventControllerConstants.SUBSCRIPTIONS_APPROVE_V1;
+import static com.ef.eventservice.controller.EventControllerConstants.SUBSCRIPTIONS_REJECT_V1;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -25,11 +27,13 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import com.ef.common.logging.ServiceLoggingUtil;
 import com.ef.dataaccess.Insert;
 import com.ef.dataaccess.Query;
+import com.ef.dataaccess.Update;
 import com.ef.eventservice.controller.util.PREventScheduleUtil;
 import com.ef.model.event.EventScheduleSubscription;
 import com.ef.model.event.PREvent;
 import com.ef.model.event.PREventScheduleSubscriptionBindingModel;
 import com.ef.model.event.PREventScheduleSubscriptionBindingModelWorkaround;
+import com.ef.model.event.PREventScheduleSubscriptionStatusChangeBindingModel;
 
 /**
  * Handles requests for the event service.
@@ -44,14 +48,21 @@ public class PREventScheduleSubscriptionController {
   private final Query<Integer, List<PREvent>> queryApprovalPendingSubscriptionsByPrId;
   private final PREventScheduleUtil prEventScheduleUtil;
 
+  private final Update<PREventScheduleSubscriptionStatusChangeBindingModel, Integer> approvePREventScheduleSubscriptionStatus;
+  private final Update<PREventScheduleSubscriptionStatusChangeBindingModel, Integer> rejectPREventScheduleSubscriptionStatus;
+
   @Autowired
   public PREventScheduleSubscriptionController(
       @Qualifier("insertPrEventScheduleSubscription") Insert<PREventScheduleSubscriptionBindingModel, EventScheduleSubscription> insertPrEventScheduleSubscription,
       @Qualifier("queryApprovalPendingSubscriptionsByPrId") Query<Integer, List<PREvent>> queryApprovalPendingSubscriptionsByPrId,
-      PREventScheduleUtil prEventScheduleUtil) {
+      PREventScheduleUtil prEventScheduleUtil,
+      @Qualifier("approvePREventScheduleSubscriptionStatus") Update<PREventScheduleSubscriptionStatusChangeBindingModel, Integer> approvePREventScheduleSubscriptionStatus,
+      @Qualifier("rejectPREventScheduleSubscriptionStatus") Update<PREventScheduleSubscriptionStatusChangeBindingModel, Integer> rejectPREventScheduleSubscriptionStatus) {
     this.insertPrEventScheduleSubscription = insertPrEventScheduleSubscription;
     this.queryApprovalPendingSubscriptionsByPrId = queryApprovalPendingSubscriptionsByPrId;
     this.prEventScheduleUtil = prEventScheduleUtil;
+    this.approvePREventScheduleSubscriptionStatus = approvePREventScheduleSubscriptionStatus;
+    this.rejectPREventScheduleSubscriptionStatus = rejectPREventScheduleSubscriptionStatus;
   }
 
   @PostMapping(SUBSCRIBE_SCHEDULE)
@@ -85,5 +96,33 @@ public class PREventScheduleSubscriptionController {
 
     prEventScheduleUtil.populateAvailableDates(events);
     return new ResponseEntity<List<PREvent>>(events, HttpStatus.OK);
+  }
+
+  @PostMapping(SUBSCRIPTIONS_APPROVE_V1)
+  @ResponseBody
+  public ResponseEntity<?> approveSubscription(@RequestBody PREventScheduleSubscriptionStatusChangeBindingModel model,
+      HttpServletRequest request) {
+
+    return updatesubscriptionStatus(model, request, approvePREventScheduleSubscriptionStatus);
+  }
+
+  @PostMapping(SUBSCRIPTIONS_REJECT_V1)
+  @ResponseBody
+  public ResponseEntity<?> rejectsubscription(@RequestBody PREventScheduleSubscriptionStatusChangeBindingModel model,
+      HttpServletRequest request) {
+
+    return updatesubscriptionStatus(model, request, rejectPREventScheduleSubscriptionStatus);
+  }
+
+  public ResponseEntity<?> updatesubscriptionStatus(PREventScheduleSubscriptionStatusChangeBindingModel model,
+      HttpServletRequest request,
+      Update<PREventScheduleSubscriptionStatusChangeBindingModel, Integer> updateSubscriptionStatus) {
+
+    logUtil.debug(logger, "Received subscription data ", model);
+
+    int result = updateSubscriptionStatus.data(model);
+    String returnString = result > 0 ? "success" : "failed";
+    
+    return new ResponseEntity<String>(returnString, HttpStatus.OK);
   }
 }
