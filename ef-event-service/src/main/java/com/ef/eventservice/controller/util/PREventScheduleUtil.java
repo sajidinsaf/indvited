@@ -11,26 +11,36 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Component;
 
+import com.ef.common.Context;
 import com.ef.common.LRPair;
+import com.ef.common.Strategy;
 import com.ef.dataaccess.Query;
+import com.ef.eventservice.publisher.PREventPublisherContext;
 import com.ef.model.event.AvailableScheduledDate;
 import com.ef.model.event.EventStatusMeta;
 import com.ef.model.event.PREvent;
 import com.ef.model.event.PREventSchedule;
 import com.ef.model.event.wrapper.PREventScheduleForPrApprovalWrapper;
+import com.ef.model.event.wrapper.PREventWrapper;
 
 @Component
 public class PREventScheduleUtil {
 
   private final Query<Pair<Long, int[]>, Integer> queryEventScheduleSubscriptionCountByScheduleIdAndStatusIds;
+  private final Strategy<Context, Void> prEventStatusStrategy;
 
   @Autowired
   public PREventScheduleUtil(
-      @Qualifier("queryEventScheduleSubscriptionCountByScheduleIdAndStatusIds") Query<Pair<Long, int[]>, Integer> queryEventScheduleSubscriptionCountByScheduleIdAndStatusIds) {
+      @Qualifier("queryEventScheduleSubscriptionCountByScheduleIdAndStatusIds") Query<Pair<Long, int[]>, Integer> queryEventScheduleSubscriptionCountByScheduleIdAndStatusIds,
+      @Qualifier("prEventStatusStrategy") Strategy<Context, Void> prEventStatusStrategy) {
     this.queryEventScheduleSubscriptionCountByScheduleIdAndStatusIds = queryEventScheduleSubscriptionCountByScheduleIdAndStatusIds;
+    this.prEventStatusStrategy = prEventStatusStrategy;
   }
 
-  public void populateAvailableDates(List<PREvent> events) {
+  public List<PREvent> populateAvailableDates(List<PREvent> events) {
+
+    List<PREvent> enrichedEvents = new ArrayList<PREvent>();
+
     for (PREvent event : events) {
       for (PREventSchedule schedule : event.getSchedules()) {
         schedule.setAvailableDates(getAllScheduledDates(schedule));
@@ -40,7 +50,22 @@ public class PREventScheduleUtil {
           event.addAvailableScheduledDatesForDisplay(new AvailableScheduledDate(date, schedule.getId()));
         }
       }
+
+      PREventWrapper eventWrapper = new PREventWrapper(event);
+
+      setStatus(eventWrapper);
+
+      enrichedEvents.add(eventWrapper);
     }
+
+    return enrichedEvents;
+  }
+
+  private void setStatus(PREventWrapper eventWrapper) {
+    PREventPublisherContext context = new PREventPublisherContext();
+    context.put(PREventPublisherContext.CURRENT_EVENT_WRAPPER, eventWrapper);
+    prEventStatusStrategy.apply(context);
+
   }
 
   private void setupWrapperDate(PREventSchedule schedule) {

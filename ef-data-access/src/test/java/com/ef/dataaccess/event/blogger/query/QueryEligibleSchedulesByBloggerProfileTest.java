@@ -6,8 +6,10 @@ import static org.hamcrest.Matchers.notNullValue;
 import static org.junit.Assert.assertThat;
 import static org.mockito.MockitoAnnotations.openMocks;
 
+import java.sql.Date;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.time.LocalDate;
 import java.util.List;
 
 import javax.sql.DataSource;
@@ -43,6 +45,7 @@ public class QueryEligibleSchedulesByBloggerProfileTest {
         HsqlDbConfigQueryEligibleSchedulesByBloggerProfileTest.class);
     queryEligibleSchedulesByBloggerProfile = appContext.getBean("queryEligibleSchedulesByBloggerProfile", Query.class);
     jdbcTemplate = appContext.getBean(JdbcTemplate.class);
+    insertEventScheduleData();
   }
 
   @After
@@ -64,46 +67,8 @@ public class QueryEligibleSchedulesByBloggerProfileTest {
     PREventSchedule schedule = schedules.get(0);
     assertThat(schedule.getId(), is(100L));
     assertThat(schedule.getEventId(), is(200));
-    assertThat(schedule.getStartDate().getTime(),
-        is(new SimpleDateFormat("yyyy-mm-dd HH:mm:ss").parse("2080-01-15 00:00:00").getTime()));
-    assertThat(schedule.getEndDate().getTime(),
-        is(new SimpleDateFormat("yyyy-mm-dd HH:mm:ss").parse("2080-01-30 00:00:00").getTime()));
-    assertThat(schedule.isSunday(), is(false));
-    assertThat(schedule.isMonday(), is(false));
-    assertThat(schedule.isTuesday(), is(true));
-    assertThat(schedule.isWednesday(), is(true));
-    assertThat(schedule.isThursday(), is(false));
-    assertThat(schedule.isFriday(), is(true));
-    assertThat(schedule.isSaturday(), is(true));
-    assertThat(schedule.isInnerCircle(), is(true));
-    assertThat(schedule.isMyBloggers(), is(true));
-    assertThat(schedule.isAllEligible(), is(false));
-
-    schedule = schedules.get(1);
-    assertThat(schedule.getId(), is(101L));
-    assertThat(schedule.getEventId(), is(200));
-    assertThat(schedule.getSubscriptions().size(), is(3));
-  }
-
-  @Test
-  public void shouldRetrieveFourSchedulesSuccessfully() throws ParseException {
-
-    List<PREvent> prEvents = queryEligibleSchedulesByBloggerProfile.data(1000010037);
-    assertThat(prEvents.size(), is(2));
-
-    List<PREventSchedule> schedules1 = prEvents.get(0).getSchedules();
-    assertThat(schedules1.size(), is(2));
-
-    List<PREventSchedule> schedules2 = prEvents.get(1).getSchedules();
-    assertThat(schedules2.size(), is(2));
-
-    PREventSchedule schedule = schedules1.get(0);
-    assertThat(schedule.getId(), is(100L));
-    assertThat(schedule.getEventId(), is(200));
-    assertThat(schedule.getStartDate().getTime(),
-        is(new SimpleDateFormat("yyyy-mm-dd HH:mm:ss").parse("2080-01-15 00:00:00").getTime()));
-    assertThat(schedule.getEndDate().getTime(),
-        is(new SimpleDateFormat("yyyy-mm-dd HH:mm:ss").parse("2080-01-30 00:00:00").getTime()));
+    assertThat(schedule.getStartDate().getTime(), is(Date.valueOf((LocalDate.now().plusDays(3L))).getTime()));
+    assertThat(schedule.getEndDate().getTime(), is(Date.valueOf((LocalDate.now().plusDays(7L))).getTime()));
     assertThat(schedule.isSunday(), is(false));
     assertThat(schedule.isMonday(), is(false));
     assertThat(schedule.isTuesday(), is(true));
@@ -116,9 +81,10 @@ public class QueryEligibleSchedulesByBloggerProfileTest {
     assertThat(schedule.isAllEligible(), is(false));
     assertThat(schedule.getSubscriptions().size(), is(0));
 
-    schedule = schedules1.get(1);
+    schedule = schedules.get(1);
     assertThat(schedule.getId(), is(101L));
     assertThat(schedule.getEventId(), is(200));
+    assertThat(schedule.getSubscriptions().size(), is(3));
 
     assertThat(prEvents.get(0).getMember(), notNullValue());
     assertThat(prEvents.get(0).getEventCriteria(), notNullValue());
@@ -126,6 +92,34 @@ public class QueryEligibleSchedulesByBloggerProfileTest {
 
     assertThat(prEvents.get(0).getEventCriteria()[0].getForum(), notNullValue());
     assertThat(schedule.getSubscriptions().size(), is(3));
+  }
+
+  private void insertEventScheduleData() {
+
+    SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
+
+    String startDate1 = dateFormat.format(Date.valueOf((LocalDate.now().plusDays(3L))));
+    String endDate1 = dateFormat.format(Date.valueOf((LocalDate.now().plusDays(7L))));
+
+    String startDate2 = dateFormat.format(Date.valueOf((LocalDate.now().plusDays(5L))));
+    String endDate2 = dateFormat.format(Date.valueOf((LocalDate.now().plusDays(8L))));
+
+    String startDate3 = dateFormat.format(Date.valueOf((LocalDate.now().plusDays(3L))));
+    String endDate3 = dateFormat.format(Date.valueOf((LocalDate.now().plusDays(11L))));
+
+    String startDate4 = dateFormat.format(Date.valueOf((LocalDate.now().plusDays(10L))));
+    String endDate4 = dateFormat.format(Date.valueOf((LocalDate.now().plusDays(13L))));
+
+    String sql = "INSERT INTO event_schedule "
+        + "(id, event_id, start_date, end_date, schedule_time, bloggers_per_day, days_of_the_week, publish_to_inner_circle, publish_to_my_bloggers, publish_to_all_eligible, scheduled_for_timestamp) "
+        + "VALUES " + "(100,200,'" + startDate1 + "','" + endDate1
+        + "','lunch only',10,'2,3,5,6',true,true,false,'2080-01-15 00:00:00')," + "(101,200,'" + startDate2 + "','"
+        + endDate2 + "','1200-1600 1800-2000',7,'1,3,5,6',true,true,false,'2080-01-15 00:00:00')," + "(102,201,'"
+        + startDate3 + "','" + endDate3 + "','lunch only',10,'2,3,5,6',true,true,false,'2080-01-15 00:00:00'),"
+        + "(103,201,'" + startDate4 + "','" + endDate4
+        + "','1200-1600 1800-2000',7,'1,3,5,6',true,true,false,'2080-01-15 00:00:00');";
+
+    jdbcTemplate.update(sql);
   }
 }
 
@@ -144,7 +138,6 @@ class HsqlDbConfigQueryEligibleSchedulesByBloggerProfileTest {
     return new DbTestUtils().addCreateScripts(embeddedDatabaseBuilder)
         .addScript("classpath:com/ef/dataaccess/event/blogger/query/insertEventCriteriaData.sql")
         .addScript("classpath:com/ef/dataaccess/event/blogger/query/insertMemberCriteriaData.sql")
-        .addScript("classpath:com/ef/dataaccess/event/blogger/query/insertEventScheduleData.sql")
         .addScript("classpath:com/ef/dataaccess/event/blogger/query/insertEventData.sql")
         .addScript("classpath:com/ef/dataaccess/event/insertEventCriteriaMeta.sql")
         .addScript("classpath:com/ef/dataaccess/event/insertVenueData.sql")

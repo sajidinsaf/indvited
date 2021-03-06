@@ -27,7 +27,7 @@ import com.ef.model.member.MemberType;
 @Component(value = "queryEligibleSchedulesByBloggerProfile")
 public class QueryEligibleSchedulesByBloggerProfile implements Query<Integer, List<PREvent>> {
 
-  private final String SELECT = "select * from event_schedule";
+  private final String SELECT = "SELECT es.* FROM event_schedule es WHERE es.start_date BETWEEN (NOW() + INTERVAL 1 DAY) AND (NOW() + INTERVAL 15 DAY)";
 
   private final JdbcTemplate jdbcTemplate;
   private final Query<Integer, List<MemberCriteriaData>> queryMemberCriteriaDataByMemberId;
@@ -123,6 +123,13 @@ public class QueryEligibleSchedulesByBloggerProfile implements Query<Integer, Li
 
         List<EventScheduleSubscription> subscriptions = queryEventScheduleSubscriptionByScheduleIdAndBloggerId
             .data(new LRPair<Integer, Long>(bloggerId, schedule.getId()));
+
+        // check if the blogger has been approved for any schedule for this event.
+//        if (hasAlreadyAvailedEvent(event, subscriptions)) {
+//          uneligibleEventsSet.add(event.getId());
+//          continue;
+//        }
+
         schedule.setSubscriptions(subscriptions);
 
         event.addSchedule(schedule);

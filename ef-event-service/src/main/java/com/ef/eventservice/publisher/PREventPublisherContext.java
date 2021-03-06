@@ -4,8 +4,10 @@ import com.ef.common.MapBasedContext;
 
 public class PREventPublisherContext extends MapBasedContext {
 
+  public static final String CURRENT_EVENT_WRAPPER = "currentEventWrapper";
+
   public PREventPublisherContext() {
-    // TODO Auto-generated constructor stub
+    super();
   }
 
   @Override

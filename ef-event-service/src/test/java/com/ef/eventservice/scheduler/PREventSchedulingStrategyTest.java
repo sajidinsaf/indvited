@@ -8,10 +8,6 @@ import static org.junit.Assert.assertThat;
 //import static org.mockito.Mockito.when;
 import static org.mockito.MockitoAnnotations.openMocks;
 
-import java.util.Properties;
-
-import javax.mail.PasswordAuthentication;
-import javax.mail.Session;
 import javax.mail.internet.MimeMessage;
 import javax.sql.DataSource;
 
@@ -54,7 +50,7 @@ public class PREventSchedulingStrategyTest {
         HsqlDbConfigPREventSchedulingStrategyTest.class);
     jdbcTemplate = appContext.getBean(JdbcTemplate.class);
 
-    strategy = appContext.getBean(Strategy.class, "prEventScheduleStrategy");
+    strategy = appContext.getBean("prEventScheduleStrategy", Strategy.class);
 
   }
 
@@ -63,7 +59,6 @@ public class PREventSchedulingStrategyTest {
     jdbcTemplate.execute("DROP SCHEMA PUBLIC CASCADE");
   }
 
-  @SuppressWarnings("unchecked")
   @Test
   public void shouldGetScheduleList() throws Exception {
     PREventPublisherContext context = new PREventPublisherContext();
@@ -75,7 +70,7 @@ public class PREventSchedulingStrategyTest {
 
     context.put(PR_EVENT_SCHEDULE_PERSIST_RESULT, prEventScheduleResult);
 
-    Response<PREvent> response = strategy.apply(context);
+    strategy.apply(context);
 
     // PREventSchedule schedule = schedules.get(0);
     assertThat(schedule.getId(), is(0L));
@@ -116,29 +111,6 @@ class HsqlDbConfigPREventSchedulingStrategyTest {
     };
 
     return sender;
-  }
-
-  private Session mailSession() {
-    final String username = "indvited@codeczar.co.uk";// change accordingly
-    final String password = "@SilverGun95@";// change accordingly
-
-    // Assuming you are sending email through relay.jangosmtp.net
-    String host = "mail.codeczar.co.uk";
-
-    Properties props = new Properties();
-    props.put("mail.smtp.auth", "true");
-    props.put("mail.smtp.starttls.enable", "true");
-    props.put("mail.smtp.host", host);
-    props.put("mail.smtp.port", "465");
-
-    // Get the Session object.
-    Session session = Session.getInstance(props, new javax.mail.Authenticator() {
-      protected PasswordAuthentication getPasswordAuthentication() {
-        return new PasswordAuthentication(username, password);
-      }
-    });
-
-    return session;
   }
 
   @Bean

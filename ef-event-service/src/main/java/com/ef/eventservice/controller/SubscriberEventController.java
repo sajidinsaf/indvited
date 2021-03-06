@@ -47,9 +47,9 @@ public class SubscriberEventController {
     List<PREvent> events = queryEligibleSchedulesByBloggerProfile.data(memberId);
     logUtil.debug(logger, "Returning ", events.size(), " events for member id ", memberId);
 
-    prEventScheduleUtil.populateAvailableDates(events);
+    List<PREvent> enrichedEvents = prEventScheduleUtil.populateAvailableDates(events);
 
-    return new ResponseEntity<List<PREvent>>(events, HttpStatus.OK);
+    return new ResponseEntity<List<PREvent>>(enrichedEvents, HttpStatus.OK);
   }
 
 }

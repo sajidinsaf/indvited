@@ -8,8 +8,11 @@ import static org.mockito.MockitoAnnotations.openMocks;
 import java.sql.Date;
 import java.text.SimpleDateFormat;
 import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
+import java.util.Random;
 
 import javax.sql.DataSource;
 
@@ -27,14 +30,19 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
 import com.ef.dataaccess.config.DbTestUtils;
+import com.ef.dataaccess.event.EventStatusMetaCache;
+import com.ef.model.event.EventScheduleSubscription;
+import com.ef.model.event.EventStatusMeta;
 import com.ef.model.event.PREvent;
 import com.ef.model.event.PREventSchedule;
 import com.ef.model.event.wrapper.PREventScheduleForPrApprovalWrapper;
+import com.ef.model.event.wrapper.PREventWrapper;
 
 public class PREventScheduleUtilTest {
 
   private PREventScheduleUtil prEventScheduleUtil;
   private JdbcTemplate jdbcTemplate;
+  private EventStatusMetaCache eventStatusMetaCache;
 
   @SuppressWarnings({ "resource", "unchecked" })
   @Before
@@ -44,6 +52,7 @@ public class PREventScheduleUtilTest {
         HsqlDbConfigPREventScheduleUtilTest.class);
     prEventScheduleUtil = appContext.getBean(PREventScheduleUtil.class);
     jdbcTemplate = appContext.getBean(JdbcTemplate.class);
+    eventStatusMetaCache = appContext.getBean(EventStatusMetaCache.class);
   }
 
   @After
@@ -70,9 +79,9 @@ public class PREventScheduleUtilTest {
     PREvent prEvent = new PREvent();
     prEvent.setSchedules(Arrays.asList(schedule));
 
-    prEventScheduleUtil.populateAvailableDates(Arrays.asList(prEvent));
+    List<PREvent> enrichedEvents = prEventScheduleUtil.populateAvailableDates(Arrays.asList(prEvent));
 
-    List<java.util.Date> dates = prEvent.getSchedules().get(0).getAvailableDates();
+    List<java.util.Date> dates = enrichedEvents.get(0).getSchedules().get(0).getAvailableDates();
 
     assertThat(dates.size(), is(9));
     assertThat(sdf.format(dates.get(0)), is("2061-02-15"));
@@ -85,7 +94,7 @@ public class PREventScheduleUtilTest {
     assertThat(sdf.format(dates.get(7)), is("2061-03-03"));
     assertThat(sdf.format(dates.get(8)), is("2061-03-06"));
 
-    assertThat(prEvent.getAllAvailableScheduledDatesForDisplay().toString(), is(
+    assertThat(enrichedEvents.get(0).getAllAvailableScheduledDatesForDisplay().toString(), is(
         "[AvailableScheduledDate [date=Tue 15 Feb 2061, scheduleId=0], AvailableScheduledDate [date=Thu 17 Feb 2061, scheduleId=0], AvailableScheduledDate [date=Sun 20 Feb 2061, scheduleId=0], AvailableScheduledDate [date=Tue 22 Feb 2061, scheduleId=0], AvailableScheduledDate [date=Thu 24 Feb 2061, scheduleId=0], AvailableScheduledDate [date=Sun 27 Feb 2061, scheduleId=0], AvailableScheduledDate [date=Tue 1 Mar 2061, scheduleId=0], AvailableScheduledDate [date=Thu 3 Mar 2061, scheduleId=0], AvailableScheduledDate [date=Sun 6 Mar 2061, scheduleId=0]]"));
 
   }
@@ -106,9 +115,9 @@ public class PREventScheduleUtilTest {
     PREvent prEvent = new PREvent();
     prEvent.setSchedules(Arrays.asList(schedule));
 
-    prEventScheduleUtil.populateAvailableDates(Arrays.asList(prEvent));
+    List<PREvent> enrichedEvents = prEventScheduleUtil.populateAvailableDates(Arrays.asList(prEvent));
 
-    schedule = prEvent.getSchedules().get(0);
+    schedule = enrichedEvents.get(0).getSchedules().get(0);
     List<java.util.Date> dates = schedule.getAvailableDates();
 
     assertThat(dates.size(), greaterThan(3));
@@ -159,15 +168,37 @@ public class PREventScheduleUtilTest {
     schedule.setBloggersPerDay(10);
     schedule.setId(scheduleId);
 
+    EventStatusMeta created = eventStatusMetaCache.getEventStatusMeta(EventStatusMeta.KNOWN_STATUS_ID_CREATED);
+
+    List<EventScheduleSubscription> subs = new ArrayList<EventScheduleSubscription>();
+
+    int randomListSize = new Random().nextInt(15) + 5;
+    for (int i = 0; i < randomListSize; i++) {
+      subs.add(new EventScheduleSubscription(0, 0, 0, null, null, created));
+    }
+
+    EventStatusMeta approved = eventStatusMetaCache.getEventStatusMeta(EventStatusMeta.KNOWN_STATUS_ID_APPROVED);
+
+    subs.add(new EventScheduleSubscription(0, 0, 0, null, null, approved));
+
+    // shuffle this list to set the statusToTest at any random location in the list
+    Collections.shuffle(subs);
+
+    schedule.setSubscriptions(subs);
+
     PREvent prEvent = new PREvent();
 
     PREventScheduleForPrApprovalWrapper wrapper = new PREventScheduleForPrApprovalWrapper(schedule);
     prEvent.setSchedules(Arrays.asList(wrapper));
 
-    prEventScheduleUtil.populateAvailableDates(Arrays.asList(prEvent));
-
+    List<PREvent> enrichedEvents = prEventScheduleUtil.populateAvailableDates(Arrays.asList(prEvent));
+    prEvent = enrichedEvents.get(0);
     schedule = prEvent.getSchedules().get(0);
     List<java.util.Date> dates = schedule.getAvailableDates();
+
+    assertThat(prEvent.getClass().getName(), is(PREventWrapper.class.getName()));
+
+    assertThat(((PREventWrapper) prEvent).getEventStatus(), is(approved));
 
     assertThat(dates.size(), greaterThan(3));
 
@@ -190,7 +221,8 @@ class HsqlDbConfigPREventScheduleUtilTest {
   private DataSource dataSource() {
     EmbeddedDatabaseBuilder embeddedDatabaseBuilder = new EmbeddedDatabaseBuilder().setType(EmbeddedDatabaseType.HSQL);
     return new DbTestUtils().addCreateScripts(embeddedDatabaseBuilder)
-        .addScript("classpath:com/ef/eventservice/controller/util/insertEventScheduleSubscriptionData.sql").build();
+        .addScript("classpath:com/ef/eventservice/controller/util/insertEventScheduleSubscriptionData.sql")
+        .addScript("classpath:com/ef/dataaccess/event/insertEventStatusMeta.sql").build();
 
   }
 

@@ -64,6 +64,26 @@ public class PREvent implements Event, Comparable<PREvent> {
     allAvailableScheduledDatesForDisplay = new TreeSet<AvailableScheduledDate>();
   }
 
+  public PREvent(PREvent prEvent) {
+    this.id = prEvent.getId();
+    this.cap = prEvent.getCap();
+    this.notes = prEvent.getNotes();
+    this.createdDate = prEvent.getCreatedDate();
+    this.eventTypeId = prEvent.getEventTypeId();
+    this.domainId = prEvent.getDomainId();
+    this.eventVenueId = prEvent.getEventVenueId();
+    this.exclusions = prEvent.getExclusions();
+    this.memberId = prEvent.getMemberId();
+    this.schedules = prEvent.getSchedules();
+    this.allAvailableScheduledDatesForDisplay = prEvent.getAllAvailableScheduledDatesForDisplay();
+    this.eventType = prEvent.getEventType();
+    this.member = prEvent.getMember();
+    this.eventVenue = prEvent.getEventVenue();
+    this.eventCriteria = prEvent.getEventCriteria();
+    this.eventDeliverables = prEvent.getEventDeliverables();
+
+  }
+
   public int getId() {
     return id;
   }

@@ -95,8 +95,8 @@ public class PREventScheduleSubscriptionController {
     List<PREvent> events = queryApprovalPendingSubscriptionsByPrId.data(memberId);
     logUtil.debug(logger, "Returning ", events.size(), " events for member id ", memberId);
 
-    prEventScheduleUtil.populateAvailableDates(events);
-    return new ResponseEntity<List<PREvent>>(events, HttpStatus.OK);
+    List<PREvent> enrichedEvents = prEventScheduleUtil.populateAvailableDates(events);
+    return new ResponseEntity<List<PREvent>>(enrichedEvents, HttpStatus.OK);
   }
 
   @PostMapping(SUBSCRIPTIONS_APPROVE_V1)
