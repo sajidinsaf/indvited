@@ -15,15 +15,18 @@ public class EventStatusMeta implements Identifiable {
   public static final int KNOWN_STATUS_ID_EVENT_CANCELLED = 7;
   public static final int KNOWN_STATUS_ID_CLOSED = 8;
   public static final int KNOWN_STATUS_ID_REDUNDANT = 9;
+  public static final int KNOWN_STATUS_ID_REDYFORREVIEW = 10;
 
   private final int id;
   private final String name;
+  private final String displayName;
   private final String description;
 
-  public EventStatusMeta(int id, String name, String description) {
+  public EventStatusMeta(int id, String name, String displayName, String description) {
     super();
     this.id = id;
     this.name = name;
+    this.displayName = displayName;
     this.description = description;
   }
 
@@ -39,9 +42,14 @@ public class EventStatusMeta implements Identifiable {
     return description;
   }
 
+  public String getDisplayName() {
+    return displayName;
+  }
+
   @Override
   public String toString() {
-    return "EventStatusMeta [id=" + id + ", name=" + name + ", description=" + description + "]";
+    return "EventStatusMeta [id=" + id + ", name=" + name + ", displayName=" + displayName + ", description="
+        + description + "]";
   }
 
 }

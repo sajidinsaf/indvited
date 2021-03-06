@@ -12,7 +12,8 @@ public class EventStatusMetaRowMapper implements RowMapper<EventStatusMeta> {
   @Override
   public EventStatusMeta mapRow(ResultSet rs, int rowNum) throws SQLException {
 
-    EventStatusMeta esm = new EventStatusMeta(rs.getInt("ID"), rs.getString("NAME"), rs.getString("DESCRIPTION"));
+    EventStatusMeta esm = new EventStatusMeta(rs.getInt("ID"), rs.getString("NAME"), rs.getString("DISPLAY_NAME"),
+        rs.getString("DESCRIPTION"));
     return esm;
   }
 

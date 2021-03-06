@@ -15,7 +15,7 @@ import com.ef.model.event.EventStatusMeta;
 @Component
 public class EventStatusMetaCache {
 
-  private final String SELECT_STATUS = "select id, name, description from event_status_meta";
+  private final String SELECT_STATUS = "select * from event_status_meta";
 
   private final JdbcTemplate jdbcTemplate;
 

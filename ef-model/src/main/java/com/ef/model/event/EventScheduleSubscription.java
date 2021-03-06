@@ -35,8 +35,9 @@ public class EventScheduleSubscription {
     String preferredTime = "1200";
     int statusId = new Random(5).nextInt();
     String name = "statusName-" + statusId;
+    String displayName = "display-" + name;
     String description = "statusDescription-" + eventScheduleTimeslotIdSubscriptionId;
-    EventStatusMeta status = new EventStatusMeta(statusId, name, description);
+    EventStatusMeta status = new EventStatusMeta(statusId, name, displayName, description);
     EventScheduleSubscription a = new EventScheduleSubscription(eventScheduleTimeslotIdSubscriptionId,
         eventScheduleTimeslotId, subscriberId, scheduleDate, preferredTime, status);
 

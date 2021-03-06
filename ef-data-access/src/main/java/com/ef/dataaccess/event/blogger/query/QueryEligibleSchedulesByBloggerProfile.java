@@ -35,8 +35,7 @@ public class QueryEligibleSchedulesByBloggerProfile implements Query<Integer, Li
   private final Query<Integer, PREvent> queryEventById;
   private final Query<Integer, Member> queryMemberById;
   private final EventEnricher eventEnricher;
-  @Qualifier("queryEventScheduleSubscriptionByScheduleIdAndBloggerId")
-  Query<Pair<Integer, Long>, List<EventScheduleSubscription>> queryEventScheduleSubscriptionByScheduleIdAndBloggerId;
+  private final Query<Pair<Integer, Long>, List<EventScheduleSubscription>> queryEventScheduleSubscriptionByScheduleIdAndBloggerId;
 
   @Autowired
   public QueryEligibleSchedulesByBloggerProfile(@Qualifier("indvitedDbJdbcTemplate") JdbcTemplate jdbcTemplate,
@@ -61,7 +60,7 @@ public class QueryEligibleSchedulesByBloggerProfile implements Query<Integer, Li
     Member subscriber = queryMemberById.data(bloggerId);
 
     if (subscriber.getMemberType().getId() != (MemberType.KNOWN_MEMBER_TYPE_BLOGGER)) {
-      throw new RuntimeException("Member: " + subscriber + " cannot subscriber to events");
+      throw new RuntimeException("Member: " + subscriber + " cannot subscribe to events");
     }
 
     List<MemberCriteriaData> bloggersCriteriaData = queryMemberCriteriaDataByMemberId.data(bloggerId);

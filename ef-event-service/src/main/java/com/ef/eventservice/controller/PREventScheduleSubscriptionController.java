@@ -25,6 +25,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.ef.common.logging.ServiceLoggingUtil;
+import com.ef.common.message.MessagePacket;
 import com.ef.dataaccess.Insert;
 import com.ef.dataaccess.Query;
 import com.ef.dataaccess.Update;
@@ -121,8 +122,14 @@ public class PREventScheduleSubscriptionController {
     logUtil.debug(logger, "Received subscription data ", model);
 
     int result = updateSubscriptionStatus.data(model);
-    String returnString = result > 0 ? "success" : "failed";
-    
-    return new ResponseEntity<String>(returnString, HttpStatus.OK);
+    final String returnString = result > 0 ? "success" : "failed";
+
+    logUtil.debug(logger, "Subscription status update result ", returnString, " No of rows updated: ", result);
+    MessagePacket<String> p = new MessagePacket<String>() {
+
+    };
+    p.setPayload(returnString);
+
+    return new ResponseEntity<MessagePacket<String>>(p, HttpStatus.OK);
   }
 }
