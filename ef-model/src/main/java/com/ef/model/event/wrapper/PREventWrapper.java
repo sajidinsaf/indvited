@@ -21,7 +21,7 @@ public class PREventWrapper extends PREvent {
 
   @Override
   public String toString() {
-    return "PREventForBloggerQueryWrapper [eventStatus=" + eventStatus + "] " + super.toString();
+    return "PREventWrapper [eventStatus=" + eventStatus + " " + super.toString() + "]";
   }
 
 }

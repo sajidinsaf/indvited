@@ -1,5 +1,5 @@
 INSERT INTO event_status_meta (id, name, display_name, description) VALUES 
-(1, 'CREATED', 'CREATED', 'The event has been created'),
+(1, 'CREATED', 'AVAILABLE', 'The event has been created'),
 (2, 'ELIGIBLE', 'ELIGIBLE', 'Event timeslot has been subscribed'),
 (3, 'APPLIED', 'APPLIED', 'Blogger has applied for an event timeslot'),
 (4, 'APPROVED', 'APPROVED', 'PR has approved blogger application'),

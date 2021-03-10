@@ -1,6 +1,7 @@
 package com.ef.eventservice.controller;
 
 import static com.ef.eventservice.controller.EventControllerConstants.GET_SUBSCRIBER_ELIGIBLE_LIST_V1;
+import static com.ef.eventservice.controller.EventControllerConstants.SUBMIT_DELIVERABLE;
 
 import java.util.List;
 
@@ -12,6 +13,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
@@ -19,6 +22,7 @@ import com.ef.common.logging.ServiceLoggingUtil;
 import com.ef.dataaccess.Query;
 import com.ef.eventservice.controller.util.PREventScheduleUtil;
 import com.ef.model.event.PREvent;
+import com.ef.model.event.SubscriberDeliverableSubmissionBindingModel;
 
 /**
  * Handles requests for the event service.
@@ -50,6 +54,16 @@ public class SubscriberEventController {
     List<PREvent> enrichedEvents = prEventScheduleUtil.populateAvailableDates(events);
 
     return new ResponseEntity<List<PREvent>>(enrichedEvents, HttpStatus.OK);
+  }
+
+  @PostMapping(SUBMIT_DELIVERABLE)
+  @ResponseBody
+  public ResponseEntity<?> addEventScheduleSubscriptions(
+      @RequestBody SubscriberDeliverableSubmissionBindingModel model) {
+
+    logUtil.debug(logger, "Received deliverable submission data ", model);
+
+    return new ResponseEntity<SubscriberDeliverableSubmissionBindingModel>(model, HttpStatus.OK);
   }
 
 }

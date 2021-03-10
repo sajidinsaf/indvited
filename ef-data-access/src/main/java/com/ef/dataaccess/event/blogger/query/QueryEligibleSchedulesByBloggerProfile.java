@@ -27,7 +27,7 @@ import com.ef.model.member.MemberType;
 @Component(value = "queryEligibleSchedulesByBloggerProfile")
 public class QueryEligibleSchedulesByBloggerProfile implements Query<Integer, List<PREvent>> {
 
-  private final String SELECT = "SELECT es.* FROM event_schedule es WHERE es.start_date BETWEEN (NOW() + INTERVAL 1 DAY) AND (NOW() + INTERVAL 15 DAY)";
+  private final String SELECT = "SELECT es.* FROM event_schedule es WHERE es.start_date BETWEEN (NOW() - INTERVAL 30 DAY) AND (NOW() + INTERVAL 15 DAY) AND es.end_date > NOW() ";
 
   private final JdbcTemplate jdbcTemplate;
   private final Query<Integer, List<MemberCriteriaData>> queryMemberCriteriaDataByMemberId;

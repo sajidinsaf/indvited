@@ -8,6 +8,8 @@ public class EventControllerConstants {
 
   public static final String SUBSCRIBE_SCHEDULE = "/api/v1/event/subscribeSchedule";
 
+  public static final String SUBMIT_DELIVERABLE = "/api/v1/event/subscriber/submit/deliverable";
+
   public static final String TEST_EVENT = "/api/v1/event/test";
 
   public static final String GET_PR_EVENT_LIST = "/api/v1/event/pr/list";

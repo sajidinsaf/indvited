@@ -12,6 +12,7 @@ public class EventDeliverable implements Serializable {
   private int eventId;
   private int deliverableId;
   private String deliverableName;
+  private String deliverableDetail;
 
   public EventDeliverable() {
 
@@ -46,6 +47,20 @@ public class EventDeliverable implements Serializable {
 
   public void setDeliverableId(int deliverableId) {
     this.deliverableId = deliverableId;
+  }
+
+  public String getDeliverableDetail() {
+    return deliverableDetail;
+  }
+
+  public void setDeliverableDetail(String deliverableDetail) {
+    this.deliverableDetail = deliverableDetail;
+  }
+
+  @Override
+  public String toString() {
+    return "EventDeliverable [eventId=" + eventId + ", deliverableId=" + deliverableId + ", deliverableName="
+        + deliverableName + ", deliverableDetail=" + deliverableDetail + "]";
   }
 
 }
