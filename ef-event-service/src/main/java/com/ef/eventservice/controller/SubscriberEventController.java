@@ -20,6 +20,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.ef.common.logging.ServiceLoggingUtil;
 import com.ef.dataaccess.Query;
+import com.ef.dataaccess.Update;
 import com.ef.eventservice.controller.util.PREventScheduleUtil;
 import com.ef.model.event.PREvent;
 import com.ef.model.event.SubscriberDeliverableSubmissionBindingModel;
@@ -35,13 +36,16 @@ public class SubscriberEventController {
 
   private final Query<Integer, List<PREvent>> queryEligibleSchedulesByBloggerProfile;
   private final PREventScheduleUtil prEventScheduleUtil;
+  private final Update<SubscriberDeliverableSubmissionBindingModel, String> insertOrUpdateDeliverable;
 
   @Autowired
   public SubscriberEventController(
       @Qualifier("queryEligibleSchedulesByBloggerProfile") Query<Integer, List<PREvent>> queryEligibleSchedulesByBloggerProfile,
-      PREventScheduleUtil prEventScheduleUtil) {
+      PREventScheduleUtil prEventScheduleUtil,
+      @Qualifier("insertOrUpdateSubscriberDeliverable") Update<SubscriberDeliverableSubmissionBindingModel, String> insertOrUpdateDeliverable) {
     this.queryEligibleSchedulesByBloggerProfile = queryEligibleSchedulesByBloggerProfile;
     this.prEventScheduleUtil = prEventScheduleUtil;
+    this.insertOrUpdateDeliverable = insertOrUpdateDeliverable;
   }
 
   @GetMapping(GET_SUBSCRIBER_ELIGIBLE_LIST_V1)
@@ -59,11 +63,15 @@ public class SubscriberEventController {
   @PostMapping(SUBMIT_DELIVERABLE)
   @ResponseBody
   public ResponseEntity<?> addEventScheduleSubscriptions(
-      @RequestBody SubscriberDeliverableSubmissionBindingModel model) {
+      @RequestBody SubscriberDeliverableSubmissionBindingModel input) {
 
-    logUtil.debug(logger, "Received deliverable submission data ", model);
+    logUtil.debug(logger, "Received deliverable submission data ", input);
 
-    return new ResponseEntity<SubscriberDeliverableSubmissionBindingModel>(model, HttpStatus.OK);
+    String result = insertOrUpdateDeliverable.data(input);
+
+    logUtil.debug(logger, "Deliverable insert or update method: ", result, input);
+    return new ResponseEntity<SubscriberDeliverableSubmissionBindingModel>(input, HttpStatus.OK);
+
   }
 
 }
