@@ -34,7 +34,8 @@ public class InsertOrUpdateSubscriberDeliverable
       String sql = String.format(INSERT, subscriberId, deliverableId, eventId, deliverableDetail);
       jdbcTemplate.update(sql);
       return Update.METHOD_INSERT;
-    } catch (RuntimeException e) {
+    } catch (org.springframework.dao.DuplicateKeyException e) {
+      e.printStackTrace();
       String sql = String.format(UPDATE, deliverableDetail, subscriberId, eventId, deliverableId);
       jdbcTemplate.update(sql);
       return Update.METHOD_UPDATE;
