@@ -15,7 +15,7 @@ public class EventStatusMeta implements Identifiable {
   public static final int KNOWN_STATUS_ID_EVENT_CANCELLED = 7;
   public static final int KNOWN_STATUS_ID_CLOSED = 8;
   public static final int KNOWN_STATUS_ID_REDUNDANT = 9;
-  public static final int KNOWN_STATUS_ID_READYFORREVIEW = 10;
+  public static final int KNOWN_STATUS_ID_DELIVERABLE_UPLOADED = 10;
 
   private final int id;
   private final String name;

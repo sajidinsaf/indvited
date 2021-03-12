@@ -27,7 +27,7 @@ public class PREventStatusStrategy implements Strategy<Context, Void> {
     this.eventStatusMetaCache = eventStatusMetaCache;
     overRideStatus = new java.util.HashSet<EventStatusMeta>();
     overRideStatus.add(eventStatusMetaCache.getEventStatusMeta(EventStatusMeta.KNOWN_STATUS_ID_CLOSED));
-    overRideStatus.add(eventStatusMetaCache.getEventStatusMeta(EventStatusMeta.KNOWN_STATUS_ID_READYFORREVIEW));
+    overRideStatus.add(eventStatusMetaCache.getEventStatusMeta(EventStatusMeta.KNOWN_STATUS_ID_DELIVERABLE_UPLOADED));
     overRideStatus.add(eventStatusMetaCache.getEventStatusMeta(EventStatusMeta.KNOWN_STATUS_ID_APPROVED));
     overRideStatus.add(eventStatusMetaCache.getEventStatusMeta(EventStatusMeta.KNOWN_STATUS_ID_APPLIED));
   }

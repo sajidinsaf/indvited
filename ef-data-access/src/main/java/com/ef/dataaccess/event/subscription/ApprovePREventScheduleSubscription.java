@@ -17,7 +17,7 @@ public class ApprovePREventScheduleSubscription
     implements Update<PREventScheduleSubscriptionStatusChangeBindingModel, Integer> {
 
   private final String UPDATE_APPROVE = "update event_schedule_subscription SET status_id=%d, approver_id=%d where subscriber_id=%d and id=%d";
-  private final String UPDATE_REDUNDANT = "update event_schedule_subscription SET status_id=%d where subscriber_id=%d and event_schedule_id=%d and id != %d";
+  private final String UPDATE_REDUNDANT = "update event_schedule_subscription SET status_id=%d, approver_id=%d where subscriber_id=%d and event_schedule_id=%d and id != %d";
 
   private final JdbcTemplate jdbcTemplate;
   private final Query<Integer, List<Long>> queryPREventScheduleIdListByEventId;
@@ -45,7 +45,7 @@ public class ApprovePREventScheduleSubscription
     List<Long> allScheduleIdsForEvent = queryPREventScheduleIdListByEventId.data(input.getEventId());
 
     for (long scheduleId : allScheduleIdsForEvent) {
-      sql = String.format(UPDATE_REDUNDANT, redundantStatusId, subscriberId, scheduleId, subscriptionId);
+      sql = String.format(UPDATE_REDUNDANT, redundantStatusId, approverId, subscriberId, scheduleId, subscriptionId);
       updateCount += jdbcTemplate.update(sql);
     }
     return updateCount;

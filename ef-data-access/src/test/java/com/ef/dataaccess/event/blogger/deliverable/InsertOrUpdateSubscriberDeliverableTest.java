@@ -84,6 +84,12 @@ public class InsertOrUpdateSubscriberDeliverableTest {
 
   }
 
+  private void setupTables(int eventId, int subscriberId) {
+    String QUERY_SUBSCRIPTION_ID = "select ess.id from event_schedule_subscription ess, event e, event_schedule es where es.event_id=%d and ess.event_schedule_id=es.id and ess.status_id in (%d, %d) and ess.subscriber_id=%d";
+
+    jdbcTemplate.update("insert into event_schedule_subscription ");
+  }
+
 }
 
 @Configuration

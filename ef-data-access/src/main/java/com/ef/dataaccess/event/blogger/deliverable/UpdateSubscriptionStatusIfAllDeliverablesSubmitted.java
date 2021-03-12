@@ -6,10 +6,11 @@ import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Component;
 
 import com.ef.dataaccess.Update;
+import com.ef.model.event.EventStatusMeta;
 import com.ef.model.event.SubscriberDeliverableSubmissionBindingModel;
 
-@Component(value = "insertOrUpdateSubscriberDeliverable")
-public class InsertOrUpdateSubscriberDeliverable
+@Component(value = "updateSubscriptionStatusIfAllDeliverablesSubmitted")
+public class UpdateSubscriptionStatusIfAllDeliverablesSubmitted
     implements Update<SubscriberDeliverableSubmissionBindingModel, String> {
 
   private final String INSERT = "insert into member_deliverable_data (member_id, deliverable_id, event_id, deliverable_detail) VALUES (%d,%d,%d,'%s')";
@@ -24,7 +25,8 @@ public class InsertOrUpdateSubscriberDeliverable
   private final JdbcTemplate jdbcTemplate;
 
   @Autowired
-  public InsertOrUpdateSubscriberDeliverable(@Qualifier("indvitedDbJdbcTemplate") JdbcTemplate jdbcTemplate) {
+  public UpdateSubscriptionStatusIfAllDeliverablesSubmitted(
+      @Qualifier("indvitedDbJdbcTemplate") JdbcTemplate jdbcTemplate) {
     this.jdbcTemplate = jdbcTemplate;
   }
 
@@ -48,10 +50,10 @@ public class InsertOrUpdateSubscriberDeliverable
       updateMethod = Update.METHOD_UPDATE;
     }
 
-//    String sql = String.format(QUERY_SUBSCRIPTION_ID, eventId, EventStatusMeta.KNOWN_STATUS_ID_APPROVED,
-//        EventStatusMeta.KNOWN_STATUS_ID_DELIVERABLE_UPLOADED, subscriberId);
-//    int subscriptionId = jdbcTemplate.queryForObject(sql, Integer.class);
-//    System.out.println(subscriptionId);
+    String sql = String.format(QUERY_SUBSCRIPTION_ID, eventId, EventStatusMeta.KNOWN_STATUS_ID_APPROVED,
+        EventStatusMeta.KNOWN_STATUS_ID_DELIVERABLE_UPLOADED, subscriberId);
+    int subscriptionId = jdbcTemplate.queryForObject(sql, Integer.class);
+    System.out.println(subscriptionId);
     return updateMethod;
   }
 

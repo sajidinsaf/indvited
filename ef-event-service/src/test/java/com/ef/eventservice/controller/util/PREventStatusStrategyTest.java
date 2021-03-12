@@ -66,7 +66,7 @@ public class PREventStatusStrategyTest {
   public void shouldSetStatusToTest() throws Exception {
     EventStatusMeta closed = eventStatusMetaCache.getEventStatusMeta(EventStatusMeta.KNOWN_STATUS_ID_CLOSED);
     EventStatusMeta readyForReview = eventStatusMetaCache
-        .getEventStatusMeta(EventStatusMeta.KNOWN_STATUS_ID_READYFORREVIEW);
+        .getEventStatusMeta(EventStatusMeta.KNOWN_STATUS_ID_DELIVERABLE_UPLOADED);
     EventStatusMeta approved = eventStatusMetaCache.getEventStatusMeta(EventStatusMeta.KNOWN_STATUS_ID_APPROVED);
     EventStatusMeta applied = eventStatusMetaCache.getEventStatusMeta(EventStatusMeta.KNOWN_STATUS_ID_APPLIED);
     created = eventStatusMetaCache.getEventStatusMeta(EventStatusMeta.KNOWN_STATUS_ID_CREATED);

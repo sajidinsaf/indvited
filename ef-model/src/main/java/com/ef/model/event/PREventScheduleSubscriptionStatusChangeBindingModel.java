@@ -1,12 +1,14 @@
 package com.ef.model.event;
 
-public class PREventScheduleSubscriptionStatusChangeBindingModel {
+import com.google.gson.Gson;
 
+public class PREventScheduleSubscriptionStatusChangeBindingModel {
   private int eventId;
   private long scheduleId;
   private long subscriptionId;
   private int subscriberId;
   private int approverId;
+  private String dataString;
 
   public PREventScheduleSubscriptionStatusChangeBindingModel() {
 
@@ -62,10 +64,29 @@ public class PREventScheduleSubscriptionStatusChangeBindingModel {
     this.approverId = approverId;
   }
 
+  public String getDataString() {
+    return dataString;
+  }
+
+  public void setDataString(String dataString) {
+    if (dataString == null) {
+      return;
+    }
+    this.dataString = dataString;
+    PREventScheduleSubscriptionStatusChangeBindingModel m = new Gson().fromJson(dataString,
+        PREventScheduleSubscriptionStatusChangeBindingModel.class);
+    setEventId(m.getEventId());
+    setScheduleId(m.getScheduleId());
+    setSubscriberId(m.getSubscriberId());
+    setApproverId(m.getApproverId());
+    setSubscriptionId(m.getSubscriptionId());
+  }
+
   @Override
   public String toString() {
     return "PREventScheduleSubscriptionStatusChangeBindingModel [eventId=" + eventId + ", scheduleId=" + scheduleId
-        + ", subscriptionId=" + subscriptionId + ", subscriberId=" + subscriberId + ", approverId=" + approverId + "]";
+        + ", subscriptionId=" + subscriptionId + ", subscriberId=" + subscriberId + ", approverId=" + approverId
+        + ", dataString=" + dataString + "]";
   }
 
 }
