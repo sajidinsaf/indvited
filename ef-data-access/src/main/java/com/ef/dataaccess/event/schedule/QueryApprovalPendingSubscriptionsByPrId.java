@@ -3,6 +3,7 @@ package com.ef.dataaccess.event.schedule;
 import java.sql.Date;
 import java.time.LocalDate;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Comparator;
 import java.util.HashMap;
 import java.util.List;
@@ -31,6 +32,8 @@ public class QueryApprovalPendingSubscriptionsByPrId implements Query<Integer, L
 
   private final EventEnricher eventEnricher;
 
+  private final List<Integer> applicableStatusIds = Arrays.asList(EventStatusMeta.KNOWN_STATUS_ID_DELIVERABLE_UPLOADED);
+
   @Autowired
   public QueryApprovalPendingSubscriptionsByPrId(
       @Qualifier("queryPREventList") Query<Integer, List<PREvent>> queryPREventList, EventEnricher eventEnricher) {
@@ -53,8 +56,11 @@ public class QueryApprovalPendingSubscriptionsByPrId implements Query<Integer, L
       for (PREventSchedule schedule : prEvent.getSchedules()) {
         List<EventScheduleSubscription> subscriptions = schedule.getSubscriptions();
         for (EventScheduleSubscription rawSubscription : subscriptions) {
-          if (rawSubscription.getEventStatus().getId() == EventStatusMeta.KNOWN_STATUS_ID_APPLIED
-              && isAfterToday(rawSubscription.getScheduleDate())) {
+
+          int statusId = rawSubscription.getEventStatus().getId();
+
+          if ((statusId == EventStatusMeta.KNOWN_STATUS_ID_APPLIED && isAfterToday(rawSubscription.getScheduleDate()))
+              || applicableStatusIds.contains(statusId)) {
 
             Map<PREventSchedule, Map<EventScheduleSubscriptionForPrApprovalWrapper, EventScheduleSubscriptionForPrApprovalWrapper>> eventScheduleMap = validEvents
                 .get(prEvent);

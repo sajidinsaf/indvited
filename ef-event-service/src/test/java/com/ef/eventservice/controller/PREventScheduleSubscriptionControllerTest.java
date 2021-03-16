@@ -48,6 +48,7 @@ import com.ef.model.event.PREvent;
 import com.ef.model.event.PREventScheduleSubscriptionBindingModel;
 import com.ef.model.event.PREventScheduleSubscriptionBindingModelWorkaround;
 import com.ef.model.event.PREventScheduleSubscriptionStatusChangeBindingModel;
+import com.ef.model.event.SubscriberDeliverableSubmissionBindingModel;
 import com.ef.model.member.Member;
 
 public class PREventScheduleSubscriptionControllerTest {
@@ -81,11 +82,12 @@ public class PREventScheduleSubscriptionControllerTest {
         .getBean("approvePREventScheduleSubscriptionStatus", Update.class);
     Update<PREventScheduleSubscriptionStatusChangeBindingModel, Integer> rejectPREventScheduleSubscriptionStatus = appContext
         .getBean("rejectPREventScheduleSubscriptionStatus", Update.class);
-
+    Update<SubscriberDeliverableSubmissionBindingModel, String> closeSubscriptionOnDeliverableApproval = appContext
+        .getBean("closeSubscriptionOnDeliverableApproval", Update.class);
     PREventScheduleUtil prEventScheduleUtil = appContext.getBean(PREventScheduleUtil.class);
     controller = new PREventScheduleSubscriptionController(insertPrEventScheduleSubscription,
         queryApprovalPendingSubscriptionsByPrId, prEventScheduleUtil, approvePREventScheduleSubscriptionStatus,
-        rejectPREventScheduleSubscriptionStatus);
+        rejectPREventScheduleSubscriptionStatus, closeSubscriptionOnDeliverableApproval);
   }
 
   @After

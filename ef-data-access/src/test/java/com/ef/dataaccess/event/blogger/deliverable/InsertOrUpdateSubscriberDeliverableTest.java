@@ -24,6 +24,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 
 import com.ef.dataaccess.Update;
 import com.ef.dataaccess.config.DbTestUtils;
+import com.ef.model.event.EventStatusMeta;
 import com.ef.model.event.SubscriberDeliverableSubmissionBindingModel;
 
 public class InsertOrUpdateSubscriberDeliverableTest {
@@ -54,6 +55,8 @@ public class InsertOrUpdateSubscriberDeliverableTest {
     int subscriberId = r.nextInt(5000) + 100000;
     String deliverableDetail = "http://zomato.com/review/" + r.nextInt(100000);
 
+    setupTables(eventId, subscriberId);
+
     SubscriberDeliverableSubmissionBindingModel model = new SubscriberDeliverableSubmissionBindingModel(eventId,
         subscriberId, deliverableId, deliverableDetail);
 
@@ -82,12 +85,21 @@ public class InsertOrUpdateSubscriberDeliverableTest {
     expectedDeliverableResult = jdbcTemplate.queryForObject(query, String.class);
     assertThat(expectedDeliverableResult, is(deliverableDetail));
 
+    query = String.format("select status_id from event_schedule_subscription where id=%d", 100);
+
+    int actualStatus = jdbcTemplate.queryForObject(query, Integer.class);
+    assertThat(actualStatus, is(EventStatusMeta.KNOWN_STATUS_ID_DELIVERABLE_UPLOADED));
   }
 
   private void setupTables(int eventId, int subscriberId) {
-    String QUERY_SUBSCRIPTION_ID = "select ess.id from event_schedule_subscription ess, event e, event_schedule es where es.event_id=%d and ess.event_schedule_id=es.id and ess.status_id in (%d, %d) and ess.subscriber_id=%d";
+//   private final String QUERY_SUBSCRIPTION_ID = "select ess.id from event_schedule_subscription ess, event e, event_schedule es where es.event_id=%d and ess.event_schedule_id=es.id and ess.status_id in (%d, %d) and ess.subscriber_id=%d";
 
-    jdbcTemplate.update("insert into event_schedule_subscription ");
+    jdbcTemplate.update(String.format("insert into event_schedule (id, event_id) values (1, %d)", eventId));
+
+    jdbcTemplate.update(String.format(
+        "insert into event_schedule_subscription (id, event_schedule_id, status_id, subscriber_id) values (100, 1, %d, %d)",
+        EventStatusMeta.KNOWN_STATUS_ID_APPROVED, subscriberId));
+
   }
 
 }

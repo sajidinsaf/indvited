@@ -2,6 +2,7 @@ package com.ef.eventservice.controller;
 
 import static com.ef.eventservice.controller.EventControllerConstants.GET_AWAITING_APPROVAL_SUBSCRIPTIONS_V1;
 import static com.ef.eventservice.controller.EventControllerConstants.SUBSCRIBE_SCHEDULE;
+import static com.ef.eventservice.controller.EventControllerConstants.SUBSCRIPTIONS_APPROVE_DELIVERABLE_V1;
 import static com.ef.eventservice.controller.EventControllerConstants.SUBSCRIPTIONS_APPROVE_V1;
 import static com.ef.eventservice.controller.EventControllerConstants.SUBSCRIPTIONS_REJECT_V1;
 
@@ -35,6 +36,7 @@ import com.ef.model.event.PREvent;
 import com.ef.model.event.PREventScheduleSubscriptionBindingModel;
 import com.ef.model.event.PREventScheduleSubscriptionBindingModelWorkaround;
 import com.ef.model.event.PREventScheduleSubscriptionStatusChangeBindingModel;
+import com.ef.model.event.SubscriberDeliverableSubmissionBindingModel;
 
 /**
  * Handles requests for the event service.
@@ -52,18 +54,22 @@ public class PREventScheduleSubscriptionController {
   private final Update<PREventScheduleSubscriptionStatusChangeBindingModel, Integer> approvePREventScheduleSubscriptionStatus;
   private final Update<PREventScheduleSubscriptionStatusChangeBindingModel, Integer> rejectPREventScheduleSubscriptionStatus;
 
+  private final Update<SubscriberDeliverableSubmissionBindingModel, String> closeSubscriptionOnDeliverableApproval;
+
   @Autowired
   public PREventScheduleSubscriptionController(
       @Qualifier("insertPrEventScheduleSubscription") Insert<PREventScheduleSubscriptionBindingModel, EventScheduleSubscription> insertPrEventScheduleSubscription,
       @Qualifier("queryApprovalPendingSubscriptionsByPrId") Query<Integer, List<PREvent>> queryApprovalPendingSubscriptionsByPrId,
       PREventScheduleUtil prEventScheduleUtil,
       @Qualifier("approvePREventScheduleSubscriptionStatus") Update<PREventScheduleSubscriptionStatusChangeBindingModel, Integer> approvePREventScheduleSubscriptionStatus,
-      @Qualifier("rejectPREventScheduleSubscriptionStatus") Update<PREventScheduleSubscriptionStatusChangeBindingModel, Integer> rejectPREventScheduleSubscriptionStatus) {
+      @Qualifier("rejectPREventScheduleSubscriptionStatus") Update<PREventScheduleSubscriptionStatusChangeBindingModel, Integer> rejectPREventScheduleSubscriptionStatus,
+      @Qualifier("closeSubscriptionOnDeliverableApproval") Update<SubscriberDeliverableSubmissionBindingModel, String> closeSubscriptionOnDeliverableApproval) {
     this.insertPrEventScheduleSubscription = insertPrEventScheduleSubscription;
     this.queryApprovalPendingSubscriptionsByPrId = queryApprovalPendingSubscriptionsByPrId;
     this.prEventScheduleUtil = prEventScheduleUtil;
     this.approvePREventScheduleSubscriptionStatus = approvePREventScheduleSubscriptionStatus;
     this.rejectPREventScheduleSubscriptionStatus = rejectPREventScheduleSubscriptionStatus;
+    this.closeSubscriptionOnDeliverableApproval = closeSubscriptionOnDeliverableApproval;
   }
 
   @PostMapping(SUBSCRIBE_SCHEDULE)
@@ -132,4 +138,18 @@ public class PREventScheduleSubscriptionController {
 
     return new ResponseEntity<MessagePacket<String>>(p, HttpStatus.OK);
   }
+
+  @PostMapping(SUBSCRIPTIONS_APPROVE_DELIVERABLE_V1)
+  @ResponseBody
+  public ResponseEntity<?> approveDeliverableAndClose(@RequestBody SubscriberDeliverableSubmissionBindingModel input) {
+
+    logUtil.debug(logger, "Received deliverable approval ", input);
+
+    String result = closeSubscriptionOnDeliverableApproval.data(input);
+
+    logUtil.debug(logger, "Status update result: ", result, input);
+    return new ResponseEntity<SubscriberDeliverableSubmissionBindingModel>(input, HttpStatus.OK);
+
+  }
+
 }

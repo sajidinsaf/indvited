@@ -20,6 +20,7 @@ import com.ef.model.event.AvailableScheduledDate;
 import com.ef.model.event.EventStatusMeta;
 import com.ef.model.event.PREvent;
 import com.ef.model.event.PREventSchedule;
+import com.ef.model.event.wrapper.MemberEventDeliverableDataWrapper;
 import com.ef.model.event.wrapper.PREventScheduleForPrApprovalWrapper;
 import com.ef.model.event.wrapper.PREventWrapper;
 
@@ -28,13 +29,16 @@ public class PREventScheduleUtil {
 
   private final Query<Pair<Long, int[]>, Integer> queryEventScheduleSubscriptionCountByScheduleIdAndStatusIds;
   private final Strategy<Context, Void> prEventStatusStrategy;
+  private final Query<Integer, List<MemberEventDeliverableDataWrapper>> queryMemberDeliverableDataByEventId;
 
   @Autowired
   public PREventScheduleUtil(
       @Qualifier("queryEventScheduleSubscriptionCountByScheduleIdAndStatusIds") Query<Pair<Long, int[]>, Integer> queryEventScheduleSubscriptionCountByScheduleIdAndStatusIds,
-      @Qualifier("prEventStatusStrategy") Strategy<Context, Void> prEventStatusStrategy) {
+      @Qualifier("prEventStatusStrategy") Strategy<Context, Void> prEventStatusStrategy,
+      @Qualifier("queryMemberDeliverableDataByEventId") Query<Integer, List<MemberEventDeliverableDataWrapper>> queryMemberDeliverableDataByEventId) {
     this.queryEventScheduleSubscriptionCountByScheduleIdAndStatusIds = queryEventScheduleSubscriptionCountByScheduleIdAndStatusIds;
     this.prEventStatusStrategy = prEventStatusStrategy;
+    this.queryMemberDeliverableDataByEventId = queryMemberDeliverableDataByEventId;
   }
 
   public List<PREvent> populateAvailableDates(List<PREvent> events) {
@@ -54,11 +58,19 @@ public class PREventScheduleUtil {
       PREventWrapper eventWrapper = new PREventWrapper(event);
 
       setStatus(eventWrapper);
+      setMemberDeliverables(eventWrapper);
 
       enrichedEvents.add(eventWrapper);
     }
 
     return enrichedEvents;
+  }
+
+  private void setMemberDeliverables(PREventWrapper eventWrapper) {
+    List<MemberEventDeliverableDataWrapper> memberDeliverables = queryMemberDeliverableDataByEventId
+        .data(eventWrapper.getId());
+    eventWrapper.setMemberDeliverableSubmission(memberDeliverables);
+
   }
 
   private void setStatus(PREventWrapper eventWrapper) {

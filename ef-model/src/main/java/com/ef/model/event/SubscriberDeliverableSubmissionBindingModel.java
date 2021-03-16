@@ -5,7 +5,7 @@ import com.google.gson.Gson;
 public class SubscriberDeliverableSubmissionBindingModel {
 
   private int eventId, subscriberId, deliverableId;
-  private String deliverableUrl;
+  private String deliverableUrl, comments;
 
   public SubscriberDeliverableSubmissionBindingModel() {
 
@@ -18,6 +18,16 @@ public class SubscriberDeliverableSubmissionBindingModel {
     this.subscriberId = subscriberId;
     this.deliverableId = deliverableId;
     this.deliverableUrl = deliverableUrl;
+  }
+
+  public SubscriberDeliverableSubmissionBindingModel(int eventId, int subscriberId, int deliverableId,
+      String deliverableUrl, String comments) {
+    super();
+    this.eventId = eventId;
+    this.subscriberId = subscriberId;
+    this.deliverableId = deliverableId;
+    this.deliverableUrl = deliverableUrl;
+    this.comments = comments;
   }
 
   public int getEventId() {
@@ -52,10 +62,18 @@ public class SubscriberDeliverableSubmissionBindingModel {
     this.deliverableUrl = deliverableUrl;
   }
 
+  public String getComments() {
+    return comments;
+  }
+
+  public void setComments(String comments) {
+    this.comments = comments;
+  }
+
   @Override
   public String toString() {
     return "SubscriberDeliverableSubmissionBindingModel [eventId=" + eventId + ", subscriberId=" + subscriberId
-        + ", deliverableId=" + deliverableId + ", deliverableUrl=" + deliverableUrl + "]";
+        + ", deliverableId=" + deliverableId + ", deliverableUrl=" + deliverableUrl + ", comments=" + comments + "]";
   }
 
   public static void main(String[] args) {

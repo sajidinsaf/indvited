@@ -11,12 +11,13 @@ import org.springframework.stereotype.Component;
 import com.ef.dataaccess.Query;
 import com.ef.dataaccess.event.EventStatusMetaCache;
 import com.ef.model.event.EventScheduleSubscription;
+import com.ef.model.event.EventStatusMeta;
 
 @Component(value = "queryEventScheduleSubscriptionByScheduleIdAndBloggerId")
 public class QueryEventScheduleSubscriptionByScheduleIdAndBloggerId
     implements Query<Pair<Integer, Long>, List<EventScheduleSubscription>> {
 
-  private final String SELECT_EVENT = "select * from event_schedule_subscription where subscriber_id=%d and event_schedule_id=%d and status_id != 8";
+  private final String SELECT_EVENT = "select * from event_schedule_subscription where subscriber_id=%d and event_schedule_id=%d and status_id != %d";
 
   private final JdbcTemplate jdbcTemplate;
   private final EventStatusMetaCache eventStatusMetaCache;
@@ -34,7 +35,7 @@ public class QueryEventScheduleSubscriptionByScheduleIdAndBloggerId
     int bloggerId = bloggerIdAndscheduleIdPair.getLeft();
     long scheduleId = bloggerIdAndscheduleIdPair.getRight();
     List<EventScheduleSubscription> eventScheduleSubscriptions = jdbcTemplate.query(
-        String.format(SELECT_EVENT, bloggerId, scheduleId),
+        String.format(SELECT_EVENT, bloggerId, scheduleId, EventStatusMeta.KNOWN_STATUS_ID_CLOSED),
         (rs, rowNum) -> new EventScheduleSubscription(rs.getLong("ID"), rs.getLong("EVENT_SCHEDULE_ID"),
             rs.getInt("SUBSCRIBER_ID"), rs.getDate("SCHEDULE_DATE"), rs.getString("PREFERRED_TIME"),
             eventStatusMetaCache.getEventStatusMeta(rs.getInt("STATUS_ID"))));
