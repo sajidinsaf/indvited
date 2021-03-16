@@ -33,4 +33,6 @@ public class EventControllerConstants {
   public static final String SUBSCRIPTIONS_REJECT_V1 = "/api/v1/event/subscriptions/reject";
 
   public static final String SUBSCRIPTIONS_APPROVE_DELIVERABLE_V1 = "/api/v1/event/subscriptions/approve/deliverable";
+
+  public static final String SUBSCRIPTIONS_REJECT_DELIVERABLE_V1 = "/api/v1/event/subscriptions/reject/deliverable";
 }

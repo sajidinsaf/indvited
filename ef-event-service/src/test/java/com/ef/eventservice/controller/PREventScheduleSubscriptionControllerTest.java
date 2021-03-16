@@ -84,10 +84,15 @@ public class PREventScheduleSubscriptionControllerTest {
         .getBean("rejectPREventScheduleSubscriptionStatus", Update.class);
     Update<SubscriberDeliverableSubmissionBindingModel, String> closeSubscriptionOnDeliverableApproval = appContext
         .getBean("closeSubscriptionOnDeliverableApproval", Update.class);
+
+    Update<SubscriberDeliverableSubmissionBindingModel, String> insertDeliverableRejectionAndUpdateSubscription = appContext
+        .getBean("insertDeliverableRejectionAndUpdateSubscription", Update.class);
+
     PREventScheduleUtil prEventScheduleUtil = appContext.getBean(PREventScheduleUtil.class);
     controller = new PREventScheduleSubscriptionController(insertPrEventScheduleSubscription,
         queryApprovalPendingSubscriptionsByPrId, prEventScheduleUtil, approvePREventScheduleSubscriptionStatus,
-        rejectPREventScheduleSubscriptionStatus, closeSubscriptionOnDeliverableApproval);
+        rejectPREventScheduleSubscriptionStatus, closeSubscriptionOnDeliverableApproval,
+        insertDeliverableRejectionAndUpdateSubscription);
   }
 
   @After

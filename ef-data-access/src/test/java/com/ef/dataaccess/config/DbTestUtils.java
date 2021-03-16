@@ -29,8 +29,8 @@ public class DbTestUtils {
         .addScript("classpath:com/ef/dataaccess/event/createEventTimeSlotTable.sql")
         .addScript("classpath:com/ef/dataaccess/event/createEventStatusMetaTable.sql")
         .addScript("classpath:com/ef/dataaccess/event/schedule/subscription/createEventScheduleSubscriptionTable.sql")
-        .addScript("classpath:com/ef/dataaccess/event/createMemberEventDeliverableDataTable.sql");
-
+        .addScript("classpath:com/ef/dataaccess/event/createMemberEventDeliverableDataTable.sql")
+        .addScript("classpath:com/ef/dataaccess/event/schedule/subscription/createMemberDeliverableDataRejection.sql");
     return embeddedDatabaseBuilder;
   }
 }
