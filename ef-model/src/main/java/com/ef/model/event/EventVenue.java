@@ -13,18 +13,20 @@ public class EventVenue implements Identifiable {
   private String zomatoUrl;
   private String venueUrl;
   private String address;
+  private String city;
 
   public EventVenue() {
 
   }
 
-  public EventVenue(int id, String name, String zomatoUrl, String venueUrl, String address) {
+  public EventVenue(int id, String name, String zomatoUrl, String venueUrl, String address, String city) {
     super();
     this.id = id;
     this.name = name;
     this.zomatoUrl = zomatoUrl;
     this.venueUrl = venueUrl;
     this.address = address;
+    this.city = city;
   }
 
   public int getId() {
@@ -67,56 +69,18 @@ public class EventVenue implements Identifiable {
     this.address = address;
   }
 
-  @Override
-  public int hashCode() {
-    final int prime = 31;
-    int result = 1;
-    result = prime * result + ((address == null) ? 0 : address.hashCode());
-    result = prime * result + id;
-    result = prime * result + ((name == null) ? 0 : name.hashCode());
-    result = prime * result + ((venueUrl == null) ? 0 : venueUrl.hashCode());
-    result = prime * result + ((zomatoUrl == null) ? 0 : zomatoUrl.hashCode());
-    return result;
+  public String getCity() {
+    return city;
   }
 
-  @Override
-  public boolean equals(Object obj) {
-    if (this == obj)
-      return true;
-    if (obj == null)
-      return false;
-    if (getClass() != obj.getClass())
-      return false;
-    EventVenue other = (EventVenue) obj;
-    if (address == null) {
-      if (other.address != null)
-        return false;
-    } else if (!address.equals(other.address))
-      return false;
-    if (id != other.id)
-      return false;
-    if (name == null) {
-      if (other.name != null)
-        return false;
-    } else if (!name.equals(other.name))
-      return false;
-    if (venueUrl == null) {
-      if (other.venueUrl != null)
-        return false;
-    } else if (!venueUrl.equals(other.venueUrl))
-      return false;
-    if (zomatoUrl == null) {
-      if (other.zomatoUrl != null)
-        return false;
-    } else if (!zomatoUrl.equals(other.zomatoUrl))
-      return false;
-    return true;
+  public void setCity(String city) {
+    this.city = city;
   }
 
   @Override
   public String toString() {
     return "EventVenue [id=" + id + ", name=" + name + ", zomatoUrl=" + zomatoUrl + ", venueUrl=" + venueUrl
-        + ", address=" + address + "]";
+        + ", address=" + address + ", city=" + city + "]";
   }
 
 }

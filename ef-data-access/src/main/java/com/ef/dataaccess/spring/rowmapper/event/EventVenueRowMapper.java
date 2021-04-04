@@ -13,7 +13,7 @@ public class EventVenueRowMapper implements RowMapper<EventVenue> {
   public EventVenue mapRow(ResultSet rs, int rowNum) throws SQLException {
 
     EventVenue eventVenue = new EventVenue(rs.getInt("ID"), rs.getString("NAME"), rs.getString("ZOMATO_URL"),
-        rs.getString("VENUE_URL"), rs.getString("ADDRESS"));
+        rs.getString("VENUE_URL"), rs.getString("ADDRESS"), rs.getString("CITY"));
     return eventVenue;
   }
 

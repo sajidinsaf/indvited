@@ -63,7 +63,7 @@ public class InsertPREventTest {
       new PREventDeliverableBindingModel("Zomato Review"), new PREventDeliverableBindingModel("Instagram Post"));
   private PREventLocationBindingModel eventLocation = new PREventLocationBindingModel("Esora",
       "1st Floor, Commerz 2, International Business Park, Oberoi Garden City, Near Oberoi Mall, Goregaon East, Mumbai",
-      "http://zoma.to/r/18789802", null);
+      "http://zoma.to/r/18789802", null, "Mumbai");
   private String notes = "Find this restaurant on Zomato | Bhukkad, Shop 13, Mohid Heights, R. T. O. Road, Andheri Lokhandwala, Andheri West, Mumbai  http://zoma.to/r/19213346 (You have to place an order for 1 dish from menu lowest item need to be ordered  amount for which will not be refunded). *Timings 12pm till 3pm \u0026 7pm till 9pm Available From Monday Till Sunday Only on Friday \u0026 Saturday  Available From 12pm till 3pm*";
 
   @SuppressWarnings("resource")

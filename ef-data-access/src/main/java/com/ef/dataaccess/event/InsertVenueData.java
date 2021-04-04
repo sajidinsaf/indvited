@@ -11,7 +11,7 @@ import com.ef.model.event.PREventLocationBindingModel;
 @Component("insertVenueData")
 public class InsertVenueData implements Insert<PREventLocationBindingModel, Boolean> {
 
-  private final String INSERT_STATEMENT = "INSERT INTO venue(name, address, zomato_url, venue_url) VALUES (?,?,?,?)";
+  private final String INSERT_STATEMENT = "INSERT INTO venue(name, address, city, zomato_url, venue_url) VALUES (?,?,?,?,?)";
   private final JdbcTemplate jdbcTemplate;
 
   @Autowired
@@ -27,7 +27,8 @@ public class InsertVenueData implements Insert<PREventLocationBindingModel, Bool
     String venueAddress = eventVenueData.getVenueAddress();
     String zomatoUrl = eventVenueData.getZomatoUrl();
     String venueUrl = eventVenueData.getVenueUrl();
-    jdbcTemplate.update(INSERT_STATEMENT, new Object[] { venueName, venueAddress, zomatoUrl, venueUrl });
+    String city = eventVenueData.getCity();
+    jdbcTemplate.update(INSERT_STATEMENT, new Object[] { venueName, venueAddress, city, zomatoUrl, venueUrl });
 
     return true;
   }

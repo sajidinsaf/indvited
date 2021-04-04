@@ -26,7 +26,7 @@ public class PREventBindingModel {
   private boolean deliverZomatoReview, deliverInstagramPost, deliverInstagramStories, deliverLiveInstagramStories,
       deliverGoogleReview, deliverPlusOneReview;
   private InvitedBloggersBindingModel invitedBloggersBindingModel;
-  private String venueName, venueAddress, venueUrl;
+  private String venueName, venueAddress, venueUrl, city;
 
   public PREventBindingModel() {
     this.eventCriteria = new ArrayList<PREventCriteriaBindingModel>();
@@ -171,6 +171,7 @@ public class PREventBindingModel {
     event.setMemberId(100010004);
 
     event.setDomainName("Restaurant");
+
     PREventCriteriaBindingModel prEventCriteriaBindingModel1 = new PREventCriteriaBindingModel("Mininum Zomato reviews",
         175);
     PREventCriteriaBindingModel prEventCriteriaBindingModel2 = new PREventCriteriaBindingModel(
@@ -186,7 +187,7 @@ public class PREventBindingModel {
 
     PREventLocationBindingModel eventLocation = new PREventLocationBindingModel("Esora",
         "1st Floor, Commerz 2, International Business Park, Oberoi Garden City, Near Oberoi Mall, Goregaon East, Mumbai",
-        "http://zoma.to/r/18789802", null);
+        "http://zoma.to/r/18789802", null, "Mumbai");
     event.setEventLocation(eventLocation);
     event.setEventType(1);
     event.setExclusions(
@@ -344,25 +345,35 @@ public class PREventBindingModel {
     this.venueUrl = venueUrl;
   }
 
-  @Override
-  public String toString() {
-    return "PREventBindingModel [memberId=" + memberId + ", eventType=" + eventType + ", domainName=" + domainName
-        + ", cap=" + cap + ", exclusions=" + exclusions + ", eventCriteria=" + eventCriteria + ", eventDeliverable="
-        + eventDeliverable + ", eventLocation=" + eventLocation + ", notes=" + notes + ", minZomatoLevel="
-        + minZomatoLevel + ", minZomatoReviews=" + minZomatoReviews + ", minInstagramFollowers=" + minInstagramFollowers
-        + ", deliverZomatoReview=" + deliverZomatoReview + ", deliverInstagramPost=" + deliverInstagramPost
-        + ", deliverInstagramStories=" + deliverInstagramStories + ", deliverLiveInstagramStories="
-        + deliverLiveInstagramStories + ", deliverGoogleReview=" + deliverGoogleReview + ", deliverPlusOneReview="
-        + deliverPlusOneReview + ", invitedBloggersBindingModel=" + invitedBloggersBindingModel + ", venueName="
-        + venueName + ", venueAddress=" + venueAddress + ", venueUrl=" + venueUrl + "]";
-  }
-
   public MemberType getMemberType() {
     return memberType;
   }
 
   public void setMemberType(MemberType memberType) {
     this.memberType = memberType;
+  }
+
+  public String getCity() {
+    return city;
+  }
+
+  public void setCity(String city) {
+    eventLocation.setCity(city);
+    this.city = city;
+  }
+
+  @Override
+  public String toString() {
+    return "PREventBindingModel [memberId=" + memberId + ", memberType=" + memberType + ", eventType=" + eventType
+        + ", domainName=" + domainName + ", cap=" + cap + ", exclusions=" + exclusions + ", eventCriteria="
+        + eventCriteria + ", eventDeliverable=" + eventDeliverable + ", eventLocation=" + eventLocation + ", notes="
+        + notes + ", minZomatoLevel=" + minZomatoLevel + ", minZomatoReviews=" + minZomatoReviews
+        + ", minInstagramFollowers=" + minInstagramFollowers + ", deliverZomatoReview=" + deliverZomatoReview
+        + ", deliverInstagramPost=" + deliverInstagramPost + ", deliverInstagramStories=" + deliverInstagramStories
+        + ", deliverLiveInstagramStories=" + deliverLiveInstagramStories + ", deliverGoogleReview="
+        + deliverGoogleReview + ", deliverPlusOneReview=" + deliverPlusOneReview + ", invitedBloggersBindingModel="
+        + invitedBloggersBindingModel + ", venueName=" + venueName + ", venueAddress=" + venueAddress + ", venueUrl="
+        + venueUrl + ", city=" + city + "]";
   }
 
 }

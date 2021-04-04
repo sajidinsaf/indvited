@@ -117,8 +117,8 @@ public class QueryEligibleSchedulesByBloggerProfile implements Query<Integer, Li
 
           eventEnricher.populateEventCriteria(event, new ArrayList<EventCriteriaData>(eventCriteriaData.values()));
 
-          Member member = queryMemberById.data(event.getMemberId());
-          event.setMember(member);
+          Member pr = queryMemberById.data(event.getMemberId());
+          event.setMember(pr);
         }
 
         List<EventScheduleSubscription> subscriptions = queryEventScheduleSubscriptionByScheduleIdAndBloggerId
