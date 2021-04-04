@@ -26,7 +26,7 @@ public class InsertMemberAddress implements Insert<MemberAddressRegistrationBind
   private static final Logger logger = LoggerFactory.getLogger(InsertMemberAddress.class);
   private final ServiceLoggingUtil logUtil = new ServiceLoggingUtil();
 
-  private final String INSERT_SCHEDULE_STATEMENT = "INSERT INTO member_address(member_id, addr_line1, addr_line2, addr_line3, city, country, pincode, creation_timestamp) VALUES (?,?,?,?,?,?,?,?)";
+  private final String INSERT_SCHEDULE_STATEMENT = "INSERT INTO member_address(member_id, addr_line1, addr_line2, addr_line3, city, country, pincode, creation_timestamp, is_current) VALUES (?,?,?,?,?,?,?,?,?)";
 
   private final JdbcTemplate jdbcTemplate;
 
@@ -53,7 +53,8 @@ public class InsertMemberAddress implements Insert<MemberAddressRegistrationBind
     int addressId = keyHolder.getKey().intValue();
 
     MemberAddress memberAddress = new MemberAddress(addressId, input.getMemberId(), input.getAddressLine1(),
-        input.getAddressLine2(), input.getAddressLine3(), input.getCity(), input.getCountry(), input.getPincode());
+        input.getAddressLine2(), input.getAddressLine3(), input.getCity(), input.getCountry(), input.getPincode(),
+        input.isCurrent());
 
     return memberAddress;
   }
@@ -70,6 +71,7 @@ public class InsertMemberAddress implements Insert<MemberAddressRegistrationBind
     ps.setString(6, input.getCountry());
     ps.setString(7, input.getPincode());
     ps.setTimestamp(8, creationTimestamp);
+    ps.setBoolean(9, input.isCurrent());
 
     return ps;
   }

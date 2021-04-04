@@ -7,5 +7,6 @@ CREATE TABLE member_address (
   city varchar(50),
   country varchar(30),
   pincode varchar(20),
-  creation_timestamp timestamp
+  creation_timestamp timestamp,
+  is_current BOOLEAN DEFAULT FALSE NOT NULL
 );

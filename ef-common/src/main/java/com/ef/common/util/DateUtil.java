@@ -41,7 +41,7 @@ public class DateUtil {
     return new Date(parsed.getTime());
   }
 
-  public String formatTimeString(String timeString, String origFormat, String newFormat) {
+  public String convertDateString(String timeString, String origFormat, String newFormat) {
     try {
       final Date dateObj = new SimpleDateFormat(origFormat).parse(timeString);
       return new SimpleDateFormat(newFormat).format(dateObj);

@@ -4,13 +4,14 @@ public class MemberAddressRegistrationBindingModel {
 
   private int memberId;
   private String addressLine1, addressLine2, addressLine3, city, country, pincode;
+  private boolean current;
 
   public MemberAddressRegistrationBindingModel() {
 
   }
 
   public MemberAddressRegistrationBindingModel(int memberId, String addressLine1, String addressLine2,
-      String addressLine3, String city, String country, String pincode) {
+      String addressLine3, String city, String country, String pincode, boolean current) {
     super();
     this.memberId = memberId;
     this.addressLine1 = addressLine1;
@@ -19,6 +20,7 @@ public class MemberAddressRegistrationBindingModel {
     this.city = city;
     this.country = country;
     this.pincode = pincode;
+    this.current = current;
   }
 
   public int getMemberId() {
@@ -77,11 +79,19 @@ public class MemberAddressRegistrationBindingModel {
     this.pincode = pincode;
   }
 
+  public boolean isCurrent() {
+    return current;
+  }
+
+  public void setCurrent(boolean current) {
+    this.current = current;
+  }
+
   @Override
   public String toString() {
     return "MemberAddressRegistrationBindingModel [memberId=" + memberId + ", addressLine1=" + addressLine1
         + ", addressLine2=" + addressLine2 + ", addressLine3=" + addressLine3 + ", city=" + city + ", country="
-        + country + ", pincode=" + pincode + "]";
+        + country + ", pincode=" + pincode + ", current=" + current + "]";
   }
 
 }

@@ -95,9 +95,10 @@ public class InsertMember implements Insert<MemberRegistrationBindingModel, Prec
 
   private MemberAddress insertMemberAddress(int memberId, MemberRegistrationBindingModel input) {
 
+    boolean setAddressAsCurrentDuringMemberRegistration = true;
     MemberAddressRegistrationBindingModel marbm = new MemberAddressRegistrationBindingModel(memberId,
         input.getAddressLine1(), input.getAddressLine2(), input.getAddressLine3(), input.getCity(), input.getCountry(),
-        input.getPincode());
+        input.getPincode(), setAddressAsCurrentDuringMemberRegistration);
     return insertMemberAddress.data(marbm);
 
   }

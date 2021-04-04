@@ -29,7 +29,7 @@ public class QueryMemberAddressesByMemberId implements Query<Integer, List<Membe
     List<MemberAddress> memberAddresses = jdbcTemplate.query(String.format(SELECT_MEMBER_CRITERIA_DATA, memberId),
         (rs, rowNum) -> new MemberAddress(rs.getInt("ID"), memberId, rs.getString("ADDR_LINE1"),
             rs.getString("ADDR_LINE2"), rs.getString("ADDR_LINE3"), rs.getString("CITY"), rs.getString("COUNTRY"),
-            rs.getString("PINCODE")));
+            rs.getString("PINCODE"), rs.getBoolean("IS_CURRENT")));
 
     return memberAddresses;
   }

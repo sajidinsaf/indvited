@@ -108,6 +108,7 @@ public class InsertMemberTest {
     assertThat(member.getMemberAddress().getCity(), is(country));
     assertThat(member.getMemberAddress().getCountry(), is(country));
     assertThat(member.getMemberAddress().getPincode(), is(pincode));
+    assertThat(member.getMemberAddress().isCurrent(), is(true));
   }
 
 }

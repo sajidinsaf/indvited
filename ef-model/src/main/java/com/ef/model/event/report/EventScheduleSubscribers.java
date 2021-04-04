@@ -96,23 +96,49 @@ public class EventScheduleSubscribers {
 
   public String getReportForVenue() {
     StringBuilder sb = new StringBuilder();
+    sb.append("___________________________________________");
+    sb.append(lineSeparator);
     sb.append("Venue: ").append(getVenueName());
     sb.append(lineSeparator);
     sb.append("Address: ").append(getVenueAddress());
     sb.append(lineSeparator);
     sb.append("From: ").append(getDateFrom()).append(" To: ").append(getDateTo());
+    sb.append(lineSeparator);
+    sb.append("Number of bloggers: ").append(getMemberSubscriptionList().size());
+    sb.append(lineSeparator);
+    sb.append("___________________________________________");
     StringBuilder msSb = new StringBuilder();
+    int serNo = 0;
     for (MemberSubscription ms : getMemberSubscriptionList()) {
-      msSb.append(lineSeparator).append("Name: ").append(ms.getFirstName()).append(" ").append(ms.getLastName())
-          .append(lineSeparator).append("Phone: ").append(ms.getPhoneNumber()).append(lineSeparator).append("Date: ")
-          .append(ms.getScheduleDate()).append(" Time: ").append(ms.getScheduleTime());
+      msSb.append(++serNo).append(". ").append("Name: ").append(ms.getFirstName()).append(" ").append(ms.getLastName())
+          .append(lineSeparator);
+      int padLength = (serNo + "").length() + 3;
+
+      String phoneLabel = padSpaces("Phone: ", padLength);
+      msSb.append(phoneLabel).append(ms.getPhoneNumber()).append(lineSeparator);
+
+      String dateLabel = padSpaces("Date: ", padLength);
+      msSb.append(dateLabel).append(ms.getScheduleDate()).append(" Time: ").append(ms.getScheduleTime())
+          .append(lineSeparator).append(lineSeparator);
     }
+
     if (!msSb.toString().trim().equals("")) {
-      sb.append(lineSeparator);
-      sb.append("--------------------");
-      sb.append(lineSeparator);
+      sb.append(lineSeparator).append(lineSeparator);
       sb.append(msSb.toString());
     }
+
+    // sb.append(lineSeparator);
+    // sb.append(lineSeparator);
+    return sb.toString();
+  }
+
+  public String padSpaces(String inputString, int length) {
+    StringBuilder sb = new StringBuilder();
+    while (sb.length() < length) {
+      sb.append(' ');
+    }
+    sb.append(inputString);
+
     return sb.toString();
   }
 

@@ -55,7 +55,7 @@ public class MemberSubscription {
 
   public void setScheduleTime(String scheduleTime) {
 
-    this.scheduleTime = new DateUtil().formatTimeString(scheduleTime, "HHmm", "hh:mma");
+    this.scheduleTime = new DateUtil().convertDateString(scheduleTime, "HHmm", "hh:mma");
   }
 
   public String getPhoneNumber() {

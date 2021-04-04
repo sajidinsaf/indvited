@@ -3,14 +3,15 @@ package com.ef.model.member;
 public class MemberAddress {
 
   private int id, memberId;
-  public String addressLine1, addressLine2, addressLine3, city, country, pincode;
+  private String addressLine1, addressLine2, addressLine3, city, country, pincode;
+  private boolean current;
 
   public MemberAddress() {
 
   }
 
   public MemberAddress(int id, int memberId, String addressLine1, String addressLine2, String addressLine3, String city,
-      String country, String pincode) {
+      String country, String pincode, boolean current) {
     super();
     this.id = id;
     this.memberId = memberId;
@@ -20,6 +21,7 @@ public class MemberAddress {
     this.city = city;
     this.country = country;
     this.pincode = pincode;
+    this.current = current;
   }
 
   public int getId() {
@@ -86,11 +88,19 @@ public class MemberAddress {
     this.pincode = pincode;
   }
 
+  public boolean isCurrent() {
+    return current;
+  }
+
+  public void setCurrent(boolean current) {
+    this.current = current;
+  }
+
   @Override
   public String toString() {
     return "MemberAddress [id=" + id + ", memberId=" + memberId + ", addressLine1=" + addressLine1 + ", addressLine2="
         + addressLine2 + ", addressLine3=" + addressLine3 + ", city=" + city + ", country=" + country + ", pincode="
-        + pincode + "]";
+        + pincode + ", current=" + current + "]";
   }
 
 }
