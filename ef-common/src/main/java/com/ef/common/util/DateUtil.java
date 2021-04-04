@@ -10,6 +10,8 @@ public class DateUtil {
           ? System.getProperty("event.schedule.display.date.format")
           : "EEE d MMM yyyy";
 
+  public static final String yyyy_dash_MM_dash_dd_format = "yyyy-MM-dd";
+
   public String formatDateForEventDisplay(Date date) {
     SimpleDateFormat formatter = new SimpleDateFormat(EVENT_DISPLAY_DATE_FORMAT);
     return formatter.format(date);
@@ -37,5 +39,14 @@ public class DateUtil {
           + "The date format can be specified with the system property 'event.schedule.date.format'");
     }
     return new Date(parsed.getTime());
+  }
+
+  public String formatTimeString(String timeString, String origFormat, String newFormat) {
+    try {
+      final Date dateObj = new SimpleDateFormat(origFormat).parse(timeString);
+      return new SimpleDateFormat(newFormat).format(dateObj);
+    } catch (final ParseException e) {
+      throw new RuntimeException(e);
+    }
   }
 }
