@@ -15,6 +15,7 @@ import org.springframework.stereotype.Component;
 
 import com.ef.common.LRPair;
 import com.ef.dataaccess.Query;
+import com.ef.dataaccess.event.blogger.query.validator.BloggerEligibleEventValidator;
 import com.ef.dataaccess.event.util.EventEnricher;
 import com.ef.model.event.EventCriteriaData;
 import com.ef.model.event.EventScheduleSubscription;
@@ -36,6 +37,7 @@ public class QueryEligibleSchedulesByBloggerProfile implements Query<Integer, Li
   private final Query<Integer, Member> queryMemberById;
   private final EventEnricher eventEnricher;
   private final Query<Pair<Integer, Long>, List<EventScheduleSubscription>> queryEventScheduleSubscriptionByScheduleIdAndBloggerId;
+  private final List<BloggerEligibleEventValidator> eventValidator;
 
   @Autowired
   public QueryEligibleSchedulesByBloggerProfile(@Qualifier("indvitedDbJdbcTemplate") JdbcTemplate jdbcTemplate,
@@ -44,7 +46,7 @@ public class QueryEligibleSchedulesByBloggerProfile implements Query<Integer, Li
       @Qualifier("queryEventById") Query<Integer, PREvent> queryEventById,
       @Qualifier("queryMemberById") Query<Integer, Member> queryMemberById,
       @Qualifier("queryEventScheduleSubscriptionByScheduleIdAndBloggerId") Query<Pair<Integer, Long>, List<EventScheduleSubscription>> queryEventScheduleSubscriptionByScheduleIdAndBloggerId,
-      EventEnricher eventEnricher) {
+      EventEnricher eventEnricher, List<BloggerEligibleEventValidator> eventValidator) {
     this.jdbcTemplate = jdbcTemplate;
     this.queryMemberCriteriaDataByMemberId = queryMemberCriteriaDataByMemberId;
     this.queryEventCriteriaDataByEventId = queryEventCriteriaDataByEventId;
@@ -52,6 +54,7 @@ public class QueryEligibleSchedulesByBloggerProfile implements Query<Integer, Li
     this.queryMemberById = queryMemberById;
     this.queryEventScheduleSubscriptionByScheduleIdAndBloggerId = queryEventScheduleSubscriptionByScheduleIdAndBloggerId;
     this.eventEnricher = eventEnricher;
+    this.eventValidator = eventValidator;
   }
 
   @Override
@@ -102,7 +105,7 @@ public class QueryEligibleSchedulesByBloggerProfile implements Query<Integer, Li
         }
         if (memberCriterion.getMemberCriteriaValue() < eventCriterion.getCriterionValue()) {
           eligible = false;
-          // Add this event id to the uneligible set
+          // Add this event id to the non-eligible set
           // so that we don't have to query and check event criteria for the same event
           // again.
           uneligibleEventsSet.add(eventId);

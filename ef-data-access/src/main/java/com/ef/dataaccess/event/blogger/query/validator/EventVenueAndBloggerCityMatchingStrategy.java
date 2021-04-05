@@ -1,25 +1,25 @@
 package com.ef.dataaccess.event.blogger.query.validator;
 
-import org.apache.commons.lang3.tuple.Pair;
-
-import com.ef.common.validation.Validator;
 import com.ef.model.event.EventVenue;
 import com.ef.model.member.Member;
+import com.ef.model.member.MemberAddress;
 
-public class EventVenueAndBloggerCityMatchingStrategy implements Validator<Pair<EventVenue, Member>, Boolean> {
+public class EventVenueAndBloggerCityMatchingStrategy implements BloggerEligibleEventValidator {
 
   public EventVenueAndBloggerCityMatchingStrategy() {
 
   }
 
   @Override
-  public Boolean validate(Pair<EventVenue, Member> data) {
+  public Boolean validate(BloggerProfileValidationPayload data) {
 
-    EventVenue venue = data.getLeft();
-    Member member = data.getRight();
+    EventVenue venue = data.getVenue();
+    Member member = data.getBlogger();
 
     String city = venue.getCity();
-    return null;
+
+    MemberAddress address = member.getMemberAddress();
+    return address != null && address.getCity() != null && address.getCity().equals(city);
   }
 
 }
