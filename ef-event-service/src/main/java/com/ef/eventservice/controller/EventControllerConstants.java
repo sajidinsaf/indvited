@@ -6,7 +6,7 @@ public class EventControllerConstants {
 
   public static final String CREATE_SCHEDULE = "/api/v1/event/createSchedule";
 
-  public static final String SUBSCRIBE_SCHEDULE = "/api/v1/event/subscribeSchedule";
+  public static final String SUBSCRIBE = "/api/v1/event/subscribe";
 
   public static final String SUBMIT_DELIVERABLE = "/api/v1/event/subscriber/submit/deliverable";
 

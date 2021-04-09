@@ -73,5 +73,4 @@ public class SubscriberEventController {
     return new ResponseEntity<SubscriberDeliverableSubmissionBindingModel>(input, HttpStatus.OK);
 
   }
-
 }

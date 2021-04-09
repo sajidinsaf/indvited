@@ -1,4 +1,4 @@
-package com.ef.dataaccess.event.schedule;
+package com.ef.dataaccess.event.subscription;
 
 import java.util.List;
 

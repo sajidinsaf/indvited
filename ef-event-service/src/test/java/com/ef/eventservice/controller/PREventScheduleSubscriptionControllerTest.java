@@ -88,11 +88,13 @@ public class PREventScheduleSubscriptionControllerTest {
     Update<SubscriberDeliverableSubmissionBindingModel, String> insertDeliverableRejectionAndUpdateSubscription = appContext
         .getBean("insertDeliverableRejectionAndUpdateSubscription", Update.class);
 
+    Query<Integer, PREvent> queryEventById = appContext.getBean("queryEventById", Query.class);
+
     PREventScheduleUtil prEventScheduleUtil = appContext.getBean(PREventScheduleUtil.class);
     controller = new PREventScheduleSubscriptionController(insertPrEventScheduleSubscription,
         queryApprovalPendingSubscriptionsByPrId, prEventScheduleUtil, approvePREventScheduleSubscriptionStatus,
         rejectPREventScheduleSubscriptionStatus, closeSubscriptionOnDeliverableApproval,
-        insertDeliverableRejectionAndUpdateSubscription);
+        insertDeliverableRejectionAndUpdateSubscription, queryEventById);
   }
 
   @After
