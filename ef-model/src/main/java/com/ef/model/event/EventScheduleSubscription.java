@@ -16,11 +16,11 @@ public class EventScheduleSubscription {
   private final EventStatusMeta eventStatus;
   private Member subscriber;
 
-  public EventScheduleSubscription(long id, long eventSubscriptionId, int subscriberId, Date scheduleDate,
+  public EventScheduleSubscription(long id, long eventScheduleId, int subscriberId, Date scheduleDate,
       String preferredTime, EventStatusMeta eventStatus) {
     super();
     this.id = id;
-    this.eventScheduleId = eventSubscriptionId;
+    this.eventScheduleId = eventScheduleId;
     this.subscriberId = subscriberId;
     this.scheduleDate = scheduleDate;
     this.preferredTime = preferredTime;

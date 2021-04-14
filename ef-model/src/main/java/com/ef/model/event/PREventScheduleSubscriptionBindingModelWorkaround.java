@@ -12,6 +12,7 @@ public class PREventScheduleSubscriptionBindingModelWorkaround {
   private final ServiceLoggingUtil logUtil = new ServiceLoggingUtil();
 
   private int memberId;
+
   private String preferredDate1;
   private String preferredTime1;
   private String preferredDate2;

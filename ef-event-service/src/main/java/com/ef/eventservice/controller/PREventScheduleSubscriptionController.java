@@ -39,6 +39,7 @@ import com.ef.model.event.PREvent;
 import com.ef.model.event.PREventScheduleSubscriptionBindingModel;
 import com.ef.model.event.PREventScheduleSubscriptionBindingModelWorkaround;
 import com.ef.model.event.PREventScheduleSubscriptionStatusChangeBindingModel;
+import com.ef.model.event.PREventScheduleSubscriptionWebFormBindingModel;
 import com.ef.model.event.SubscriberDeliverableSubmissionBindingModel;
 
 /**
@@ -197,5 +198,15 @@ public class PREventScheduleSubscriptionController {
 
     return model;
 
+  }
+
+  @PostMapping(SUBSCRIBE + "ScheduleWebForm")
+  @ResponseBody
+  public ResponseEntity<?> scheduleWebForm(@RequestBody PREventScheduleSubscriptionWebFormBindingModel formData,
+      HttpServletRequest request) {
+
+    logUtil.debug(logger, "Received subscription data ", formData);
+
+    return new ResponseEntity<String>("success", HttpStatus.OK);
   }
 }

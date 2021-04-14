@@ -13,7 +13,11 @@ public class DateUtil {
   public static final String yyyy_dash_MM_dash_dd_format = "yyyy-MM-dd";
 
   public String formatDateForEventDisplay(Date date) {
-    SimpleDateFormat formatter = new SimpleDateFormat(EVENT_DISPLAY_DATE_FORMAT);
+    return formatDate(date, EVENT_DISPLAY_DATE_FORMAT);
+  }
+
+  public String formatDate(Date date, String format) {
+    SimpleDateFormat formatter = new SimpleDateFormat(format);
     return formatter.format(date);
   }
 
