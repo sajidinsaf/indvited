@@ -31,14 +31,14 @@ import com.ef.common.message.Channel;
 import com.ef.common.message.Response;
 import com.ef.common.message.StatusCode;
 import com.ef.dataaccess.config.DbTestUtils;
-import com.ef.eventservice.publisher.PREventPublisherContext;
+import com.ef.eventservice.publisher.EventServiceContext;
 import com.ef.model.event.EventScheduleResult;
 import com.ef.model.event.PREvent;
 import com.ef.model.event.PREventSchedule;
 
 public class PREventSchedulingStrategyTest {
 
-  private Strategy<PREventPublisherContext, Response<PREvent>> strategy;
+  private Strategy<EventServiceContext, Response<PREvent>> strategy;
 
   private JdbcTemplate jdbcTemplate;
 
@@ -61,7 +61,7 @@ public class PREventSchedulingStrategyTest {
 
   @Test
   public void shouldGetScheduleList() throws Exception {
-    PREventPublisherContext context = new PREventPublisherContext();
+    EventServiceContext context = new EventServiceContext();
 
     PREventSchedule schedule = new PREventSchedule();
     schedule.setEventId(37);

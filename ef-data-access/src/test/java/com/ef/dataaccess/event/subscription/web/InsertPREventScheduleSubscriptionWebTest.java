@@ -57,11 +57,12 @@ public class InsertPREventScheduleSubscriptionWebTest {
     String address = "3234 sdfsdf";
     String city = "London";
     String gender = "M";
+    int statusId = 3;
 
     // System.out.println(new
     // DateUtil().parseDateFromEventDisplayString(preferredDate));
     PREventScheduleSubscriptionWebFormBindingModel w = new PREventScheduleSubscriptionWebFormBindingModel(201,
-        firstName, lastName, email, phone, preferredDate, preferredTime, criteria, address, city, gender);
+        firstName, lastName, email, phone, preferredDate, preferredTime, criteria, address, city, gender, statusId);
 
     EventScheduleSubscription result = insertWebSubscription.data(w);
 

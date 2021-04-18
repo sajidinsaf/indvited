@@ -4,11 +4,13 @@ import static com.ef.eventservice.controller.EventControllerConstants.PUBLISH_PR
 import static com.ef.eventservice.controller.EventControllerConstants.TEST_EVENT;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
@@ -72,7 +74,17 @@ public class PREventController {
   }
 
   @GetMapping(TEST_EVENT)
-  public ResponseEntity<?> test() {
-    return new ResponseEntity<String>("{\"everthing\":\"alright\"}", HttpStatus.OK);
+  public ResponseEntity<?> test(HttpServletResponse response) {
+    logUtil.info(logger, "Testing");
+
+    HttpHeaders httpHeaders = new HttpHeaders();
+
+    for (String name : response.getHeaderNames()) {
+      httpHeaders.add(name, response.getHeader(name));
+    }
+    httpHeaders.add("X-AUTH-TOKEN", "sdfhsdkjf-bsjfdh0-bsfjsdf-sdfs");
+
+    return new ResponseEntity<String>("{\"everthing\":\"alright\"}", httpHeaders, HttpStatus.OK);
+
   }
 }

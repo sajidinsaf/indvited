@@ -28,13 +28,18 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.ModelAndView;
 
+import com.ef.common.MapBasedContext;
+import com.ef.common.Strategy;
 import com.ef.common.logging.ServiceLoggingUtil;
 import com.ef.common.message.MessagePacket;
+import com.ef.common.message.Response;
 import com.ef.dataaccess.Insert;
 import com.ef.dataaccess.Query;
 import com.ef.dataaccess.Update;
 import com.ef.eventservice.controller.util.PREventScheduleUtil;
+import com.ef.eventservice.publisher.EventServiceContext;
 import com.ef.model.event.EventScheduleSubscription;
+import com.ef.model.event.EventStatusMeta;
 import com.ef.model.event.PREvent;
 import com.ef.model.event.PREventScheduleSubscriptionBindingModel;
 import com.ef.model.event.PREventScheduleSubscriptionBindingModelWorkaround;
@@ -64,6 +69,8 @@ public class PREventScheduleSubscriptionController {
 
   private final Query<Integer, PREvent> queryEnrichedEventWithAvailableSchedulesByEventId;
 
+  private final Strategy<MapBasedContext, Response<String>> eventScheduleSubscriptionByWebStrategy;
+
   @Autowired
   public PREventScheduleSubscriptionController(
       @Qualifier("insertPrEventScheduleSubscription") Insert<PREventScheduleSubscriptionBindingModel, EventScheduleSubscription> insertPrEventScheduleSubscription,
@@ -73,7 +80,8 @@ public class PREventScheduleSubscriptionController {
       @Qualifier("rejectPREventScheduleSubscriptionStatus") Update<PREventScheduleSubscriptionStatusChangeBindingModel, Integer> rejectPREventScheduleSubscriptionStatus,
       @Qualifier("closeSubscriptionOnDeliverableApproval") Update<SubscriberDeliverableSubmissionBindingModel, String> closeSubscriptionOnDeliverableApproval,
       @Qualifier("insertDeliverableRejectionAndUpdateSubscription") Update<SubscriberDeliverableSubmissionBindingModel, String> insertDeliverableRejectionAndUpdateSubscription,
-      @Qualifier("queryEnrichedEventWithAvailableSchedulesByEventId") Query<Integer, PREvent> queryEventWithAvailableSchedulesByEventId) {
+      @Qualifier("queryEnrichedEventWithAvailableSchedulesByEventId") Query<Integer, PREvent> queryEventWithAvailableSchedulesByEventId,
+      @Qualifier("eventScheduleSubscriptionByWebStrategy") Strategy<MapBasedContext, Response<String>> eventScheduleSubscriptionByWebStrategy) {
     this.insertPrEventScheduleSubscription = insertPrEventScheduleSubscription;
     this.queryApprovalPendingSubscriptionsByPrId = queryApprovalPendingSubscriptionsByPrId;
     this.prEventScheduleUtil = prEventScheduleUtil;
@@ -82,6 +90,7 @@ public class PREventScheduleSubscriptionController {
     this.closeSubscriptionOnDeliverableApproval = closeSubscriptionOnDeliverableApproval;
     this.insertDeliverableRejectionAndUpdateSubscription = insertDeliverableRejectionAndUpdateSubscription;
     this.queryEnrichedEventWithAvailableSchedulesByEventId = queryEventWithAvailableSchedulesByEventId;
+    this.eventScheduleSubscriptionByWebStrategy = eventScheduleSubscriptionByWebStrategy;
   }
 
   @PostMapping(SUBSCRIBE + "Schedule")
@@ -205,7 +214,12 @@ public class PREventScheduleSubscriptionController {
   public ResponseEntity<?> scheduleWebForm(@RequestBody PREventScheduleSubscriptionWebFormBindingModel formData,
       HttpServletRequest request) {
 
+    formData.setStatusId(EventStatusMeta.KNOWN_STATUS_ID_APPLIED);
     logUtil.debug(logger, "Received subscription data ", formData);
+
+    EventServiceContext context = new EventServiceContext();
+    context.put(EventServiceContext.WEB_SCUBSCRIPTION_MODEL, formData);
+    eventScheduleSubscriptionByWebStrategy.apply(context);
 
     return new ResponseEntity<String>("success", HttpStatus.OK);
   }

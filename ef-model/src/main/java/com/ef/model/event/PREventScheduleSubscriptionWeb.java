@@ -1,29 +1,36 @@
 package com.ef.model.event;
 
+import java.sql.Date;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.ef.common.logging.ServiceLoggingUtil;
 import com.google.gson.Gson;
 
-public class PREventScheduleSubscriptionWebFormBindingModel {
+public class PREventScheduleSubscriptionWeb {
 
-  private static final Logger logger = LoggerFactory.getLogger(PREventScheduleSubscriptionWebFormBindingModel.class);
+  private static final Logger logger = LoggerFactory.getLogger(PREventScheduleSubscriptionWeb.class);
   private final ServiceLoggingUtil logUtil = new ServiceLoggingUtil();
 
+  private int id;
   private int eventId;
+  private long eventScheduleId;
   private int statusId;
-  private String firstName, lastName, email, phone, preferredDate, preferredTime, criteria, address, city, gender;
+  private String firstName, lastName, email, phone, preferredTime, criteria, address, city, gender;
+  private Date preferredDate;
 
-  public PREventScheduleSubscriptionWebFormBindingModel() {
+  public PREventScheduleSubscriptionWeb() {
     // TODO Auto-generated constructor stub
   }
 
-  public PREventScheduleSubscriptionWebFormBindingModel(int eventId, String firstName, String lastName, String email,
-      String phone, String preferredDate, String preferredTime, String criteria, String address, String city,
-      String gender, int statusId) {
+  public PREventScheduleSubscriptionWeb(int id, int eventId, long eventScheduleId, String firstName, String lastName,
+      String email, String phone, Date preferredDate, String preferredTime, String criteria, String address,
+      String city, String gender, int statusId) {
     super();
+    this.id = id;
     this.eventId = eventId;
+    this.eventScheduleId = eventScheduleId;
     this.firstName = firstName;
     this.lastName = lastName;
     this.email = email;
@@ -35,6 +42,30 @@ public class PREventScheduleSubscriptionWebFormBindingModel {
     this.city = city;
     this.gender = gender;
     this.statusId = statusId;
+  }
+
+  public int getId() {
+    return id;
+  }
+
+  public void setId(int id) {
+    this.id = id;
+  }
+
+  public int getEventId() {
+    return eventId;
+  }
+
+  public void setEventId(int eventId) {
+    this.eventId = eventId;
+  }
+
+  public long getEventScheduleId() {
+    return eventScheduleId;
+  }
+
+  public void setEventScheduleId(long eventScheduleId) {
+    this.eventScheduleId = eventScheduleId;
   }
 
   public String getFirstName() {
@@ -69,11 +100,11 @@ public class PREventScheduleSubscriptionWebFormBindingModel {
     this.phone = phone;
   }
 
-  public String getPreferredDate() {
+  public Date getPreferredDate() {
     return preferredDate;
   }
 
-  public void setPreferredDate(String preferredDate) {
+  public void setPreferredDate(Date preferredDate) {
     this.preferredDate = preferredDate;
   }
 
@@ -85,20 +116,11 @@ public class PREventScheduleSubscriptionWebFormBindingModel {
     this.preferredTime = preferredTime;
   }
 
-  public int getEventId() {
-    return eventId;
-  }
-
-  public void setEventId(int eventId) {
-    this.eventId = eventId;
-  }
-
   public String getCriteria() {
     return criteria;
   }
 
   public void setCriteria(String criteria) {
-
     this.criteria = criteria;
   }
 
@@ -136,10 +158,10 @@ public class PREventScheduleSubscriptionWebFormBindingModel {
 
   @Override
   public String toString() {
-    return "PREventScheduleSubscriptionWebFormBindingModel [eventId=" + eventId + ", statusId=" + statusId
-        + ", firstName=" + firstName + ", lastName=" + lastName + ", email=" + email + ", phone=" + phone
-        + ", preferredDate=" + preferredDate + ", preferredTime=" + preferredTime + ", criteria=" + criteria
-        + ", address=" + address + ", city=" + city + ", gender=" + gender + "]";
+    return "PREventScheduleSubscriptionWeb [id=" + id + ", eventId=" + eventId + ", eventScheduleId=" + eventScheduleId
+        + ", statusId=" + statusId + ", firstName=" + firstName + ", lastName=" + lastName + ", email=" + email
+        + ", phone=" + phone + ", preferredDate=" + preferredDate + ", preferredTime=" + preferredTime + ", criteria="
+        + criteria + ", address=" + address + ", city=" + city + ", gender=" + gender + "]";
   }
 
   public static void main(String args[]) {
@@ -147,17 +169,21 @@ public class PREventScheduleSubscriptionWebFormBindingModel {
     String lastName = "Peck";
     String email = "gp@gmail.com";
     String phone = "4525253222";
-    String preferredDate = "Thu 15 Jan 2020-23";
+    Date preferredDate = new Date(System.currentTimeMillis());
     String preferredTime = "12:30";
     String criteria = "sfsfW£4sdfsfsfw£SDS";
     String address = "3234 sdfsdf";
     String city = "London";
     String gender = "M";
+    int id = 23423;
+    int eventId = 103243;
+    int eventScheduleId = 1023;
     int statusId = 32423;
-    PREventScheduleSubscriptionWebFormBindingModel w = new PREventScheduleSubscriptionWebFormBindingModel(50, firstName,
+    PREventScheduleSubscriptionWeb w = new PREventScheduleSubscriptionWeb(id, eventId, eventScheduleId, firstName,
         lastName, email, phone, preferredDate, preferredTime, criteria, address, city, gender, statusId);
 
     System.out.println(new Gson().toJson(w));
 
   }
+
 }

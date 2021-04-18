@@ -16,7 +16,7 @@ import com.ef.model.member.Member;
 @Component(value = "queryEnrichedEventWithAvailableSchedulesByEventId")
 public class QueryEnrichedEventWithAvailableSchedulesByEventId implements Query<Integer, PREvent> {
 
-  private final String SELECT = "SELECT es.* FROM event_schedule es WHERE es.event_id=%d AND es.start_date BETWEEN (NOW()+ INTERVAL 1 DAY) AND (NOW() + INTERVAL 60 DAY) AND es.end_date > NOW() ";
+  private final String SELECT = "SELECT es.* FROM event_schedule es WHERE es.event_id=%d AND es.start_date < DATE_ADD(now(), INTERVAL 30 DAY) AND es.end_date > DATE_ADD(NOW(), INTERVAL 1 DAY) ";
 
   private final JdbcTemplate jdbcTemplate;
   private final Query<Integer, PREvent> queryEventById;
@@ -48,7 +48,6 @@ public class QueryEnrichedEventWithAvailableSchedulesByEventId implements Query<
     PREvent event = queryEventById.data(eventId);
 
     event.setSchedules(schedules);
-    ;
 
     Member pr = queryMemberById.data(event.getMemberId());
     event.setMember(pr);

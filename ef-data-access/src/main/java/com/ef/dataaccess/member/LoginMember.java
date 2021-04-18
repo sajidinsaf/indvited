@@ -10,6 +10,7 @@ import org.springframework.stereotype.Component;
 
 import com.ef.common.logging.ServiceLoggingUtil;
 import com.ef.dataaccess.Query;
+import com.ef.dataaccess.Update;
 import com.ef.dataaccess.spring.member.rowmapper.MemberRowMapperWithPassword;
 import com.ef.model.member.Member;
 import com.ef.model.member.MemberLoginBindingModel;
@@ -27,15 +28,18 @@ public class LoginMember implements Query<MemberLoginBindingModel, Member> {
   private final PasswordEncoder encoder;
   private final Query<String, String> emailFormatterForDb;
   private final Query<Integer, MemberLoginControl> queryLoginControlByEmail;
+  private final Update<Integer, Member> updateMemberLoginControl;
 
   @Autowired
   public LoginMember(@Qualifier("indvitedDbJdbcTemplate") JdbcTemplate jdbcTemplate,
       @Qualifier("emailFormatterForDb") Query<String, String> emailFormatterForDb, PasswordEncoder encoder,
-      @Qualifier("queryMemberLoginControlByMemberId") Query<Integer, MemberLoginControl> queryLoginControlByEmail) {
+      @Qualifier("queryMemberLoginControlByMemberId") Query<Integer, MemberLoginControl> queryLoginControlByEmail,
+      @Qualifier("updateMemberLoginControl") Update<Integer, Member> updateMemberLoginControl) {
     this.jdbcTemplate = jdbcTemplate;
     this.emailFormatterForDb = emailFormatterForDb;
     this.encoder = encoder;
     this.queryLoginControlByEmail = queryLoginControlByEmail;
+    this.updateMemberLoginControl = updateMemberLoginControl;
   }
 
   @Override
@@ -48,6 +52,8 @@ public class LoginMember implements Query<MemberLoginBindingModel, Member> {
 
     Member member = jdbcTemplate.queryForObject(SELECT_MEMBER, new Object[] { email, memberType.getId() },
         new MemberRowMapperWithPassword(memberType, null));
+
+    updateMemberLoginControl.data(member.getId());
 
     MemberLoginControl memberLoginControl = queryLoginControlByEmail.data(member.getId());
 

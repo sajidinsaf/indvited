@@ -14,6 +14,7 @@ public class MemberLoginControl implements Serializable {
   private final String token;
   private final long creationTimestamp;
   private final long expires;
+  private String xAuthToken;
 
   public MemberLoginControl(int memberId, String token, Timestamp creationTimestamp, Timestamp expiryTimestamp) {
     super();
@@ -39,10 +40,18 @@ public class MemberLoginControl implements Serializable {
     return expires;
   }
 
+  public String getxAuthToken() {
+    return xAuthToken;
+  }
+
+  public void setxAuthToken(String xAuthToken) {
+    this.xAuthToken = xAuthToken;
+  }
+
   @Override
   public String toString() {
     return "MemberLoginControl [memberId=" + memberId + ", token=" + token + ", creationTimestamp=" + creationTimestamp
-        + ", expiryTimestamp=" + expires + "]";
+        + ", expires=" + expires + ", xAuthToken=" + xAuthToken + "]";
   }
 
 }

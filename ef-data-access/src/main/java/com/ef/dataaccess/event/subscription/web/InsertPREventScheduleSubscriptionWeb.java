@@ -46,7 +46,7 @@ public class InsertPREventScheduleSubscriptionWeb
 //      preferred_time date,
 //      criteria_string varchar(500),
 //      status_id INTEGER
-  private final String INSERT_SCHEDULE_SUBSCRIPTION_WEB_STATEMENT = "INSERT INTO event_schedule_subscription_web  (event_id, event_schedule_id, first_name, last_name, email, phone, city, gender, preferred_date, preferred_time, criteria_string, status_id) VALUES (?,?,?,?,?,?,?,?,?,?,?,?)";
+  private final String INSERT_SCHEDULE_SUBSCRIPTION_WEB_STATEMENT = "INSERT INTO event_schedule_subscription_web  (event_id, event_schedule_id, first_name, last_name, email, phone, address, city, gender, preferred_date, preferred_time, criteria_string, status_id) VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?)";
 
   private final JdbcTemplate jdbcTemplate;
 
@@ -114,12 +114,13 @@ public class InsertPREventScheduleSubscriptionWeb
     ps.setString(4, input.getLastName());
     ps.setString(5, input.getEmail());
     ps.setString(6, input.getPhone());
-    ps.setString(7, input.getCity());
-    ps.setString(8, input.getGender());
-    ps.setDate(9, getDate(input.getPreferredDate()));
-    ps.setString(10, input.getPreferredTime());
-    ps.setString(11, input.getCriteria());
-    ps.setInt(12, EventStatusMeta.KNOWN_STATUS_ID_APPLIED);
+    ps.setString(7, input.getAddress());
+    ps.setString(8, input.getCity());
+    ps.setString(9, input.getGender());
+    ps.setDate(10, getDate(input.getPreferredDate()));
+    ps.setString(11, input.getPreferredTime());
+    ps.setString(12, input.getCriteria());
+    ps.setInt(13, input.getStatusId());
 
     return ps;
   }

@@ -6,6 +6,7 @@ CREATE TABLE event_schedule_subscription_web (
   last_name varchar(25),
   email varchar(75),
   phone varchar(10),
+  address varchar(500),
   city varchar(30),
   gender char(1),
   preferred_date date,

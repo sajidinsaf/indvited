@@ -39,7 +39,7 @@ import com.ef.common.message.StatusCode;
 import com.ef.dataaccess.Insert;
 import com.ef.dataaccess.Query;
 import com.ef.dataaccess.config.DbTestUtils;
-import com.ef.eventservice.publisher.PREventPublisherContext;
+import com.ef.eventservice.publisher.EventServiceContext;
 import com.ef.model.event.EventScheduleResult;
 import com.ef.model.event.PREventSchedule;
 import com.ef.model.event.PREventScheduleBindingModel;
@@ -60,7 +60,7 @@ public class PREventScheduleControllerTest {
     Insert<PREventScheduleBindingModel, EventScheduleResult> insertPrEventSchedule = appContext
         .getBean("insertPrEventSchedule", Insert.class);
 
-    Strategy<PREventPublisherContext, Response<?>> prEventScheduleNowStrategy = appContext
+    Strategy<EventServiceContext, Response<?>> prEventScheduleNowStrategy = appContext
         .getBean("prEventScheduleStrategy", Strategy.class);
 
     Query<Integer, List<PREventSchedule>> queryPREventScheduleListByEventId = appContext

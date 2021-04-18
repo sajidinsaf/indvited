@@ -23,7 +23,6 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
 import com.ef.dataaccess.config.DbTestUtils;
-import com.ef.model.event.PREventScheduleSubscriptionWebFormBindingModel;
 import com.ef.model.member.MemberCriteriaData;
 
 public class InputDataUtilTest {
@@ -59,10 +58,7 @@ public class InputDataUtilTest {
     String city = "London";
     String gender = "M";
 
-    PREventScheduleSubscriptionWebFormBindingModel w = new PREventScheduleSubscriptionWebFormBindingModel(50, firstName,
-        lastName, email, phone, preferredDate, preferredTime, criteria, address, city, gender);
-
-    List<MemberCriteriaData> result = inputDataUtil.buildMemberCriteriaList(w);
+    List<MemberCriteriaData> result = inputDataUtil.buildMemberCriteriaList(criteria);
 
     assertThat(result.get(0).getCriteriaMetadata().getId(), is(1));
     assertThat(result.get(0).getMemberCriteriaValue(), is(3234));

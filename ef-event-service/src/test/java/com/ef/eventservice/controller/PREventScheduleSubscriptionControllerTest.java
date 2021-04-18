@@ -34,6 +34,8 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 
 import com.ef.common.Context;
 import com.ef.common.EmailSender;
+import com.ef.common.MapBasedContext;
+import com.ef.common.Strategy;
 import com.ef.common.message.Channel;
 import com.ef.common.message.Response;
 import com.ef.common.message.StatusCode;
@@ -90,11 +92,14 @@ public class PREventScheduleSubscriptionControllerTest {
 
     Query<Integer, PREvent> queryEventById = appContext.getBean("queryEventById", Query.class);
 
+    Strategy<MapBasedContext, Response<String>> eventScheduleSubscriptionByWebStrategy = appContext
+        .getBean("eventScheduleSubscriptionByWebStrategy", Strategy.class);
+
     PREventScheduleUtil prEventScheduleUtil = appContext.getBean(PREventScheduleUtil.class);
     controller = new PREventScheduleSubscriptionController(insertPrEventScheduleSubscription,
         queryApprovalPendingSubscriptionsByPrId, prEventScheduleUtil, approvePREventScheduleSubscriptionStatus,
         rejectPREventScheduleSubscriptionStatus, closeSubscriptionOnDeliverableApproval,
-        insertDeliverableRejectionAndUpdateSubscription, queryEventById);
+        insertDeliverableRejectionAndUpdateSubscription, queryEventById, eventScheduleSubscriptionByWebStrategy);
   }
 
   @After

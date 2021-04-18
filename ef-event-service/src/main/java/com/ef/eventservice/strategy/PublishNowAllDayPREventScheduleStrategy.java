@@ -11,11 +11,11 @@ import com.ef.common.logging.ServiceLoggingUtil;
 import com.ef.common.message.Publisher;
 import com.ef.common.message.Response;
 import com.ef.dataaccess.Insert;
-import com.ef.eventservice.publisher.PREventPublisherContext;
+import com.ef.eventservice.publisher.EventServiceContext;
 import com.ef.model.event.PREvent;
 import com.ef.model.event.PREventScheduleBindingModel;
 
-public class PublishNowAllDayPREventScheduleStrategy implements Strategy<PREventPublisherContext, Response<?>> {
+public class PublishNowAllDayPREventScheduleStrategy implements Strategy<EventServiceContext, Response<?>> {
 
   private static final Logger logger = LoggerFactory.getLogger(PublishNowAllDayPREventScheduleStrategy.class);
   private final ServiceLoggingUtil logUtil = new ServiceLoggingUtil();
@@ -35,7 +35,7 @@ public class PublishNowAllDayPREventScheduleStrategy implements Strategy<PREvent
   }
 
   @Override
-  public Response<?> apply(PREventPublisherContext context) {
+  public Response<?> apply(EventServiceContext context) {
     try {
 
       PREventScheduleBindingModel prEventScheduleBindingModel = context.get(PR_EVENT_SCHEDULE_BINDING_MODEL);

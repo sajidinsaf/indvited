@@ -8,7 +8,6 @@ import org.springframework.stereotype.Component;
 
 import com.ef.dataaccess.event.EventCriteriaMetadataCache;
 import com.ef.model.event.EventCriteriaMetadata;
-import com.ef.model.event.PREventScheduleSubscriptionWebFormBindingModel;
 import com.ef.model.member.MemberCriteriaData;
 
 @Component
@@ -21,7 +20,7 @@ public class InputDataUtil {
     this.eventCriteriaMetadataCache = eventCriteriaMetadataCache;
   }
 
-  public List<MemberCriteriaData> buildMemberCriteriaList(PREventScheduleSubscriptionWebFormBindingModel input) {
+  public List<MemberCriteriaData> buildMemberCriteriaList(String criteriaString) {
     // {"eventId":"50","firstName":"Sam","lastName":"sdfjn","email":"sfsjf@ssk.com","phone":"9773636366","address":"23
     // Msnjtd","city":"Ornv","preferredDate":"Tue 20 Apr
     // 2021","preferredTime":"1400","criteria":"criterionSepcriterionId1nameValSep3234criterionSepcriterionId2nameValSep13242criterionSepcriterionId3nameValSep12","gender":"F"}
@@ -29,8 +28,6 @@ public class InputDataUtil {
     String criterionIdPropName = "criterionId";
     String nameValueSeparator = "nameValSep";
     String spaceInValue = "spaceInVal";
-
-    String criteriaString = input.getCriteria();
 
     // remove the leading criterion separator if any
     if (criteriaString.startsWith(criterionSeparator)) {

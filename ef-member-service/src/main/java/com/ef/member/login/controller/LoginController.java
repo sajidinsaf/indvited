@@ -1,14 +1,14 @@
 package com.ef.member.login.controller;
 
-import static com.ef.member.login.controller.LoginControllerConstants.LOGIN_WITH_EMAIL_AND_TOKEN_ADMIN;
-import static com.ef.member.login.controller.LoginControllerConstants.LOGIN_WITH_EMAIL_AND_TOKEN_BLOGGER;
-import static com.ef.member.login.controller.LoginControllerConstants.LOGIN_WITH_EMAIL_AND_TOKEN_PR;
+import static com.ef.member.login.controller.LoginControllerConstants.LOGIN_WITH_MEMBERID_AND_TOKEN;
 import static com.ef.member.login.controller.LoginControllerConstants.LOGIN_WITH_USERNAME_AND_PASSWORD_ADMIN;
 import static com.ef.member.login.controller.LoginControllerConstants.LOGIN_WITH_USERNAME_AND_PASSWORD_BLOGGER;
 import static com.ef.member.login.controller.LoginControllerConstants.LOGIN_WITH_USERNAME_AND_PASSWORD_PR;
 
 import java.util.List;
 
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
 import org.slf4j.Logger;
@@ -31,6 +31,7 @@ import com.ef.model.member.MemberLoginBindingModel;
 import com.ef.model.member.MemberLoginControl;
 import com.ef.model.member.MemberTokenAuthBindingModel;
 import com.ef.model.member.MemberType;
+import com.google.gson.Gson;
 
 /**
  * Handles requests for the event service.
@@ -63,29 +64,29 @@ public class LoginController {
 
   @PostMapping(LOGIN_WITH_USERNAME_AND_PASSWORD_ADMIN)
   public ResponseEntity<?> adminLoginWithEmailAndPassword(@RequestBody MemberLoginBindingModel memberLoginData,
-      HttpSession httpSession) {
+      HttpServletRequest request, HttpServletResponse response, HttpSession httpSession) {
     memberLoginData.setMemberType(ADMIN);
-    return loginWithEmailAndPassword(memberLoginData, httpSession);
+    return loginWithEmailAndPassword(memberLoginData, request, response, httpSession);
   }
 
 //  curl -i -H "Accept: application/json" -H "Content-Type:application/json" -X POST --data '{"id":"1232455663","type":"PREvent","scheduledDate":"2020/12/25","scheduledTime":"18:03:51","location":"Mainland China","description":"Review Food Event"}' "http://secure.codeczar.co.uk/event-service/api/v1/event/publish"
   @PostMapping(LOGIN_WITH_USERNAME_AND_PASSWORD_PR)
   public ResponseEntity<?> prLoginWithEmailAndPassword(@RequestBody MemberLoginBindingModel memberLoginData,
-      HttpSession httpSession) {
+      HttpServletRequest request, HttpServletResponse response, HttpSession httpSession) {
     memberLoginData.setMemberType(PR);
-    return loginWithEmailAndPassword(memberLoginData, httpSession);
+    return loginWithEmailAndPassword(memberLoginData, request, response, httpSession);
   }
 
   @PostMapping(LOGIN_WITH_USERNAME_AND_PASSWORD_BLOGGER)
   public ResponseEntity<?> bloggerLoginWithEmailAndPassword(@RequestBody MemberLoginBindingModel memberLoginData,
-      HttpSession httpSession) {
+      HttpServletRequest request, HttpServletResponse response, HttpSession httpSession) {
 
     memberLoginData.setMemberType(BLOGGER);
-    return loginWithEmailAndPassword(memberLoginData, httpSession);
+    return loginWithEmailAndPassword(memberLoginData, request, response, httpSession);
   }
 
   private ResponseEntity<?> loginWithEmailAndPassword(MemberLoginBindingModel memberLoginData,
-      HttpSession httpSession) {
+      HttpServletRequest request, HttpServletResponse response, HttpSession httpSession) {
     logUtil.debug(logger, "Logging in member: " + memberLoginData);
 
     Response<Member> loginStatus = loginService.loginMember(memberLoginData);
@@ -103,32 +104,16 @@ public class LoginController {
     Member member = loginStatus.getResponseResult();
     httpSession.setAttribute("member", member);
 
+    MemberLoginControl loginControl = member.getMemberLoginControl();
+    loginControl.setxAuthToken(httpSession.getId());
+    logUtil.debug(logger, "Member login controller: " + loginControl);
+
     return new ResponseEntity<MemberLoginControl>(member.getMemberLoginControl(),
         HttpStatus.valueOf(loginStatus.getStatusCode().name()));
   }
 
-  @PostMapping(LOGIN_WITH_EMAIL_AND_TOKEN_ADMIN)
-  public ResponseEntity<?> loginWithEmailAndTokenAdmin(@RequestBody MemberTokenAuthBindingModel memberLoginData,
-      HttpSession httpSession) {
-    memberLoginData.setMemberType(ADMIN);
-    return loginWithEmailAndToken(memberLoginData, httpSession);
-  }
-
-  @PostMapping(LOGIN_WITH_EMAIL_AND_TOKEN_PR)
-  public ResponseEntity<?> loginWithEmailAndTokenPr(@RequestBody MemberTokenAuthBindingModel memberLoginData,
-      HttpSession httpSession) {
-    memberLoginData.setMemberType(PR);
-    return loginWithEmailAndToken(memberLoginData, httpSession);
-  }
-
-  @PostMapping(LOGIN_WITH_EMAIL_AND_TOKEN_BLOGGER)
-  public ResponseEntity<?> loginWithEmailAndTokenBlogger(@RequestBody MemberTokenAuthBindingModel memberLoginData,
-      HttpSession httpSession) {
-    memberLoginData.setMemberType(BLOGGER);
-    return loginWithEmailAndToken(memberLoginData, httpSession);
-  }
-
-  private ResponseEntity<?> loginWithEmailAndToken(MemberTokenAuthBindingModel memberLoginData,
+  @PostMapping(LOGIN_WITH_MEMBERID_AND_TOKEN)
+  private ResponseEntity<?> loginWithMemberIdAndToken(@RequestBody MemberTokenAuthBindingModel memberLoginData,
       HttpSession httpSession) {
     logUtil.debug(logger, "Logging in member: " + memberLoginData);
 
@@ -140,14 +125,36 @@ public class LoginController {
       if (httpSession != null) {
         httpSession.invalidate();
       }
-      return new ResponseEntity<List<String>>(loginStatus.getFailureReasons(),
-          HttpStatus.valueOf(loginStatus.getStatusCode().name()));
+      String responseJson = new Gson().toJson(new ResponseJson(loginStatus.getFailureReasons().toString()));
+      return new ResponseEntity<String>(responseJson, HttpStatus.valueOf(loginStatus.getStatusCode().name()));
     }
 
-    Member member = loginStatus.getResponseResult();
-    httpSession.setAttribute("member", member);
+//    Member member = loginStatus.getResponseResult();
+//    httpSession.setAttribute("member", member);
+    String responseJson = new Gson().toJson(new ResponseJson("Login Successful"));
 
-    return new ResponseEntity<MemberLoginControl>(member.getMemberLoginControl(),
-        HttpStatus.valueOf(loginStatus.getStatusCode().name()));
+    return new ResponseEntity<String>(responseJson, HttpStatus.valueOf(loginStatus.getStatusCode().name()));
   }
+
+//  public static void main(String args[]) {
+//    System.out.println(new Gson().toJson(new ResponseJson("Login Successful")));
+//  }
+}
+
+class ResponseJson {
+  String response;
+
+  public ResponseJson(String response) {
+    super();
+    this.response = response;
+  }
+
+  public String getResponse() {
+    return response;
+  }
+
+  public void setResponse(String response) {
+    this.response = response;
+  }
+
 }

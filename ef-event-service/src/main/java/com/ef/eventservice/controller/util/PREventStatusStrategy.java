@@ -9,7 +9,7 @@ import org.springframework.stereotype.Component;
 import com.ef.common.Context;
 import com.ef.common.Strategy;
 import com.ef.dataaccess.event.EventStatusMetaCache;
-import com.ef.eventservice.publisher.PREventPublisherContext;
+import com.ef.eventservice.publisher.EventServiceContext;
 import com.ef.model.event.EventScheduleSubscription;
 import com.ef.model.event.EventStatusMeta;
 import com.ef.model.event.PREventSchedule;
@@ -35,7 +35,7 @@ public class PREventStatusStrategy implements Strategy<Context, Void> {
   @Override
   public Void apply(Context context) {
 
-    PREventWrapper prEvent = context.get(PREventPublisherContext.CURRENT_EVENT_WRAPPER);
+    PREventWrapper prEvent = context.get(EventServiceContext.CURRENT_EVENT_WRAPPER);
 
     prEvent.setEventStatus(eventStatusMetaCache.getEventStatusMeta(EventStatusMeta.KNOWN_STATUS_ID_CREATED));
 

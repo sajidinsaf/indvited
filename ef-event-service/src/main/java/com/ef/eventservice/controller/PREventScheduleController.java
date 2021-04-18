@@ -27,7 +27,7 @@ import com.ef.common.logging.ServiceLoggingUtil;
 import com.ef.common.message.Response;
 import com.ef.dataaccess.Insert;
 import com.ef.dataaccess.Query;
-import com.ef.eventservice.publisher.PREventPublisherContext;
+import com.ef.eventservice.publisher.EventServiceContext;
 import com.ef.model.event.EventScheduleResult;
 import com.ef.model.event.PREventSchedule;
 import com.ef.model.event.PREventScheduleBindingModel;
@@ -43,14 +43,14 @@ public class PREventScheduleController {
 
   private final Insert<PREventScheduleBindingModel, EventScheduleResult> insertPrEventSchedule;
 
-  private final Strategy<PREventPublisherContext, Response<?>> prEventScheduleStrategy;
+  private final Strategy<EventServiceContext, Response<?>> prEventScheduleStrategy;
 
   private final Query<Integer, List<PREventSchedule>> queryPREventScheduleListByEventId;
 
   @Autowired
   public PREventScheduleController(
       @Qualifier("insertPrEventSchedule") Insert<PREventScheduleBindingModel, EventScheduleResult> insertPrEventSchedule,
-      @Qualifier("prEventScheduleStrategy") Strategy<PREventPublisherContext, Response<?>> prEventScheduleStrategy,
+      @Qualifier("prEventScheduleStrategy") Strategy<EventServiceContext, Response<?>> prEventScheduleStrategy,
       @Qualifier("queryPREventScheduleListByEventId") Query<Integer, List<PREventSchedule>> queryPREventScheduleListByEventId) {
     this.insertPrEventSchedule = insertPrEventSchedule;
     this.prEventScheduleStrategy = prEventScheduleStrategy;
@@ -77,7 +77,7 @@ public class PREventScheduleController {
 
       EventScheduleResult prEventScheduleResult = insertPrEventSchedule.data(eventSchedule);
 
-      PREventPublisherContext context = new PREventPublisherContext();
+      EventServiceContext context = new EventServiceContext();
       context.put(PR_EVENT_SCHEDULE_BINDING_MODEL, eventSchedule);
       context.put(PR_EVENT_SCHEDULE_PERSIST_RESULT, prEventScheduleResult);
 

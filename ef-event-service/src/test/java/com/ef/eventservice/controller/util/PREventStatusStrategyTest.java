@@ -30,7 +30,7 @@ import com.ef.common.MapBasedContext;
 import com.ef.common.Strategy;
 import com.ef.dataaccess.config.DbTestUtils;
 import com.ef.dataaccess.event.EventStatusMetaCache;
-import com.ef.eventservice.publisher.PREventPublisherContext;
+import com.ef.eventservice.publisher.EventServiceContext;
 import com.ef.model.event.EventScheduleSubscription;
 import com.ef.model.event.EventStatusMeta;
 import com.ef.model.event.PREvent;
@@ -101,7 +101,7 @@ public class PREventStatusStrategyTest {
     PREventWrapper prEventWrapper = new PREventWrapper(prEvent);
 
     MapBasedContext context = new MapBasedContext();
-    context.put(PREventPublisherContext.CURRENT_EVENT_WRAPPER, prEventWrapper);
+    context.put(EventServiceContext.CURRENT_EVENT_WRAPPER, prEventWrapper);
 
     statusStrategy.apply(context);
 

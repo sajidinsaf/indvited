@@ -15,7 +15,7 @@ import com.ef.common.Context;
 import com.ef.common.LRPair;
 import com.ef.common.Strategy;
 import com.ef.dataaccess.Query;
-import com.ef.eventservice.publisher.PREventPublisherContext;
+import com.ef.eventservice.publisher.EventServiceContext;
 import com.ef.model.event.AvailableScheduledDate;
 import com.ef.model.event.EventStatusMeta;
 import com.ef.model.event.PREvent;
@@ -74,8 +74,8 @@ public class PREventScheduleUtil {
   }
 
   private void setStatus(PREventWrapper eventWrapper) {
-    PREventPublisherContext context = new PREventPublisherContext();
-    context.put(PREventPublisherContext.CURRENT_EVENT_WRAPPER, eventWrapper);
+    EventServiceContext context = new EventServiceContext();
+    context.put(EventServiceContext.CURRENT_EVENT_WRAPPER, eventWrapper);
     prEventStatusStrategy.apply(context);
 
   }

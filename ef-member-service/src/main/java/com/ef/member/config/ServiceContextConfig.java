@@ -39,7 +39,6 @@ import com.ef.member.login.service.LoginService;
 import com.ef.member.login.service.TokenAuthService;
 import com.ef.member.login.service.validation.EmailAndMemberTypeCombinationValidator;
 import com.ef.member.login.service.validation.EmailNotNullOrEmptyValidator;
-import com.ef.member.login.service.validation.MemberTokenAuthBindingModelPasswordValidator;
 import com.ef.member.login.service.validation.PasswordNotNullOrEmptyValidator;
 import com.ef.member.registration.model.RegistrationConfirmationMessageModel;
 import com.ef.member.registration.service.RegistrationConfirmationService;
@@ -109,10 +108,10 @@ public class ServiceContextConfig implements WebMvcConfigurer {
 
   @Bean
   public TokenAuthService tokenAuthService(
-      @Autowired @Qualifier("loginMemberAuthToken") Query<MemberTokenAuthBindingModel, Member> loginMember) {
+      @Autowired @Qualifier("loginMemberByIdAndAuthToken") Query<MemberTokenAuthBindingModel, Member> loginMemberByIdAndAuthToken) {
 
     List<Validator<MemberTokenAuthBindingModel, String>> validators = authTokenDataValidators();
-    return new TokenAuthService(loginMember, validators);
+    return new TokenAuthService(loginMemberByIdAndAuthToken, validators);
   }
 
   private List<Validator<MemberLoginBindingModel, String>> loginDataValidators(
@@ -129,7 +128,7 @@ public class ServiceContextConfig implements WebMvcConfigurer {
     List<Validator<MemberTokenAuthBindingModel, String>> validators = new ArrayList<Validator<MemberTokenAuthBindingModel, String>>();
 
 //    validators.add(new EmailNotNullOrEmptyValidator());
-    validators.add(new MemberTokenAuthBindingModelPasswordValidator());
+    // validators.add(new MemberTokenAuthBindingModelPasswordValidator());
     return validators;
   }
 

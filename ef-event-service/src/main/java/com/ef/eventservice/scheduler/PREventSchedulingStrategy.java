@@ -12,14 +12,14 @@ import com.ef.common.Strategy;
 import com.ef.common.message.Response;
 import com.ef.common.message.StatusCode;
 import com.ef.dataaccess.Query;
-import com.ef.eventservice.publisher.PREventPublisherContext;
+import com.ef.eventservice.publisher.EventServiceContext;
 import com.ef.model.event.EventScheduleResult;
 import com.ef.model.event.PREvent;
 import com.ef.model.event.PREventSchedule;
 import com.ef.model.member.Member;
 
 @Component("prEventScheduleStrategy")
-public class PREventSchedulingStrategy implements Strategy<PREventPublisherContext, Response<PREvent>> {
+public class PREventSchedulingStrategy implements Strategy<EventServiceContext, Response<PREvent>> {
 
   private final Query<Integer, PREvent> queryPREventById;
   private final Query<Integer, List<PREventSchedule>> queryEventScheduleList;
@@ -35,7 +35,7 @@ public class PREventSchedulingStrategy implements Strategy<PREventPublisherConte
   }
 
   @Override
-  public Response<PREvent> apply(PREventPublisherContext context) {
+  public Response<PREvent> apply(EventServiceContext context) {
 
     EventScheduleResult prEventScheduleResult = context.get(PR_EVENT_SCHEDULE_PERSIST_RESULT);
 
