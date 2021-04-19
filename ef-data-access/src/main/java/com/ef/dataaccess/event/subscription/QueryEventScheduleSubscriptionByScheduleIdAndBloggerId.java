@@ -11,6 +11,7 @@ import org.springframework.stereotype.Component;
 import com.ef.dataaccess.Query;
 import com.ef.dataaccess.event.EventStatusMetaCache;
 import com.ef.model.event.EventScheduleSubscription;
+import com.ef.model.event.EventScheduleSubscriptionApp;
 import com.ef.model.event.EventStatusMeta;
 
 @Component(value = "queryEventScheduleSubscriptionByScheduleIdAndBloggerId")
@@ -36,7 +37,7 @@ public class QueryEventScheduleSubscriptionByScheduleIdAndBloggerId
     long scheduleId = bloggerIdAndscheduleIdPair.getRight();
     List<EventScheduleSubscription> eventScheduleSubscriptions = jdbcTemplate.query(
         String.format(SELECT_EVENT, bloggerId, scheduleId, EventStatusMeta.KNOWN_STATUS_ID_CLOSED),
-        (rs, rowNum) -> new EventScheduleSubscription(rs.getLong("ID"), rs.getLong("EVENT_SCHEDULE_ID"),
+        (rs, rowNum) -> new EventScheduleSubscriptionApp(rs.getLong("ID"), rs.getLong("EVENT_SCHEDULE_ID"),
             rs.getInt("SUBSCRIBER_ID"), rs.getDate("SCHEDULE_DATE"), rs.getString("PREFERRED_TIME"),
             eventStatusMetaCache.getEventStatusMeta(rs.getInt("STATUS_ID"))));
 

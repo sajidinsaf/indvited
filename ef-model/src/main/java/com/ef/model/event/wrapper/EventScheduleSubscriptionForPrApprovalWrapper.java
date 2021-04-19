@@ -6,8 +6,9 @@ import java.util.List;
 
 import com.ef.common.util.DateUtil;
 import com.ef.model.event.EventScheduleSubscription;
+import com.ef.model.event.EventScheduleSubscriptionApp;
 
-public class EventScheduleSubscriptionForPrApprovalWrapper extends EventScheduleSubscription {
+public class EventScheduleSubscriptionForPrApprovalWrapper extends EventScheduleSubscriptionApp {
 
   private List<DateAndTime> prefferedDatesAndTimes;
 

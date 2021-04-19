@@ -10,6 +10,7 @@ import org.springframework.stereotype.Component;
 import com.ef.dataaccess.Query;
 import com.ef.dataaccess.event.EventStatusMetaCache;
 import com.ef.model.event.EventScheduleSubscription;
+import com.ef.model.event.EventScheduleSubscriptionApp;
 import com.ef.model.member.Member;
 import com.ef.model.member.MemberCriteriaData;
 
@@ -38,14 +39,14 @@ public class QueryEventScheduleSubscriptionByScheduleId implements Query<Long, L
 
     List<EventScheduleSubscription> eventScheduleSubscriptions = jdbcTemplate.query(
         String.format(SELECT_EVENT, scheduleId),
-        (rs, rowNum) -> new EventScheduleSubscription(rs.getLong("ID"), rs.getLong("EVENT_SCHEDULE_ID"),
+        (rs, rowNum) -> new EventScheduleSubscriptionApp(rs.getLong("ID"), rs.getLong("EVENT_SCHEDULE_ID"),
             rs.getInt("SUBSCRIBER_ID"), rs.getDate("SCHEDULE_DATE"), rs.getString("PREFERRED_TIME"),
             eventStatusMetaCache.getEventStatusMeta(rs.getInt("STATUS_ID"))));
 
     for (EventScheduleSubscription subscription : eventScheduleSubscriptions) {
       int subscriberId = subscription.getSubscriberId();
       Member member = queryMemberById.data(subscriberId);
-      subscription.setSubscriber(member);
+      ((EventScheduleSubscriptionApp) subscription).setSubscriber(member);
 
       List<MemberCriteriaData> memberCriteriaDataList = queryMemberCriteriaDataByMemberId.data(subscriberId);
       member.setMemberCriteriaDataList(memberCriteriaDataList);

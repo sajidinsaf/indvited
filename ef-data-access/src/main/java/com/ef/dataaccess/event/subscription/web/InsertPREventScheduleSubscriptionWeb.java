@@ -23,6 +23,7 @@ import com.ef.dataaccess.Insert;
 import com.ef.dataaccess.Query;
 import com.ef.dataaccess.event.EventStatusMetaCache;
 import com.ef.model.event.EventScheduleSubscription;
+import com.ef.model.event.EventScheduleSubscriptionApp;
 import com.ef.model.event.EventStatusMeta;
 import com.ef.model.event.PREventScheduleSubscriptionWebFormBindingModel;
 
@@ -81,8 +82,8 @@ public class InsertPREventScheduleSubscriptionWeb
     long subscriptionId = keyHolder.getKey().longValue();
     logUtil.debug(logger, "created event schedule subscription with id", subscriptionId);
 
-    EventScheduleSubscription eventScheduleSubscription = new EventScheduleSubscription(subscriptionId, scheduleId, -1,
-        getDate(input.getPreferredDate()), input.getPreferredTime(),
+    EventScheduleSubscription eventScheduleSubscription = new EventScheduleSubscriptionApp(subscriptionId, scheduleId,
+        -1, getDate(input.getPreferredDate()), input.getPreferredTime(),
         eventStatusMetaCache.getEventStatusMeta(EventStatusMeta.KNOWN_STATUS_ID_APPLIED));
 
     return eventScheduleSubscription;

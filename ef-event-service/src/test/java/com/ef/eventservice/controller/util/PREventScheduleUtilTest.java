@@ -32,6 +32,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import com.ef.dataaccess.config.DbTestUtils;
 import com.ef.dataaccess.event.EventStatusMetaCache;
 import com.ef.model.event.EventScheduleSubscription;
+import com.ef.model.event.EventScheduleSubscriptionApp;
 import com.ef.model.event.EventStatusMeta;
 import com.ef.model.event.PREvent;
 import com.ef.model.event.PREventSchedule;
@@ -174,12 +175,12 @@ public class PREventScheduleUtilTest {
 
     int randomListSize = new Random().nextInt(15) + 5;
     for (int i = 0; i < randomListSize; i++) {
-      subs.add(new EventScheduleSubscription(0, 0, 0, null, null, created));
+      subs.add(new EventScheduleSubscriptionApp(0, 0, 0, null, null, created));
     }
 
     EventStatusMeta approved = eventStatusMetaCache.getEventStatusMeta(EventStatusMeta.KNOWN_STATUS_ID_APPROVED);
 
-    subs.add(new EventScheduleSubscription(0, 0, 0, null, null, approved));
+    subs.add(new EventScheduleSubscriptionApp(0, 0, 0, null, null, approved));
 
     // shuffle this list to set the statusToTest at any random location in the list
     Collections.shuffle(subs);

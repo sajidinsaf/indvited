@@ -32,6 +32,7 @@ import com.ef.dataaccess.config.DbTestUtils;
 import com.ef.dataaccess.event.EventStatusMetaCache;
 import com.ef.eventservice.publisher.EventServiceContext;
 import com.ef.model.event.EventScheduleSubscription;
+import com.ef.model.event.EventScheduleSubscriptionApp;
 import com.ef.model.event.EventStatusMeta;
 import com.ef.model.event.PREvent;
 import com.ef.model.event.PREventSchedule;
@@ -88,10 +89,10 @@ public class PREventStatusStrategyTest {
     List<EventScheduleSubscription> subs = new ArrayList<EventScheduleSubscription>();
     int randomListSize = new Random().nextInt(15) + 5;
     for (int i = 0; i < randomListSize; i++) {
-      subs.add(new EventScheduleSubscription(0, 0, 0, null, null, created));
+      subs.add(new EventScheduleSubscriptionApp(0, 0, 0, null, null, created));
     }
 
-    subs.add(new EventScheduleSubscription(0, 0, 0, null, null, statusToTest));
+    subs.add(new EventScheduleSubscriptionApp(0, 0, 0, null, null, statusToTest));
 
     // shuffle this list to set the statusToTest at any random location in the list
     Collections.shuffle(subs);
