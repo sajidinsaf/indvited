@@ -37,6 +37,7 @@ import com.ef.dataaccess.Insert;
 import com.ef.dataaccess.Query;
 import com.ef.dataaccess.Update;
 import com.ef.eventservice.controller.util.PREventScheduleUtil;
+import com.ef.eventservice.controller.util.PREventWebSubscriptionsUtil;
 import com.ef.eventservice.publisher.EventServiceContext;
 import com.ef.model.event.EventScheduleSubscription;
 import com.ef.model.event.EventStatusMeta;
@@ -71,11 +72,13 @@ public class PREventScheduleSubscriptionController {
 
   private final Strategy<MapBasedContext, Response<String>> eventScheduleSubscriptionByWebStrategy;
 
+  private final PREventWebSubscriptionsUtil prEventWebSubscriptionsUtil;
+
   @Autowired
   public PREventScheduleSubscriptionController(
       @Qualifier("insertPrEventScheduleSubscription") Insert<PREventScheduleSubscriptionBindingModel, EventScheduleSubscription> insertPrEventScheduleSubscription,
       @Qualifier("queryApprovalPendingSubscriptionsByPrId") Query<Integer, List<PREvent>> queryApprovalPendingSubscriptionsByPrId,
-      PREventScheduleUtil prEventScheduleUtil,
+      PREventScheduleUtil prEventScheduleUtil, PREventWebSubscriptionsUtil prEventWebSubscriptionsUtil,
       @Qualifier("approvePREventScheduleSubscriptionStatus") Update<PREventScheduleSubscriptionStatusChangeBindingModel, Integer> approvePREventScheduleSubscriptionStatus,
       @Qualifier("rejectPREventScheduleSubscriptionStatus") Update<PREventScheduleSubscriptionStatusChangeBindingModel, Integer> rejectPREventScheduleSubscriptionStatus,
       @Qualifier("closeSubscriptionOnDeliverableApproval") Update<SubscriberDeliverableSubmissionBindingModel, String> closeSubscriptionOnDeliverableApproval,
@@ -85,6 +88,7 @@ public class PREventScheduleSubscriptionController {
     this.insertPrEventScheduleSubscription = insertPrEventScheduleSubscription;
     this.queryApprovalPendingSubscriptionsByPrId = queryApprovalPendingSubscriptionsByPrId;
     this.prEventScheduleUtil = prEventScheduleUtil;
+    this.prEventWebSubscriptionsUtil = prEventWebSubscriptionsUtil;
     this.approvePREventScheduleSubscriptionStatus = approvePREventScheduleSubscriptionStatus;
     this.rejectPREventScheduleSubscriptionStatus = rejectPREventScheduleSubscriptionStatus;
     this.closeSubscriptionOnDeliverableApproval = closeSubscriptionOnDeliverableApproval;
@@ -120,6 +124,8 @@ public class PREventScheduleSubscriptionController {
   public ResponseEntity<?> getBloggerEligibleEventList(@RequestParam Integer memberId) {
 
     List<PREvent> events = queryApprovalPendingSubscriptionsByPrId.data(memberId);
+
+    events = prEventWebSubscriptionsUtil.populateWebEvents(events, memberId);
     logUtil.debug(logger, "Returning ", events.size(), " events for member id ", memberId);
 
     List<PREvent> enrichedEvents = prEventScheduleUtil.populateAvailableDates(events);

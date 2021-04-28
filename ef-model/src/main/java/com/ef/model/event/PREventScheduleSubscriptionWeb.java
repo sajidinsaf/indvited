@@ -1,14 +1,18 @@
 package com.ef.model.event;
 
 import java.sql.Date;
+import java.util.List;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.ef.common.logging.ServiceLoggingUtil;
+import com.ef.model.member.Member;
+import com.ef.model.member.MemberAddress;
+import com.ef.model.member.MemberCriteriaData;
 import com.google.gson.Gson;
 
-public class PREventScheduleSubscriptionWeb {
+public class PREventScheduleSubscriptionWeb implements EventScheduleSubscription {
 
   private static final Logger logger = LoggerFactory.getLogger(PREventScheduleSubscriptionWeb.class);
   private final ServiceLoggingUtil logUtil = new ServiceLoggingUtil();
@@ -19,9 +23,11 @@ public class PREventScheduleSubscriptionWeb {
   private int statusId;
   private String firstName, lastName, email, phone, preferredTime, criteria, address, city, gender;
   private Date preferredDate;
+  private EventStatusMeta eventStatus;
+  private List<MemberCriteriaData> memberCriteriaDataList;
 
   public PREventScheduleSubscriptionWeb() {
-    // TODO Auto-generated constructor stub
+
   }
 
   public PREventScheduleSubscriptionWeb(int id, int eventId, long eventScheduleId, String firstName, String lastName,
@@ -44,7 +50,29 @@ public class PREventScheduleSubscriptionWeb {
     this.statusId = statusId;
   }
 
-  public int getId() {
+  public PREventScheduleSubscriptionWeb(int id, int eventId, long eventScheduleId, String firstName, String lastName,
+      String email, String phone, Date preferredDate, String preferredTime,
+      List<MemberCriteriaData> memberCriteriaDataList, String address, String city, String gender,
+      EventStatusMeta eventStatus) {
+    super();
+    this.id = id;
+    this.eventId = eventId;
+    this.eventScheduleId = eventScheduleId;
+    this.firstName = firstName;
+    this.lastName = lastName;
+    this.email = email;
+    this.phone = phone;
+    this.preferredDate = preferredDate;
+    this.preferredTime = preferredTime;
+    this.memberCriteriaDataList = memberCriteriaDataList;
+    this.address = address;
+    this.city = city;
+    this.gender = gender;
+    this.eventStatus = eventStatus;
+    this.statusId = eventStatus.getId();
+  }
+
+  public long getId() {
     return id;
   }
 
@@ -186,4 +214,68 @@ public class PREventScheduleSubscriptionWeb {
 
   }
 
+  @Override
+  public long getScheduleSubscriptionId() {
+    return getEventScheduleId();
+  }
+
+  @Override
+  public int getSubscriberId() {
+    // We don't expect this web subscription option to be used for long after launch
+    // so casting the long to an int should be safe here.
+    return (int) getEventScheduleId();
+  }
+
+  @Override
+  public EventStatusMeta getEventStatus() {
+    return eventStatus;
+  }
+
+  public void setEventStatus(EventStatusMeta eventStatusMeta) {
+    this.eventStatus = eventStatusMeta;
+  }
+
+  @Override
+  public Date getScheduleDate() {
+    return preferredDate;
+  }
+
+  @Override
+  public Member getSubscriber() {
+    Member member = new Member();
+    member.setFirstName(firstName);
+    member.setLastName(lastName);
+    member.setGender(gender);
+    member.setEmail(email);
+    member.setPhone(phone);
+    member.setId(id);
+    member.setMemberCriteriaDataList(memberCriteriaDataList);
+
+    MemberAddress memberAddress = new MemberAddress();
+    memberAddress.setCity(city);
+    memberAddress.setAddressLine1(address);
+    memberAddress.setMemberId(getSubscriberId());
+    memberAddress.setCurrent(true);
+    member.setMemberAddress(memberAddress);
+
+    return member;
+  }
+
+  public void setMemberCriteriaDataList(List<MemberCriteriaData> memberCriteriaDataList) {
+    this.memberCriteriaDataList = memberCriteriaDataList;
+  }
+
+  public List<MemberCriteriaData> getMemberCriteriaDataList() {
+    return memberCriteriaDataList;
+  }
+
+  @Override
+  public int compareTo(EventScheduleSubscription o) {
+    return new Long(id).compareTo(new Long(o.getId()));
+  }
+
+  @Override
+  public int getSubscriptionMode() {
+    return SUBSCRIPTION_MODE_WEB;
+  }
 }

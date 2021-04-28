@@ -39,6 +39,7 @@ public class PREventScheduleUtil {
     this.queryEventScheduleSubscriptionCountByScheduleIdAndStatusIds = queryEventScheduleSubscriptionCountByScheduleIdAndStatusIds;
     this.prEventStatusStrategy = prEventStatusStrategy;
     this.queryMemberDeliverableDataByEventId = queryMemberDeliverableDataByEventId;
+
   }
 
   public List<PREvent> populateAvailableDates(List<PREvent> events) {

@@ -10,7 +10,7 @@ public class Member implements Serializable {
 
   private static final long serialVersionUID = 275549302589403129L;
 
-  private int id;
+  private int id = -1;
   private String firstname;
   private String lastname;
   private String email;
@@ -84,7 +84,7 @@ public class Member implements Serializable {
   }
 
   public void setId(int id) {
-    checkForMutation(id, "id");
+    checkForMutation(this.id != -1 ? this.id : null, "id");
     this.id = id;
   }
 
@@ -93,7 +93,7 @@ public class Member implements Serializable {
   }
 
   public void setFirstName(String firstname) {
-    checkForMutation(firstname, "firstname");
+    checkForMutation(this.firstname, "firstname");
     this.firstname = firstname;
   }
 
@@ -102,7 +102,7 @@ public class Member implements Serializable {
   }
 
   public void setLastName(String lastname) {
-    checkForMutation(lastname, "lastname");
+    checkForMutation(this.lastname, "lastname");
     this.lastname = lastname;
   }
 
@@ -111,7 +111,7 @@ public class Member implements Serializable {
   }
 
   public void setEmail(String email) {
-    checkForMutation(email, "email");
+    checkForMutation(this.email, "email");
     this.email = email;
   }
 
@@ -120,7 +120,7 @@ public class Member implements Serializable {
   }
 
   public void setGender(String gender) {
-    checkForMutation(gender, "gender");
+    checkForMutation(this.gender, "gender");
     this.gender = gender;
   }
 
@@ -137,7 +137,7 @@ public class Member implements Serializable {
   }
 
   public void setPhone(String phone) {
-    checkForMutation(phone, "phone");
+    checkForMutation(this.phone, "phone");
     this.phone = phone;
   }
 
@@ -146,7 +146,7 @@ public class Member implements Serializable {
   }
 
   public void setMemberType(MemberType memberType) {
-    checkForMutation(memberType, "memberType");
+    checkForMutation(this.memberType, "memberType");
     this.memberType = memberType;
   }
 
@@ -155,7 +155,7 @@ public class Member implements Serializable {
   }
 
   public void setDate_registered(Timestamp date_registered) {
-    checkForMutation(date_registered, "date_registered");
+    checkForMutation(this.date_registered, "date_registered");
     this.date_registered = date_registered;
   }
 
@@ -164,7 +164,7 @@ public class Member implements Serializable {
   }
 
   public void setTimestamp_of_last_login(Timestamp timestamp_of_last_login) {
-    checkForMutation(timestamp_of_last_login, "timestamp_of_last_login");
+    checkForMutation(this.timestamp_of_last_login, "timestamp_of_last_login");
     this.timestamp_of_last_login = timestamp_of_last_login;
   }
 

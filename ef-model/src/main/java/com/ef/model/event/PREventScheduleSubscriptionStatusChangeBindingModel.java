@@ -9,19 +9,21 @@ public class PREventScheduleSubscriptionStatusChangeBindingModel {
   private int subscriberId;
   private int approverId;
   private String dataString;
+  private int subscriptionMode;
 
   public PREventScheduleSubscriptionStatusChangeBindingModel() {
 
   }
 
   public PREventScheduleSubscriptionStatusChangeBindingModel(int eventId, long scheduleId, long subscriptionId,
-      int subscriberId, int approverId) {
+      int subscriberId, int approverId, int subscriptionMode) {
     super();
     this.eventId = eventId;
     this.scheduleId = scheduleId;
     this.subscriptionId = subscriptionId;
     this.subscriberId = subscriberId;
     this.approverId = approverId;
+    this.subscriptionMode = subscriptionMode;
   }
 
   public int getEventId() {
@@ -68,6 +70,14 @@ public class PREventScheduleSubscriptionStatusChangeBindingModel {
     return dataString;
   }
 
+  public int getSubscriptionMode() {
+    return subscriptionMode;
+  }
+
+  public void setSubscriptionMode(int subscriptionMode) {
+    this.subscriptionMode = subscriptionMode;
+  }
+
   public void setDataString(String dataString) {
     if (dataString == null) {
       return;
@@ -80,13 +90,14 @@ public class PREventScheduleSubscriptionStatusChangeBindingModel {
     setSubscriberId(m.getSubscriberId());
     setApproverId(m.getApproverId());
     setSubscriptionId(m.getSubscriptionId());
+    setSubscriptionMode(m.getSubscriptionMode());
   }
 
   @Override
   public String toString() {
     return "PREventScheduleSubscriptionStatusChangeBindingModel [eventId=" + eventId + ", scheduleId=" + scheduleId
         + ", subscriptionId=" + subscriptionId + ", subscriberId=" + subscriberId + ", approverId=" + approverId
-        + ", dataString=" + dataString + "]";
+        + ", dataString=" + dataString + ", subscriptionMode=" + subscriptionMode + "]";
   }
 
 }

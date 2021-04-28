@@ -25,6 +25,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 
 import com.ef.dataaccess.Update;
 import com.ef.dataaccess.config.DbTestUtils;
+import com.ef.model.event.EventScheduleSubscription;
 import com.ef.model.event.EventStatusMeta;
 import com.ef.model.event.PREventScheduleSubscriptionStatusChangeBindingModel;
 
@@ -58,7 +59,8 @@ public class RejectPREventScheduleSubscriptionTest {
     int approverId = 1000010016;
 
     PREventScheduleSubscriptionStatusChangeBindingModel model = new PREventScheduleSubscriptionStatusChangeBindingModel(
-        doesntMatterEventId, scheduleId, doesntMatterSubscriptionId, subscriberId, approverId);
+        doesntMatterEventId, scheduleId, doesntMatterSubscriptionId, subscriberId, approverId,
+        EventScheduleSubscription.SUBSCRIPTION_MODE_APP);
 
     int count = rejectPREventScheduleSubscriptionStatus.data(model);
 

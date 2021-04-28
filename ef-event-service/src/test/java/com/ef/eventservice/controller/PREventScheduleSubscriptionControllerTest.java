@@ -44,6 +44,7 @@ import com.ef.dataaccess.Query;
 import com.ef.dataaccess.Update;
 import com.ef.dataaccess.config.DbTestUtils;
 import com.ef.eventservice.controller.util.PREventScheduleUtil;
+import com.ef.eventservice.controller.util.PREventWebSubscriptionsUtil;
 import com.ef.model.event.EventScheduleSubscription;
 import com.ef.model.event.EventStatusMeta;
 import com.ef.model.event.PREvent;
@@ -96,10 +97,14 @@ public class PREventScheduleSubscriptionControllerTest {
         .getBean("eventScheduleSubscriptionByWebStrategy", Strategy.class);
 
     PREventScheduleUtil prEventScheduleUtil = appContext.getBean(PREventScheduleUtil.class);
+
+    PREventWebSubscriptionsUtil prEventWebSubscriptionsUtil = appContext.getBean(PREventWebSubscriptionsUtil.class);
+
     controller = new PREventScheduleSubscriptionController(insertPrEventScheduleSubscription,
-        queryApprovalPendingSubscriptionsByPrId, prEventScheduleUtil, approvePREventScheduleSubscriptionStatus,
-        rejectPREventScheduleSubscriptionStatus, closeSubscriptionOnDeliverableApproval,
-        insertDeliverableRejectionAndUpdateSubscription, queryEventById, eventScheduleSubscriptionByWebStrategy);
+        queryApprovalPendingSubscriptionsByPrId, prEventScheduleUtil, prEventWebSubscriptionsUtil,
+        approvePREventScheduleSubscriptionStatus, rejectPREventScheduleSubscriptionStatus,
+        closeSubscriptionOnDeliverableApproval, insertDeliverableRejectionAndUpdateSubscription, queryEventById,
+        eventScheduleSubscriptionByWebStrategy);
   }
 
   @After

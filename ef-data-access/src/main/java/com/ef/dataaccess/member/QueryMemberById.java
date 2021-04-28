@@ -2,6 +2,7 @@ package com.ef.dataaccess.member;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Component;
 
@@ -26,9 +27,16 @@ public class QueryMemberById implements Query<Integer, Member> {
 
   @Override
   public Member data(Integer id) {
-    Member member = jdbcTemplate.queryForObject(SELECT_MEMBER, new Object[] { id },
-        new MemberRowMapper(memberTypeCache));
-    return member;
+    try {
+      Member member = jdbcTemplate.queryForObject(SELECT_MEMBER, new Object[] { id },
+          new MemberRowMapper(memberTypeCache));
+      return member;
+    } catch (EmptyResultDataAccessException e) {
+      EmptyResultDataAccessException e1 = new EmptyResultDataAccessException("No member found for id: " + id, 1);
+      e1.initCause(e);
+      throw e1;
+    }
+
   }
 
 }

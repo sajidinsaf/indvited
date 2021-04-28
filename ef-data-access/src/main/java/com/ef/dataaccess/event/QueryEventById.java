@@ -4,6 +4,7 @@ import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Component;
 
@@ -36,7 +37,14 @@ public class QueryEventById implements Query<Integer, PREvent> {
   @Override
   public PREvent data(Integer id) {
 
-    PREvent prEvent = jdbcTemplate.queryForObject(SELECT_EVENT, new Object[] { id }, new PREventTableRowMapper());
+    PREvent prEvent = null;
+    try {
+      prEvent = jdbcTemplate.queryForObject(SELECT_EVENT, new Object[] { id }, new PREventTableRowMapper());
+    } catch (EmptyResultDataAccessException e) {
+      EmptyResultDataAccessException e1 = new EmptyResultDataAccessException("No event found for id: " + id, 1);
+      e1.initCause(e);
+      throw e1;
+    }
     prEvent.setEventType(eventTypeCache.getEventType(prEvent.getEventTypeId()));
 
     EventVenue eventVenue = queryVenue.data(prEvent.getEventVenueId());

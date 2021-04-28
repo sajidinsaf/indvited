@@ -150,4 +150,9 @@ public class EventScheduleSubscriptionApp implements EventScheduleSubscription {
         + eventStatus + ", subscriber=" + subscriber + "]";
   }
 
+  @Override
+  public int getSubscriptionMode() {
+    return SUBSCRIPTION_MODE_APP;
+  }
+
 }
