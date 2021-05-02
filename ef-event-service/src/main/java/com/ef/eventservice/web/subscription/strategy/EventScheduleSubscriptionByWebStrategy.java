@@ -15,10 +15,10 @@ import com.ef.model.event.PREventScheduleSubscriptionWebFormBindingModel;
 @Component("eventScheduleSubscriptionByWebStrategy")
 public class EventScheduleSubscriptionByWebStrategy implements Strategy<MapBasedContext, Response<String>> {
 
-  private final Insert<PREventScheduleSubscriptionWebFormBindingModel, EventScheduleSubscription> insertPREventScheduleSubscriptionWeb;
+  private final Insert<PREventScheduleSubscriptionWebFormBindingModel, Response<EventScheduleSubscription>> insertPREventScheduleSubscriptionWeb;
 
   public EventScheduleSubscriptionByWebStrategy(
-      @Qualifier("insertPREventScheduleSubscriptionWeb") Insert<PREventScheduleSubscriptionWebFormBindingModel, EventScheduleSubscription> insertPREventScheduleSubscriptionWeb) {
+      @Qualifier("insertPREventScheduleSubscriptionWeb") Insert<PREventScheduleSubscriptionWebFormBindingModel, Response<EventScheduleSubscription>> insertPREventScheduleSubscriptionWeb) {
     this.insertPREventScheduleSubscriptionWeb = insertPREventScheduleSubscriptionWeb;
   }
 
@@ -33,10 +33,19 @@ public class EventScheduleSubscriptionByWebStrategy implements Strategy<MapBased
       // message
 
       // persist the request
-      EventScheduleSubscription result = insertPREventScheduleSubscriptionWeb.data(input);
-      String response = "Your request has been successfully registered. Your request number is: " + result.getId()
-          + ". Please quote this number in your communications. You will receive confirmation when your request has been approved.";
-      return new Response<String>(response, StatusCode.OK);
+      Response<EventScheduleSubscription> response = insertPREventScheduleSubscriptionWeb.data(input);
+      ;
+
+      if (response.getStatusCode() == StatusCode.OK) {
+        EventScheduleSubscription result = response.getResponseResult();
+        String responseString = "Your request has been successfully registered. Your request number is: "
+            + result.getId()
+            + ". Please quote this number in your communications. You will receive confirmation when your request has been approved.";
+        return new Response<String>(responseString, StatusCode.OK);
+      } else {
+        return new Response<String>(response.getFailureReasons().get(0), response.getStatusCode());
+      }
+
     } catch (RuntimeException e) {
       return new Response<String>(
           "REquest submission failed. Please try after some time or contact support for more information.",

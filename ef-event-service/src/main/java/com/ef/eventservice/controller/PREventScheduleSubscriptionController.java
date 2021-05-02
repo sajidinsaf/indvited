@@ -6,6 +6,8 @@ import static com.ef.eventservice.controller.EventControllerConstants.SUBSCRIPTI
 import static com.ef.eventservice.controller.EventControllerConstants.SUBSCRIPTIONS_APPROVE_V1;
 import static com.ef.eventservice.controller.EventControllerConstants.SUBSCRIPTIONS_REJECT_DELIVERABLE_V1;
 import static com.ef.eventservice.controller.EventControllerConstants.SUBSCRIPTIONS_REJECT_V1;
+import static com.ef.eventservice.controller.EventControllerConstants.UPDATE_SUBSCRIPTION_STATUS_ACTION;
+import static com.ef.eventservice.controller.EventControllerConstants.UPDATE_SUBSCRIPTION_STATUS_BINDING_MODEL;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -31,7 +33,6 @@ import org.springframework.web.servlet.ModelAndView;
 import com.ef.common.MapBasedContext;
 import com.ef.common.Strategy;
 import com.ef.common.logging.ServiceLoggingUtil;
-import com.ef.common.message.MessagePacket;
 import com.ef.common.message.Response;
 import com.ef.dataaccess.Insert;
 import com.ef.dataaccess.Query;
@@ -61,8 +62,7 @@ public class PREventScheduleSubscriptionController {
   private final Query<Integer, List<PREvent>> queryApprovalPendingSubscriptionsByPrId;
   private final PREventScheduleUtil prEventScheduleUtil;
 
-  private final Update<PREventScheduleSubscriptionStatusChangeBindingModel, Integer> approvePREventScheduleSubscriptionStatus;
-  private final Update<PREventScheduleSubscriptionStatusChangeBindingModel, Integer> rejectPREventScheduleSubscriptionStatus;
+  private final Strategy<MapBasedContext, ResponseEntity<?>> subscriptionStatusUpdateStrategy;
 
   private final Update<SubscriberDeliverableSubmissionBindingModel, String> closeSubscriptionOnDeliverableApproval;
 
@@ -79,8 +79,7 @@ public class PREventScheduleSubscriptionController {
       @Qualifier("insertPrEventScheduleSubscription") Insert<PREventScheduleSubscriptionBindingModel, EventScheduleSubscription> insertPrEventScheduleSubscription,
       @Qualifier("queryApprovalPendingSubscriptionsByPrId") Query<Integer, List<PREvent>> queryApprovalPendingSubscriptionsByPrId,
       PREventScheduleUtil prEventScheduleUtil, PREventWebSubscriptionsUtil prEventWebSubscriptionsUtil,
-      @Qualifier("approvePREventScheduleSubscriptionStatus") Update<PREventScheduleSubscriptionStatusChangeBindingModel, Integer> approvePREventScheduleSubscriptionStatus,
-      @Qualifier("rejectPREventScheduleSubscriptionStatus") Update<PREventScheduleSubscriptionStatusChangeBindingModel, Integer> rejectPREventScheduleSubscriptionStatus,
+      @Qualifier("subscriptionStatusUpdateStrategy") Strategy<MapBasedContext, ResponseEntity<?>> subscriptionStatusUpdateStrategy,
       @Qualifier("closeSubscriptionOnDeliverableApproval") Update<SubscriberDeliverableSubmissionBindingModel, String> closeSubscriptionOnDeliverableApproval,
       @Qualifier("insertDeliverableRejectionAndUpdateSubscription") Update<SubscriberDeliverableSubmissionBindingModel, String> insertDeliverableRejectionAndUpdateSubscription,
       @Qualifier("queryEnrichedEventWithAvailableSchedulesByEventId") Query<Integer, PREvent> queryEventWithAvailableSchedulesByEventId,
@@ -89,8 +88,7 @@ public class PREventScheduleSubscriptionController {
     this.queryApprovalPendingSubscriptionsByPrId = queryApprovalPendingSubscriptionsByPrId;
     this.prEventScheduleUtil = prEventScheduleUtil;
     this.prEventWebSubscriptionsUtil = prEventWebSubscriptionsUtil;
-    this.approvePREventScheduleSubscriptionStatus = approvePREventScheduleSubscriptionStatus;
-    this.rejectPREventScheduleSubscriptionStatus = rejectPREventScheduleSubscriptionStatus;
+    this.subscriptionStatusUpdateStrategy = subscriptionStatusUpdateStrategy;
     this.closeSubscriptionOnDeliverableApproval = closeSubscriptionOnDeliverableApproval;
     this.insertDeliverableRejectionAndUpdateSubscription = insertDeliverableRejectionAndUpdateSubscription;
     this.queryEnrichedEventWithAvailableSchedulesByEventId = queryEventWithAvailableSchedulesByEventId;
@@ -137,33 +135,29 @@ public class PREventScheduleSubscriptionController {
   public ResponseEntity<?> approveSubscription(@RequestBody PREventScheduleSubscriptionStatusChangeBindingModel model,
       HttpServletRequest request) {
 
-    return updatesubscriptionStatus(model, request, approvePREventScheduleSubscriptionStatus);
+    MapBasedContext context = new MapBasedContext();
+    context.put(UPDATE_SUBSCRIPTION_STATUS_ACTION, EventStatusMeta.KNOWN_STATUS_ID_APPROVED);
+    context.put(UPDATE_SUBSCRIPTION_STATUS_BINDING_MODEL, model);
+    return updatesubscriptionStatus(model, request, context);
   }
 
   @PostMapping(SUBSCRIPTIONS_REJECT_V1)
   @ResponseBody
   public ResponseEntity<?> rejectsubscription(@RequestBody PREventScheduleSubscriptionStatusChangeBindingModel model,
       HttpServletRequest request) {
+    MapBasedContext context = new MapBasedContext();
+    context.put(UPDATE_SUBSCRIPTION_STATUS_ACTION, EventStatusMeta.KNOWN_STATUS_ID_REJECTED);
+    context.put(UPDATE_SUBSCRIPTION_STATUS_BINDING_MODEL, model);
 
-    return updatesubscriptionStatus(model, request, rejectPREventScheduleSubscriptionStatus);
+    return updatesubscriptionStatus(model, request, context);
   }
 
   public ResponseEntity<?> updatesubscriptionStatus(PREventScheduleSubscriptionStatusChangeBindingModel model,
-      HttpServletRequest request,
-      Update<PREventScheduleSubscriptionStatusChangeBindingModel, Integer> updateSubscriptionStatus) {
+      HttpServletRequest request, MapBasedContext context) {
 
     logUtil.debug(logger, "Received subscription data ", model);
 
-    int result = updateSubscriptionStatus.data(model);
-    final String returnString = result > 0 ? "success" : "failed";
-
-    logUtil.debug(logger, "Subscription status update result ", returnString, " No of rows updated: ", result);
-    MessagePacket<String> p = new MessagePacket<String>() {
-
-    };
-    p.setPayload(returnString);
-
-    return new ResponseEntity<MessagePacket<String>>(p, HttpStatus.OK);
+    return subscriptionStatusUpdateStrategy.apply(context);
   }
 
   @PostMapping(SUBSCRIPTIONS_APPROVE_DELIVERABLE_V1)

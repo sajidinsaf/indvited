@@ -100,11 +100,13 @@ public class PREventScheduleSubscriptionControllerTest {
 
     PREventWebSubscriptionsUtil prEventWebSubscriptionsUtil = appContext.getBean(PREventWebSubscriptionsUtil.class);
 
+    Strategy<MapBasedContext, ResponseEntity<?>> subscriptionStatusUpdateStrategy = appContext
+        .getBean("subscriptionStatusUpdateStrategy", Strategy.class);
+
     controller = new PREventScheduleSubscriptionController(insertPrEventScheduleSubscription,
         queryApprovalPendingSubscriptionsByPrId, prEventScheduleUtil, prEventWebSubscriptionsUtil,
-        approvePREventScheduleSubscriptionStatus, rejectPREventScheduleSubscriptionStatus,
-        closeSubscriptionOnDeliverableApproval, insertDeliverableRejectionAndUpdateSubscription, queryEventById,
-        eventScheduleSubscriptionByWebStrategy);
+        subscriptionStatusUpdateStrategy, closeSubscriptionOnDeliverableApproval,
+        insertDeliverableRejectionAndUpdateSubscription, queryEventById, eventScheduleSubscriptionByWebStrategy);
   }
 
   @After

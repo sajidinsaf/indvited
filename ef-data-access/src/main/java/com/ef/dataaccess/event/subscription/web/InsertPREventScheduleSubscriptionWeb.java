@@ -5,12 +5,14 @@ import java.sql.Date;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.util.Arrays;
 
 import org.apache.commons.lang3.tuple.Pair;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.dao.DuplicateKeyException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.jdbc.support.KeyHolder;
@@ -18,6 +20,8 @@ import org.springframework.stereotype.Component;
 
 import com.ef.common.LRPair;
 import com.ef.common.logging.ServiceLoggingUtil;
+import com.ef.common.message.Response;
+import com.ef.common.message.StatusCode;
 import com.ef.common.util.DateUtil;
 import com.ef.dataaccess.Insert;
 import com.ef.dataaccess.Query;
@@ -29,10 +33,12 @@ import com.ef.model.event.PREventScheduleSubscriptionWebFormBindingModel;
 
 @Component("insertPREventScheduleSubscriptionWeb")
 public class InsertPREventScheduleSubscriptionWeb
-    implements Insert<PREventScheduleSubscriptionWebFormBindingModel, EventScheduleSubscription> {
+    implements Insert<PREventScheduleSubscriptionWebFormBindingModel, Response<EventScheduleSubscription>> {
 
   private static final Logger logger = LoggerFactory.getLogger(InsertPREventScheduleSubscriptionWeb.class);
   private final ServiceLoggingUtil logUtil = new ServiceLoggingUtil();
+
+  public static final String RESPONSE_STRING_FORMAT = "Event: %d already has a request from this email: %s or this phone: %s";
 
 //  event_schedule_subscription_web
 //      event_id INTEGER,
@@ -66,27 +72,36 @@ public class InsertPREventScheduleSubscriptionWeb
   }
 
   @Override
-  public EventScheduleSubscription data(final PREventScheduleSubscriptionWebFormBindingModel input) {
+  public Response<EventScheduleSubscription> data(final PREventScheduleSubscriptionWebFormBindingModel input) {
 
     logUtil.debug(logger, " Input Schedule Details: ", input);
 
     KeyHolder keyHolder = new GeneratedKeyHolder();
 
     long scheduleId = getScheduleId(input);
+    long subscriptionId = -1;
 
-    // Insert the PR Event schedule subscription and get the subscription id.
-    jdbcTemplate.update(connection -> {
-      return getInsertEventScheduleSubscriptionBindingModel(input, scheduleId, connection);
-    }, keyHolder);
+    try {
+      // Insert the PR Event schedule subscription and get the subscription id.
+      jdbcTemplate.update(connection -> {
+        return getInsertEventScheduleSubscriptionBindingModel(input, scheduleId, connection);
+      }, keyHolder);
+      subscriptionId = keyHolder.getKey().longValue();
+    } catch (DuplicateKeyException e) {
+      Response<EventScheduleSubscription> response = new Response<EventScheduleSubscription>(
+          StatusCode.PRECONDITION_FAILED);
+      String message = String.format(RESPONSE_STRING_FORMAT, input.getEventId(), input.getEmail(), input.getPhone());
+      response.setFailureReasons(Arrays.asList(message));
+      return response;
+    }
 
-    long subscriptionId = keyHolder.getKey().longValue();
     logUtil.debug(logger, "created event schedule subscription with id", subscriptionId);
 
     EventScheduleSubscription eventScheduleSubscription = new EventScheduleSubscriptionApp(subscriptionId, scheduleId,
         -1, getDate(input.getPreferredDate()), input.getPreferredTime(),
         eventStatusMetaCache.getEventStatusMeta(EventStatusMeta.KNOWN_STATUS_ID_APPLIED));
 
-    return eventScheduleSubscription;
+    return new Response<EventScheduleSubscription>(eventScheduleSubscription, StatusCode.OK);
   }
 
   private final PreparedStatement getInsertEventScheduleSubscriptionBindingModel(
@@ -113,7 +128,7 @@ public class InsertPREventScheduleSubscriptionWeb
     ps.setLong(2, scheduleId);
     ps.setString(3, input.getFirstName());
     ps.setString(4, input.getLastName());
-    ps.setString(5, input.getEmail());
+    ps.setString(5, input.getEmail().toLowerCase());
     ps.setString(6, input.getPhone());
     ps.setString(7, input.getAddress());
     ps.setString(8, input.getCity());

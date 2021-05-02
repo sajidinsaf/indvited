@@ -5,6 +5,8 @@ import static org.hamcrest.Matchers.is;
 import static org.junit.Assert.assertThat;
 import static org.mockito.MockitoAnnotations.openMocks;
 
+import java.util.Random;
+
 import javax.sql.DataSource;
 
 import org.junit.After;
@@ -23,13 +25,16 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import com.ef.common.message.Response;
 import com.ef.common.message.StatusCode;
 import com.ef.dataaccess.Insert;
+import com.ef.dataaccess.Update;
 import com.ef.dataaccess.config.DbTestUtils;
 import com.ef.model.event.EventScheduleSubscription;
+import com.ef.model.event.PREventScheduleSubscriptionStatusChangeBindingModel;
 import com.ef.model.event.PREventScheduleSubscriptionWebFormBindingModel;
 
-public class InsertPREventScheduleSubscriptionWebTest {
+public abstract class WebScheduleSubscriptionStatusTest {
 
   private Insert<PREventScheduleSubscriptionWebFormBindingModel, Response<EventScheduleSubscription>> insertWebSubscription;
+  private Update<PREventScheduleSubscriptionStatusChangeBindingModel, Integer> updateStatusBean;
   private JdbcTemplate jdbcTemplate;
 
   @SuppressWarnings({ "resource", "unchecked" })
@@ -37,8 +42,9 @@ public class InsertPREventScheduleSubscriptionWebTest {
   public void setUp() {
     openMocks(this);
     AnnotationConfigApplicationContext appContext = new AnnotationConfigApplicationContext(
-        HsqlDbConfigInsertPREventScheduleSubscriptionWebTest.class);
+        HsqlDbConfigWebScheduleSubscriptionStatusTest.class);
     insertWebSubscription = appContext.getBean("insertPREventScheduleSubscriptionWeb", Insert.class);
+    updateStatusBean = getUpdateBean(appContext);
     jdbcTemplate = appContext.getBean(JdbcTemplate.class);
   }
 
@@ -48,7 +54,7 @@ public class InsertPREventScheduleSubscriptionWebTest {
   }
 
   @Test
-  public void shouldInsertWebSubscriptionSuccessfully() {
+  public void shouldRejectSubscriptionSuccessfully() {
     String firstName = "Gregory";
     String lastName = "Peck";
     String email = "gp@gmail.com";
@@ -70,58 +76,30 @@ public class InsertPREventScheduleSubscriptionWebTest {
 
     assertThat(response.getStatusCode(), is(StatusCode.OK));
     EventScheduleSubscription result = response.getResponseResult();
+    PREventScheduleSubscriptionStatusChangeBindingModel input = new PREventScheduleSubscriptionStatusChangeBindingModel();
+    input.setApproverId(new Random().nextInt());
+    input.setEventId(w.getEventId());
+    input.setSubscriptionId(result.getId());
+    int numberOfRowsUpdated = updateStatusBean.data(input);
 
-    assertThat(result.getId(), is(0L));
-    assertThat(result.getPreferredTime(), is("1230"));
-    assertThat(result.getEventScheduleId(), is(101L));
-    assertThat(result.getSubscriberId(), is(-1));
+    assertThat(numberOfRowsUpdated, is(1));
 
+    int updatedStatusId = jdbcTemplate.queryForObject(
+        "select status_id from event_schedule_subscription_web where event_id=" + input.getEventId(), Integer.class);
+
+    assertThat(updatedStatusId, is(getExpectedUpdateStatus()));
   }
 
-  @Test
-  public void shouldCatchAndReturn() {
-    String firstName = "Gregory";
-    String lastName = "Peck";
-    String email = "gp@gmail.com";
-    String phone = "4525253222";
-    String preferredDate = "Tue 10 Jul 2085";
-    String preferredTime = "1230";
-    String criteria = "criterionSepcriterionId1nameValSep3234criterionSepcriterionId2nameValSep13242criterionSepcriterionId3nameValSep12";
-    String address = "3234 sdfsdf";
-    String city = "London";
-    String gender = "M";
-    int statusId = 3;
+  protected abstract Update<PREventScheduleSubscriptionStatusChangeBindingModel, Integer> getUpdateBean(
+      AnnotationConfigApplicationContext appContext);
 
-    // System.out.println(new
-    // DateUtil().parseDateFromEventDisplayString(preferredDate));
-    PREventScheduleSubscriptionWebFormBindingModel w = new PREventScheduleSubscriptionWebFormBindingModel(201,
-        firstName, lastName, email, phone, preferredDate, preferredTime, criteria, address, city, gender, statusId);
-
-    Response<EventScheduleSubscription> response = insertWebSubscription.data(w);
-
-    assertThat(response.getStatusCode(), is(StatusCode.OK));
-    EventScheduleSubscription result = response.getResponseResult();
-
-    assertThat(result.getId(), is(0L));
-    assertThat(result.getPreferredTime(), is("1230"));
-    assertThat(result.getEventScheduleId(), is(101L));
-    assertThat(result.getSubscriberId(), is(-1));
-
-    response = insertWebSubscription.data(w);
-
-    assertThat(response.getStatusCode(), is(StatusCode.PRECONDITION_FAILED));
-
-    assertThat(response.getFailureReasons().get(0),
-        is(String.format(InsertPREventScheduleSubscriptionWeb.RESPONSE_STRING_FORMAT, w.getEventId(), w.getEmail(),
-            w.getPhone())));
-
-  }
+  protected abstract int getExpectedUpdateStatus();
 
 }
 
 @Configuration
 @ComponentScan(basePackages = { "com.ef.dataaccess.event", "com.ef.dataaccess.member" })
-class HsqlDbConfigInsertPREventScheduleSubscriptionWebTest {
+class HsqlDbConfigWebScheduleSubscriptionStatusTest {
 
   @Bean
   public JdbcTemplate indvitedDbJdbcTemplate() {

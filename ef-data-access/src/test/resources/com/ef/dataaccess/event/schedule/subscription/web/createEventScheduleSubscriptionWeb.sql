@@ -13,5 +13,8 @@ CREATE TABLE event_schedule_subscription_web (
   preferred_time char(5),
   criteria_string varchar(500),
   status_id INTEGER,
+  approver_id INTEGER,
   entry_timestamp timestamp
 );
+CREATE UNIQUE INDEX idx_evenId_phone ON event_schedule_subscription_web (event_id, phone);
+CREATE UNIQUE INDEX idx_evenId_email ON event_schedule_subscription_web (event_id, email);
